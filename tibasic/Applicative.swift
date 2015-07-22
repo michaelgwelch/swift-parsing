@@ -1,0 +1,47 @@
+//
+//  ApplicativeParser.swift
+//  tibasic
+//
+//  Created by Michael Welch on 7/22/15.
+//  Copyright © 2015 Michael Welch. All rights reserved.
+//
+
+import Foundation
+
+// Like Haskell fmap, <$>
+func <~><A,B>(lhs:A->B, rhs:Parser<A>) -> Parser<B> {
+    return fmap(lhs, rhs)
+}
+
+// Like Haskell Alternative <|>
+func <|><A>(lhs:Parser<A>, rhs:Parser<A>) -> Parser<A> {
+    return Parser { input in
+        let result = lhs.tokenize(input)
+        switch lhs.tokenize(input) {
+        case .None: return rhs.tokenize(input)
+        case .Some(_): return result
+        }
+    }
+}
+
+
+// Like Haskell Applicative <*>
+func <*><A,B>(lhs:Parser<A -> B>, rhs:Parser<A>) -> Parser<B> {
+    return apply(lhs, rhs)
+}
+
+// Haskell Applicative <*
+func <*<A,B>(lhs:Parser<A>, rhs:Parser<B>) -> Parser<A> {
+    return liftA2(const)(lhs)(rhs)
+}
+
+// Haskell Applictive *>
+func *><A,B>(lhs:Parser<A>, rhs:Parser<B>) -> Parser<B> {
+    return liftA2(const(id))(lhs)(rhs)
+}
+
+func liftA2<A,B,C>(f:A -> B -> C)(_ a:Parser<A>)(_ b:Parser<B>) -> Parser<C> {
+    return f <~> a <*> b
+}
+
+
