@@ -22,13 +22,13 @@ func liftA2<A,B,C>(f:A -> B -> C)(_ a:Tokenizer<A>)(_ b:Tokenizer<B>) -> Tokeniz
 }
 
 
-// Like Haskell fmap or <$>
+// Like Haskell fmap, <$>
 infix operator <~> { associativity left precedence 120 }
 func <~><A,B>(lhs:A->B, rhs:Tokenizer<A>) -> Tokenizer<B> {
     return fmap(lhs, rhs)
 }
 
-// Like Haskell Applicative "or" <|>
+// Like Haskell Alternative <|>
 infix operator <|> { associativity left precedence 110 }
 func <|><A>(lhs:Tokenizer<A>, rhs:Tokenizer<A>) -> Tokenizer<A> {
     return Tokenizer { input in
@@ -41,17 +41,19 @@ func <|><A>(lhs:Tokenizer<A>, rhs:Tokenizer<A>) -> Tokenizer<A> {
 }
 
 
-// Like Haskell <*>
+// Like Haskell Applicative <*>
 infix operator <*> { associativity left precedence 120 }
 func <*><A,B>(lhs:Tokenizer<A -> B>, rhs:Tokenizer<A>) -> Tokenizer<B> {
     return apply(lhs, rhs)
 }
 
+// Haskell Applicative <*
 infix operator <* { associativity left precedence 120 }
 func <*<A,B>(lhs:Tokenizer<A>, rhs:Tokenizer<B>) -> Tokenizer<A> {
     return liftA2(const)(lhs)(rhs)
 }
 
+// Haskell Applictive *>
 infix operator *> { associativity left precedence 120 }
 func *><A,B>(lhs:Tokenizer<A>, rhs:Tokenizer<B>) -> Tokenizer<B> {
     return liftA2(const(id))(lhs)(rhs)
@@ -193,7 +195,7 @@ func many<T>(t:Tokenizer<T>) -> Tokenizer<List<T>> {
 func manystack1<T>(t:Tokenizer<T>) -> Tokenizer<List<T>> {
     return t |>>= { v in
         many(t) |>>= { vs in
-            return success(List<T>.Cons(h: v, t: Box(vs)))
+            return success(List<T>.Cons(h: v, t: vs))
         }
     }
 }
@@ -204,14 +206,14 @@ let isSpace:Character -> Bool = { (c:Character) -> Bool in
 let space:Tokenizer<()> = many(sat(isSpace)) |>> success(())
 let ident:Tokenizer<String> = letter |>>= { c in
     many(alphanum) |>>= { cs in
-        var list = List<Character>.Cons(h: c, t: Box(cs))
+        var list = List<Character>.Cons(h: c, t: cs)
         return success(String(list))
     }
 }
 
 let nat:Tokenizer<Int> = digit |>>= { d in
     many(digit) |>>= { ds in
-        var list = List<Character>.Cons(h: d, t: Box(ds))
+        var list = List<Character>.Cons(h: d, t: ds)
         return success(Int(String(list))!) // Oops, could have some overflow or exception
     }
 }
@@ -243,19 +245,9 @@ func apply<A,B>(tf:Tokenizer<A -> B>, _ ta:Tokenizer<A>) -> Tokenizer<B> {
     }
 }
 
-class Box<T> {
-    private(set) var value:T
-    init(_ value:T) {
-        self.value = value
-    }
-    class func B(value:T) -> Box<T> {
-        return Box(value)
-    }
-}
-
-enum List<T> {
+indirect enum List<T> {
     case Nil
-    case Cons(h:T, t:Box<List<T>>)
+    case Cons(h:T, t:List<T>)
 }
 
 class ListGenerator<T> : AnyGenerator<T> {
@@ -267,8 +259,8 @@ class ListGenerator<T> : AnyGenerator<T> {
     override func next() -> Element? {
         switch list {
         case .Nil: return nil
-        case .Cons(let h, let box):
-            list = box.value
+        case .Cons(let h, let t):
+            list = t
             return h
         }
     }
@@ -318,37 +310,47 @@ enum Expression {
     case Relationalexpr
 }
 
-enum NumericExpression {
+indirect enum NumericExpression {
     case NumberLiteral(Int)
-    case Paren(Box<NumericExpression>)
-    case Exp(Box<NumericExpression>, Box<NumericExpression>)
-    case Negate(Box<NumericExpression>)
+    case Paren(NumericExpression)
+    case Exp(NumericExpression, NumericExpression)
+    case Negate(NumericExpression)
+    case Multiply(NumericExpression, NumericExpression)
+    case Divide(NumericExpression, NumericExpression)
+    case Add(NumericExpression, NumericExpression)
+    case Subtract(NumericExpression, NumericExpression)
 }
-func NumericExprParen(numExpr:NumericExpression) -> NumericExpression {
-    return NumericExpression.Paren(Box(numExpr))
-}
-func NumericExprExp(numExpr:NumericExpression)(_ numExpr2:NumericExpression) -> NumericExpression {
-    return NumericExpression.Exp(Box(numExpr), Box(numExpr2))
-}
-func NumericExprNegate(numExpr:NumericExpression) -> NumericExpression {
-    return NumericExpression.Negate !< Box(numExpr)
+func curry<A,B,C>(f:(A,B)->C)(_ a:A)(_ b:B) -> C {
+    return f(a,b)
 }
 
 let left_paren = char("(")
 let right_paren = char(")")
 let exponent_op = char("^")
+let mult_op = char("*")
+let divide_op = char("/")
 let plus_op = char("+")
 let subtract_op = char("-")
 let number = nat
 
-let numeric_expression:Tokenizer<NumericExpression> = prefix_expression
+let numeric_expression:Tokenizer<NumericExpression> = add_expression
 
+let number_literal_expr = NumericExpression.NumberLiteral <~> number
 
-let number_literal_expr:Tokenizer<NumericExpression> = NumericExpression.NumberLiteral <~> number
-let paren_expression:Tokenizer<NumericExpression> = NumericExprParen <~> (left_paren *> numeric_expression <* right_paren)
-  <|> number_literal_expr
-let exponent_expresion:Tokenizer<NumericExpression> = NumericExprExp <~> numeric_expression <* exponent_op <*> numeric_expression
-  <|> paren_expression
-let prefix_expression = plus_op *> numeric_expression
-  <|> NumericExprNegate <~> (subtract_op *> numeric_expression)
-  <|> exponent_expresion
+let paren_expression = number_literal_expr
+  <|> NumericExpression.Paren <~> (left_paren *> numeric_expression <* right_paren)
+
+let exponent_expresion = paren_expression
+  <|> curry(NumericExpression.Exp) <~> (numeric_expression <* exponent_op) <*> numeric_expression
+
+let prefix_expression = exponent_expresion
+  <|> plus_op *> numeric_expression
+  <|> NumericExpression.Negate <~> (subtract_op *> numeric_expression)
+
+let multiply_expression = prefix_expression
+  <|> curry(NumericExpression.Multiply) <~> (numeric_expression <* mult_op) <*> numeric_expression
+  <|> curry(NumericExpression.Divide) <~> (numeric_expression <* divide_op) <*> numeric_expression
+
+let add_expression = multiply_expression
+  <|> curry(NumericExpression.Add) <~> (numeric_expression <* plus_op) <*> numeric_expression
+  <|> curry(NumericExpression.Subtract) <~> (numeric_expression <* subtract_op) <*> numeric_expression
