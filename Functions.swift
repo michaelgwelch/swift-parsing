@@ -21,6 +21,6 @@ func §<A,B>(lhs:A->B, rhs:A) -> B {
     return lhs(rhs)
 }
 
-func •<A,B,C>(f:B->C, g:A->B)(a:A) -> C {
+func •<A,B,C>(f:B->C, g:A->B)(_ a:A) -> C {
     return f § g § a // === f(g(a))
 }

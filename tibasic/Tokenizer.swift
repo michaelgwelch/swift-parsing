@@ -27,7 +27,6 @@ struct Parser<T> {
     }
 }
 
-
 ///////////////////////////////
 
 
@@ -39,18 +38,16 @@ func failure<T>() -> Parser<T> {
 }
 
 func success<T>(t:T) -> Parser<T> {
-    return Parser { input in (t, input) }
+    return Parser { (t, $0) }
 }
 
-func sat(predicate:Character -> Bool) -> Parser<Character> {
 
-    return item |>>= { c in
-        return predicate(c) ? success(c) : failure()
-    }
+func sat(predicate:Character -> Bool) -> Parser<Character> {
+    return item.bind { predicate($0) ? success($0) : failure() }
 }
 
 func char(c:Character) -> Parser<Character> {
-    return sat() { x in c == x }
+    return sat() { c == $0 }
 }
 
 // Parser primitives
@@ -59,7 +56,9 @@ let item:Parser<Character> = Parser<Character> { input in
     guard (input.characters.count > 0) else {
         return nil
     }
-    return (input[input.startIndex], input.substringFromIndex(input.startIndex.successor()))
+
+    let index0 = input.startIndex
+    return (input[index0], input.substringFromIndex(index0.successor()))
 }
 
 let isLetter:Character -> Bool = { c in isUpper(c) || isLower(c) }
@@ -76,29 +75,15 @@ let alphanum:Parser<Character> = sat(isAlphanum)
 
 
 
-extension Parser {
-    func bind<TB>(f:T -> Parser<TB>) -> Parser<TB> {
-        return bind2(self, f)
-    }
-}
-
-func bind2<TA, TB>(ma:Parser<TA>, _ f:TA -> Parser<TB>) -> Parser<TB> {
-    return Parser { input in
-        switch ma.tokenize(input) {
-        case .None: return nil
-        case .Some((let a, let output)): return f(a).tokenize(output)
-        }
-    }
-}
-
-
-
-
 func string(s:String) -> Parser<String> {
-    if s.isEmpty { return success("") }
+    guard (!s.isEmpty) else {
+        return pure("")
+    }
+
     let c = s[s.startIndex]
     let cs = s.substringFromIndex(s.startIndex.successor())
-    return char(c) |>> string(cs) |>> success(s)
+
+    return char(c) *> string(cs) *> pure(s)
 }
 
 
@@ -113,22 +98,22 @@ func many1<T>(t:Parser<T>) -> Parser<List<T>> {
 let isSpace:Character -> Bool = { (c:Character) -> Bool in
     c == " " || c == "\n" || c == "\r" || c == "\t" }
 
-let space:Parser<()> = many(sat(isSpace)) |>> success(())
+let space:Parser<()> = many(sat(isSpace)) *> success(())
 
 let ident:Parser<String> = String.init <§> (cons <§> letter <*> many(alphanum))
 
-let int:String -> Int = { (s:String) in Int(s)!}
+private let int:String -> Int = { Int($0)!} // Construct an int out of a string of digits
 
 let nat:Parser<Int> = int <§> (String.init <§> (cons <§> digit <*> many(digit)))
 
 func token<T>(t:Parser<T>) -> Parser<T> { return (space *> t) <* space }
 
-
 let identifier = token(ident)
+
 let natural = token(nat)
-func symbol(xs:String) -> Parser<String> {
-    return token(string(xs))
-}
+
+let symbol:String -> Parser<String> = { (token • string) § $0 } // fancy way of saying token(string($0))
+
 
 
 

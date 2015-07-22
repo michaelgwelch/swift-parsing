@@ -9,7 +9,7 @@
 import Foundation
 
 func fmap<A,B>(f:A->B, _ t:Parser<A>) -> Parser<B> {
-    return t |>>= { v in
+    return t.bind { v in
         return success(f(v))
     }
 }
