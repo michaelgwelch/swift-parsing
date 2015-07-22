@@ -8,6 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		E3C5EF8F1B5B091200AF07B9 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3C5EF8E1B5B091200AF07B9 /* main.swift */; };
+		E3C5EF961B5B0A8E00AF07B9 /* Token.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3C5EF951B5B0A8E00AF07B9 /* Token.swift */; };
+		E3C5EF981B5B0D6100AF07B9 /* Lexer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3C5EF971B5B0D6100AF07B9 /* Lexer.swift */; };
+		E3C5EFA01B5BDB6E00AF07B9 /* tibasic_unit_test.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3C5EF9F1B5BDB6E00AF07B9 /* tibasic_unit_test.swift */; };
+		E3C5EFA51B5BDB9000AF07B9 /* Lexer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3C5EF971B5B0D6100AF07B9 /* Lexer.swift */; };
+		E3C5EFA61B5BDD8E00AF07B9 /* Token.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3C5EF951B5B0A8E00AF07B9 /* Token.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -25,10 +30,22 @@
 /* Begin PBXFileReference section */
 		E3C5EF8B1B5B091200AF07B9 /* tibasic */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = tibasic; sourceTree = BUILT_PRODUCTS_DIR; };
 		E3C5EF8E1B5B091200AF07B9 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		E3C5EF951B5B0A8E00AF07B9 /* Token.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Token.swift; sourceTree = "<group>"; };
+		E3C5EF971B5B0D6100AF07B9 /* Lexer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Lexer.swift; sourceTree = "<group>"; };
+		E3C5EF9D1B5BDB6E00AF07B9 /* tibasic-unit-test.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "tibasic-unit-test.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		E3C5EF9F1B5BDB6E00AF07B9 /* tibasic_unit_test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = tibasic_unit_test.swift; sourceTree = "<group>"; };
+		E3C5EFA11B5BDB6E00AF07B9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		E3C5EF881B5B091200AF07B9 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E3C5EF9A1B5BDB6E00AF07B9 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -42,6 +59,7 @@
 			isa = PBXGroup;
 			children = (
 				E3C5EF8D1B5B091200AF07B9 /* tibasic */,
+				E3C5EF9E1B5BDB6E00AF07B9 /* tibasic-unit-test */,
 				E3C5EF8C1B5B091200AF07B9 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -50,6 +68,7 @@
 			isa = PBXGroup;
 			children = (
 				E3C5EF8B1B5B091200AF07B9 /* tibasic */,
+				E3C5EF9D1B5BDB6E00AF07B9 /* tibasic-unit-test.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -58,8 +77,19 @@
 			isa = PBXGroup;
 			children = (
 				E3C5EF8E1B5B091200AF07B9 /* main.swift */,
+				E3C5EF951B5B0A8E00AF07B9 /* Token.swift */,
+				E3C5EF971B5B0D6100AF07B9 /* Lexer.swift */,
 			);
 			path = tibasic;
+			sourceTree = "<group>";
+		};
+		E3C5EF9E1B5BDB6E00AF07B9 /* tibasic-unit-test */ = {
+			isa = PBXGroup;
+			children = (
+				E3C5EF9F1B5BDB6E00AF07B9 /* tibasic_unit_test.swift */,
+				E3C5EFA11B5BDB6E00AF07B9 /* Info.plist */,
+			);
+			path = "tibasic-unit-test";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -82,6 +112,23 @@
 			productReference = E3C5EF8B1B5B091200AF07B9 /* tibasic */;
 			productType = "com.apple.product-type.tool";
 		};
+		E3C5EF9C1B5BDB6E00AF07B9 /* tibasic-unit-test */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E3C5EFA21B5BDB6E00AF07B9 /* Build configuration list for PBXNativeTarget "tibasic-unit-test" */;
+			buildPhases = (
+				E3C5EF991B5BDB6E00AF07B9 /* Sources */,
+				E3C5EF9A1B5BDB6E00AF07B9 /* Frameworks */,
+				E3C5EF9B1B5BDB6E00AF07B9 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "tibasic-unit-test";
+			productName = "tibasic-unit-test";
+			productReference = E3C5EF9D1B5BDB6E00AF07B9 /* tibasic-unit-test.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -92,6 +139,9 @@
 				ORGANIZATIONNAME = "Michael Welch";
 				TargetAttributes = {
 					E3C5EF8A1B5B091200AF07B9 = {
+						CreatedOnToolsVersion = 7.0;
+					};
+					E3C5EF9C1B5BDB6E00AF07B9 = {
 						CreatedOnToolsVersion = 7.0;
 					};
 				};
@@ -109,9 +159,20 @@
 			projectRoot = "";
 			targets = (
 				E3C5EF8A1B5B091200AF07B9 /* tibasic */,
+				E3C5EF9C1B5BDB6E00AF07B9 /* tibasic-unit-test */,
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		E3C5EF9B1B5BDB6E00AF07B9 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		E3C5EF871B5B091200AF07B9 /* Sources */ = {
@@ -119,6 +180,18 @@
 			buildActionMask = 2147483647;
 			files = (
 				E3C5EF8F1B5B091200AF07B9 /* main.swift in Sources */,
+				E3C5EF981B5B0D6100AF07B9 /* Lexer.swift in Sources */,
+				E3C5EF961B5B0A8E00AF07B9 /* Token.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E3C5EF991B5BDB6E00AF07B9 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E3C5EFA61B5BDD8E00AF07B9 /* Token.swift in Sources */,
+				E3C5EFA51B5BDB9000AF07B9 /* Lexer.swift in Sources */,
+				E3C5EFA01B5BDB6E00AF07B9 /* tibasic_unit_test.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -217,6 +290,28 @@
 			};
 			name = Release;
 		};
+		E3C5EFA31B5BDB6E00AF07B9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = "tibasic-unit-test/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.welch.tibasic-unit-test";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		E3C5EFA41B5BDB6E00AF07B9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = "tibasic-unit-test/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.welch.tibasic-unit-test";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -234,6 +329,15 @@
 			buildConfigurations = (
 				E3C5EF931B5B091200AF07B9 /* Debug */,
 				E3C5EF941B5B091200AF07B9 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E3C5EFA21B5BDB6E00AF07B9 /* Build configuration list for PBXNativeTarget "tibasic-unit-test" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E3C5EFA31B5BDB6E00AF07B9 /* Debug */,
+				E3C5EFA41B5BDB6E00AF07B9 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 		};

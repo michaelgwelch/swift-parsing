@@ -4,6 +4,11 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
+		<key>tibasic-unit-test.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>1</integer>
+		</dict>
 		<key>tibasic.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
@@ -13,6 +18,11 @@
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
 		<key>E3C5EF8A1B5B091200AF07B9</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>E3C5EF9C1B5BDB6E00AF07B9</key>
 		<dict>
 			<key>primary</key>
 			<true/>
