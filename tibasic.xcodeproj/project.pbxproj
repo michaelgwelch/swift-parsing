@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E3811F2C1B5F204B00248BA0 /* Tokenizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3811F2B1B5F204B00248BA0 /* Tokenizer.swift */; };
+		E3811F2D1B5F204B00248BA0 /* Tokenizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3811F2B1B5F204B00248BA0 /* Tokenizer.swift */; };
 		E3C5EF8F1B5B091200AF07B9 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3C5EF8E1B5B091200AF07B9 /* main.swift */; };
 		E3C5EF961B5B0A8E00AF07B9 /* Token.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3C5EF951B5B0A8E00AF07B9 /* Token.swift */; };
 		E3C5EF981B5B0D6100AF07B9 /* Lexer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3C5EF971B5B0D6100AF07B9 /* Lexer.swift */; };
@@ -28,6 +30,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		E3811F2B1B5F204B00248BA0 /* Tokenizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Tokenizer.swift; sourceTree = "<group>"; };
 		E3C5EF8B1B5B091200AF07B9 /* tibasic */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = tibasic; sourceTree = BUILT_PRODUCTS_DIR; };
 		E3C5EF8E1B5B091200AF07B9 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		E3C5EF951B5B0A8E00AF07B9 /* Token.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Token.swift; sourceTree = "<group>"; };
@@ -79,6 +82,7 @@
 				E3C5EF8E1B5B091200AF07B9 /* main.swift */,
 				E3C5EF951B5B0A8E00AF07B9 /* Token.swift */,
 				E3C5EF971B5B0D6100AF07B9 /* Lexer.swift */,
+				E3811F2B1B5F204B00248BA0 /* Tokenizer.swift */,
 			);
 			path = tibasic;
 			sourceTree = "<group>";
@@ -180,6 +184,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E3C5EF8F1B5B091200AF07B9 /* main.swift in Sources */,
+				E3811F2C1B5F204B00248BA0 /* Tokenizer.swift in Sources */,
 				E3C5EF981B5B0D6100AF07B9 /* Lexer.swift in Sources */,
 				E3C5EF961B5B0A8E00AF07B9 /* Token.swift in Sources */,
 			);
@@ -190,6 +195,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E3C5EFA61B5BDD8E00AF07B9 /* Token.swift in Sources */,
+				E3811F2D1B5F204B00248BA0 /* Tokenizer.swift in Sources */,
 				E3C5EFA51B5BDB9000AF07B9 /* Lexer.swift in Sources */,
 				E3C5EFA01B5BDB6E00AF07B9 /* tibasic_unit_test.swift in Sources */,
 			);
@@ -340,6 +346,7 @@
 				E3C5EFA41B5BDB6E00AF07B9 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
