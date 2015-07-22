@@ -10,7 +10,7 @@ import Foundation
 
 
 // Like Haskell fmap, <$>
-infix operator <~> { associativity left precedence 120 }
+infix operator <§> { associativity left precedence 120 }
 
 // Like Haskell Alternative <|>
 infix operator <|> { associativity left precedence 110 }
@@ -31,7 +31,8 @@ infix operator |>>= { associativity left precedence 100 }
 infix operator |>> { associativity left precedence 100 }
 
 // Like Haskell $
-infix operator !< { associativity right precedence 50 }
+infix operator § { associativity right precedence 50 }
 
-
+// Like Haskell . (compose)
+infix operator • { associativity right precedence 190 }
 

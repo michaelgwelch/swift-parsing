@@ -14,6 +14,10 @@ indirect enum List<T> {
     case Cons(h:T, t:List<T>)
 }
 
+func cons<T>(head:T)(_ tail:List<T>) -> List<T> {
+    return List<T>.Cons(h: head, t: tail)
+}
+
 class ListGenerator<T> : AnyGenerator<T> {
 
     private(set) var list:List<Element>

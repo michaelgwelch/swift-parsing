@@ -8,9 +8,9 @@
 
 import Foundation
 
-// Like Haskell fmap, <$>
-func <~><A,B>(lhs:A->B, rhs:Parser<A>) -> Parser<B> {
-    return fmap(lhs, rhs)
+
+func pure<A>(a:A) -> Parser<A> {
+    return success(a)
 }
 
 // Like Haskell Alternative <|>
@@ -41,7 +41,12 @@ func *><A,B>(lhs:Parser<A>, rhs:Parser<B>) -> Parser<B> {
 }
 
 func liftA2<A,B,C>(f:A -> B -> C)(_ a:Parser<A>)(_ b:Parser<B>) -> Parser<C> {
-    return f <~> a <*> b
+    return f <§> a <*> b
 }
 
 
+func apply<A,B>(tf:Parser<A -> B>, _ ta:Parser<A>) -> Parser<B> {
+    return tf.bind { f in
+        fmap(f, ta)
+    }
+}

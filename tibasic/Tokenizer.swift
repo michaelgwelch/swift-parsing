@@ -28,7 +28,6 @@ struct Parser<T> {
 }
 
 
-
 ///////////////////////////////
 
 
@@ -44,6 +43,7 @@ func success<T>(t:T) -> Parser<T> {
 }
 
 func sat(predicate:Character -> Bool) -> Parser<Character> {
+
     return item |>>= { c in
         return predicate(c) ? success(c) : failure()
     }
@@ -68,7 +68,7 @@ let isUpper:Character -> Bool = { c in (c >= "A" && c <= "Z") }
 let isLower:Character -> Bool = { c in (c >= "a" && c <= "z") }
 let isAlphanum:Character -> Bool = { isLetter($0) || isDigit($0) }
 
-let letter:Parser<Character> = sat !< isLetter
+let letter:Parser<Character> = sat § isLetter
 let digit:Parser<Character> = sat(isDigit)
 let upper:Parser<Character> = sat(isUpper)
 let lower:Parser<Character> = sat(isLower)
@@ -102,53 +102,26 @@ func string(s:String) -> Parser<String> {
 }
 
 
-
-infix operator +++ { associativity left precedence 150 }
-func +++<TA>(t1:Parser<TA>, t2:Parser<TA>) -> Parser<TA> {
-    return Parser { input in
-        let parseResult = t1.tokenize(input)
-        switch parseResult {
-        case .None: return t2.tokenize(input)
-        case .Some(_): return parseResult
-        }
-    }
-}
-
 func many<T>(t:Parser<T>) -> Parser<List<T>> {
-    return many(t) +++ success(List<T>.Nil)
+    return many1(t) <|> success(List<T>.Nil)
 }
 
-func manystack1<T>(t:Parser<T>) -> Parser<List<T>> {
-    return t |>>= { v in
-        many(t) |>>= { vs in
-            return success(List<T>.Cons(h: v, t: vs))
-        }
-    }
+func many1<T>(t:Parser<T>) -> Parser<List<T>> {
+    return cons <§> t <*> many(t)
 }
 
 let isSpace:Character -> Bool = { (c:Character) -> Bool in
     c == " " || c == "\n" || c == "\r" || c == "\t" }
 
 let space:Parser<()> = many(sat(isSpace)) |>> success(())
-let ident:Parser<String> = letter |>>= { c in
-    many(alphanum) |>>= { cs in
-        var list = List<Character>.Cons(h: c, t: cs)
-        return success(String(list))
-    }
-}
 
-let nat:Parser<Int> = digit |>>= { d in
-    many(digit) |>>= { ds in
-        var list = List<Character>.Cons(h: d, t: ds)
-        return success(Int(String(list))!) // Oops, could have some overflow or exception
-    }
-}
+let ident:Parser<String> = String.init <§> (cons <§> letter <*> many(alphanum))
 
-func token<T>(t:Parser<T>) -> Parser<T> {
-    return space |>> t |>>= { v in
-        space |>> success(v)
-    }
-}
+let int:String -> Int = { (s:String) in Int(s)!}
+
+let nat:Parser<Int> = int <§> (String.init <§> (cons <§> digit <*> many(digit)))
+
+func token<T>(t:Parser<T>) -> Parser<T> { return (space *> t) <* space }
 
 
 let identifier = token(ident)
@@ -157,16 +130,6 @@ func symbol(xs:String) -> Parser<String> {
     return token(string(xs))
 }
 
-func fmap<A,B>(f:A->B, _ t:Parser<A>) -> Parser<B> {
-    return t |>>= { v in
-        return success(f(v))
-    }
-}
 
 
 
-func apply<A,B>(tf:Parser<A -> B>, _ ta:Parser<A>) -> Parser<B> {
-    return tf.bind { f in
-        fmap(f, ta)
-    }
-}

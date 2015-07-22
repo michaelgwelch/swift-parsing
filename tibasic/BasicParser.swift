@@ -20,11 +20,11 @@ enum PrintItem {
 }
 
 func parsePrintStringExpr() -> Parser<PrintItem> {
-    return PrintItem.StringExpr <~> identifier
+    return PrintItem.StringExpr <§> identifier
 }
 
 func parsePrintNumericExpr() -> Parser<PrintItem> {
-    return PrintItem.NumericExpr <~> nat
+    return PrintItem.NumericExpr <§> nat
 }
 
 func parsePrintItem() -> Parser<PrintItem> {
@@ -82,22 +82,22 @@ let number = nat
 
 let numeric_expression:Parser<NumericExpression> = add_expression
 
-let number_literal_expr = NumericExpression.NumberLiteral <~> number
+let number_literal_expr = NumericExpression.NumberLiteral <§> number
 
 let paren_expression = number_literal_expr
-    <|> NumericExpression.Paren <~> (left_paren *> numeric_expression <* right_paren)
+    <|> NumericExpression.Paren <§> (left_paren *> numeric_expression <* right_paren)
 
 let exponent_expresion = paren_expression
-    <|> NumericExpression.CreateExp <~> (numeric_expression <* exponent_op) <*> numeric_expression
+    <|> NumericExpression.CreateExp <§> (numeric_expression <* exponent_op) <*> numeric_expression
 
 let prefix_expression = exponent_expresion
     <|> plus_op *> numeric_expression
-    <|> NumericExpression.Negate <~> (subtract_op *> numeric_expression)
+    <|> NumericExpression.Negate <§> (subtract_op *> numeric_expression)
 
 let multiply_expression = prefix_expression
-    <|> NumericExpression.CreateMult <~> (numeric_expression <* mult_op) <*> numeric_expression
-    <|> NumericExpression.CreateDiv <~> (numeric_expression <* divide_op) <*> numeric_expression
+    <|> NumericExpression.CreateMult <§> (numeric_expression <* mult_op) <*> numeric_expression
+    <|> NumericExpression.CreateDiv <§> (numeric_expression <* divide_op) <*> numeric_expression
 
 let add_expression = multiply_expression
-    <|> NumericExpression.CreateAdd <~> (numeric_expression <* plus_op) <*> numeric_expression
-    <|> NumericExpression.CreateSub <~> (numeric_expression <* subtract_op) <*> numeric_expression
+    <|> NumericExpression.CreateAdd <§> (numeric_expression <* plus_op) <*> numeric_expression
+    <|> NumericExpression.CreateSub <§> (numeric_expression <* subtract_op) <*> numeric_expression

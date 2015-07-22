@@ -16,9 +16,11 @@ func id<A>(a:A) -> A {
     return a
 }
 
-
 // Like Haskell $
-func !<<A,B>(lhs:A->B, rhs:A) -> B {
+func §<A,B>(lhs:A->B, rhs:A) -> B {
     return lhs(rhs)
 }
 
+func •<A,B,C>(f:B->C, g:A->B)(a:A) -> C {
+    return f § g § a // === f(g(a))
+}

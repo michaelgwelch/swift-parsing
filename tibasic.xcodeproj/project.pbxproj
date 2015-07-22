@@ -21,6 +21,8 @@
 		E38AC5FE1B60438C0079A22F /* Functions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E38AC5FC1B60438C0079A22F /* Functions.swift */; };
 		E38AC6001B6043A50079A22F /* Monad.swift in Sources */ = {isa = PBXBuildFile; fileRef = E38AC5FF1B6043A50079A22F /* Monad.swift */; };
 		E38AC6011B6043A50079A22F /* Monad.swift in Sources */ = {isa = PBXBuildFile; fileRef = E38AC5FF1B6043A50079A22F /* Monad.swift */; };
+		E38AC6031B6048970079A22F /* Functor.swift in Sources */ = {isa = PBXBuildFile; fileRef = E38AC6021B6048970079A22F /* Functor.swift */; };
+		E38AC6041B6048970079A22F /* Functor.swift in Sources */ = {isa = PBXBuildFile; fileRef = E38AC6021B6048970079A22F /* Functor.swift */; };
 		E3C5EF8F1B5B091200AF07B9 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3C5EF8E1B5B091200AF07B9 /* main.swift */; };
 /* End PBXBuildFile section */
 
@@ -44,6 +46,7 @@
 		E38AC5F71B6042ED0079A22F /* Applicative.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Applicative.swift; path = tibasic/Applicative.swift; sourceTree = "<group>"; };
 		E38AC5FC1B60438C0079A22F /* Functions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Functions.swift; sourceTree = "<group>"; };
 		E38AC5FF1B6043A50079A22F /* Monad.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Monad.swift; sourceTree = "<group>"; };
+		E38AC6021B6048970079A22F /* Functor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Functor.swift; sourceTree = "<group>"; };
 		E3C5EF8B1B5B091200AF07B9 /* tibasic */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = tibasic; sourceTree = BUILT_PRODUCTS_DIR; };
 		E3C5EF8E1B5B091200AF07B9 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		E3C5EF9D1B5BDB6E00AF07B9 /* tibasic-unit-test.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "tibasic-unit-test.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -76,6 +79,7 @@
 				E3811F2B1B5F204B00248BA0 /* Tokenizer.swift */,
 				E38AC5F11B6042AD0079A22F /* BasicParser.swift */,
 				E38AC5FF1B6043A50079A22F /* Monad.swift */,
+				E38AC6021B6048970079A22F /* Functor.swift */,
 			);
 			name = Parser;
 			sourceTree = "<group>";
@@ -218,6 +222,7 @@
 				E38AC5FD1B60438C0079A22F /* Functions.swift in Sources */,
 				E38AC5F51B6042C50079A22F /* List.swift in Sources */,
 				E38AC6001B6043A50079A22F /* Monad.swift in Sources */,
+				E38AC6031B6048970079A22F /* Functor.swift in Sources */,
 				E38AC5F21B6042AD0079A22F /* BasicParser.swift in Sources */,
 				E38AC5F81B6042ED0079A22F /* Applicative.swift in Sources */,
 			);
@@ -228,6 +233,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E38AC5F01B603F9C0079A22F /* Operators.swift in Sources */,
+				E38AC6041B6048970079A22F /* Functor.swift in Sources */,
 				E38AC5F91B6042ED0079A22F /* Applicative.swift in Sources */,
 				E38AC5F61B6042C50079A22F /* List.swift in Sources */,
 				E38AC5F31B6042AD0079A22F /* BasicParser.swift in Sources */,
