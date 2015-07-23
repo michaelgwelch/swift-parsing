@@ -14,27 +14,37 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "E3C5EF8A1B5B091200AF07B9"
-               BuildableName = "tibasic"
-               BlueprintName = "tibasic"
+               BlueprintIdentifier = "E38AC6691B608BE90079A22F"
+               BuildableName = "TIBasic.framework"
+               BlueprintName = "TIBasic"
                ReferencedContainer = "container:tibasic.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction
+      buildConfiguration = "Debug"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
-      shouldUseLaunchSchemeArgsEnv = "YES"
-      buildConfiguration = "Debug">
+      shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "E38AC6721B608BE90079A22F"
+               BuildableName = "TIBasicTests.xctest"
+               BlueprintName = "TIBasicTests"
+               ReferencedContainer = "container:tibasic.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "E3C5EF8A1B5B091200AF07B9"
-            BuildableName = "tibasic"
-            BlueprintName = "tibasic"
+            BlueprintIdentifier = "E38AC6691B608BE90079A22F"
+            BuildableName = "TIBasic.framework"
+            BlueprintName = "TIBasic"
             ReferencedContainer = "container:tibasic.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -42,44 +52,42 @@
       </AdditionalOptions>
    </TestAction>
    <LaunchAction
+      buildConfiguration = "Debug"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       launchStyle = "0"
       useCustomWorkingDirectory = "NO"
-      buildConfiguration = "Debug"
       ignoresPersistentStateOnLaunch = "NO"
       debugDocumentVersioning = "YES"
       debugServiceExtension = "internal"
       allowLocationSimulation = "YES">
-      <BuildableProductRunnable
-         runnableDebuggingMode = "0">
+      <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "E3C5EF8A1B5B091200AF07B9"
-            BuildableName = "tibasic"
-            BlueprintName = "tibasic"
+            BlueprintIdentifier = "E38AC6691B608BE90079A22F"
+            BuildableName = "TIBasic.framework"
+            BlueprintName = "TIBasic"
             ReferencedContainer = "container:tibasic.xcodeproj">
          </BuildableReference>
-      </BuildableProductRunnable>
+      </MacroExpansion>
       <AdditionalOptions>
       </AdditionalOptions>
    </LaunchAction>
    <ProfileAction
+      buildConfiguration = "Release"
       shouldUseLaunchSchemeArgsEnv = "YES"
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
-      buildConfiguration = "Release"
       debugDocumentVersioning = "YES">
-      <BuildableProductRunnable
-         runnableDebuggingMode = "0">
+      <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "E3C5EF8A1B5B091200AF07B9"
-            BuildableName = "tibasic"
-            BlueprintName = "tibasic"
+            BlueprintIdentifier = "E38AC6691B608BE90079A22F"
+            BuildableName = "TIBasic.framework"
+            BlueprintName = "TIBasic"
             ReferencedContainer = "container:tibasic.xcodeproj">
          </BuildableReference>
-      </BuildableProductRunnable>
+      </MacroExpansion>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">

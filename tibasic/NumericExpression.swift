@@ -13,40 +13,6 @@ struct Number {
 
 }
 
-
-enum PrintItem {
-    case StringExpr(str:String) // should take expression
-    case NumericExpr(num:Int) // should take expression
-}
-
-func parsePrintStringExpr() -> Parser<PrintItem> {
-    return PrintItem.StringExpr <§> identifier
-}
-
-func parsePrintNumericExpr() -> Parser<PrintItem> {
-    return PrintItem.NumericExpr <§> nat
-}
-
-func parsePrintItem() -> Parser<PrintItem> {
-    return parsePrintStringExpr()
-        <|> parsePrintNumericExpr()
-}
-
-enum PrintSeparator {
-    case Comma
-    case Colon
-    case Semicolon
-    case Multiple(seperators: [PrintSeparator])
-}
-
-
-
-enum Expression {
-    case NumericExpr
-    case StringExpr
-    case Relationalexpr
-}
-
 indirect enum NumericExpression {
     case NumberLiteral(Int)
     case Paren(NumericExpression)
@@ -63,9 +29,7 @@ indirect enum NumericExpression {
     static let CreateAdd = curry(Add)
     static let CreateSub = curry(Subtract)
 }
-func curry<A,B,C>(f:(A,B)->C)(_ a:A)(_ b:B) -> C {
-    return f(a,b)
-}
+
 
 let left_paren = char("(")
 let right_paren = char(")")

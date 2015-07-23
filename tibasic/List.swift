@@ -9,12 +9,12 @@
 import Foundation
 
 
-indirect enum List<T> {
+public indirect enum List<T> {
     case Nil
     case Cons(h:T, t:List<T>)
 }
 
-func cons<T>(head:T)(_ tail:List<T>) -> List<T> {
+public func cons<T>(head:T)(_ tail:List<T>) -> List<T> {
     return List<T>.Cons(h: head, t: tail)
 }
 
@@ -35,7 +35,7 @@ class ListGenerator<T> : AnyGenerator<T> {
 }
 
 extension List : SequenceType {
-    func generate() -> AnyGenerator<T> {
+    public func generate() -> AnyGenerator<T> {
         return ListGenerator(self)
     }
 }

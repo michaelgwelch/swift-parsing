@@ -16,13 +16,13 @@ import Foundation
 // Parser struct and protocol
 //////////////////
 
-struct Parser<T> {
+public struct Parser<T> {
     private let parse:String -> (T,String)?
-    init(parse:String -> (T,String)?) {
+    public init(parse:String -> (T,String)?) {
         self.parse = parse
     }
 
-    func tokenize(input: String) -> (token: T, output: String)? {
+    public func tokenize(input: String) -> (token: T, output: String)? {
         return parse(input)
     }
 }
@@ -33,26 +33,26 @@ struct Parser<T> {
 
 // Functions that return Tokenizers
 
-func failure<T>() -> Parser<T> {
+public func failure<T>() -> Parser<T> {
     return Parser { _ in nil }
 }
 
-func success<T>(t:T) -> Parser<T> {
+public func success<T>(t:T) -> Parser<T> {
     return Parser { (t, $0) }
 }
 
 
-func sat(predicate:Character -> Bool) -> Parser<Character> {
+public func sat(predicate:Character -> Bool) -> Parser<Character> {
     return item.bind { predicate($0) ? success($0) : failure() }
 }
 
-func char(c:Character) -> Parser<Character> {
+public func char(c:Character) -> Parser<Character> {
     return sat() { c == $0 }
 }
 
 // Parser primitives
 
-let item:Parser<Character> = Parser<Character> { input in
+public let item:Parser<Character> = Parser<Character> { input in
     guard (input.characters.count > 0) else {
         return nil
     }
@@ -75,7 +75,7 @@ let alphanum:Parser<Character> = sat(isAlphanum)
 
 
 
-func string(s:String) -> Parser<String> {
+public func string(s:String) -> Parser<String> {
     guard (!s.isEmpty) else {
         return pure("")
     }
@@ -87,11 +87,11 @@ func string(s:String) -> Parser<String> {
 }
 
 
-func many<T>(t:Parser<T>) -> Parser<List<T>> {
+public func many<T>(t:Parser<T>) -> Parser<List<T>> {
     return many1(t) <|> success(List<T>.Nil)
 }
 
-func many1<T>(t:Parser<T>) -> Parser<List<T>> {
+public func many1<T>(t:Parser<T>) -> Parser<List<T>> {
     return cons <§> t <*> many(t)
 }
 
