@@ -8,10 +8,10 @@
 
 import Foundation
 
-indirect enum RelationalExpression {
+public indirect enum RelationalExpression {
     case LessThan(RelationalExpression, RelationalExpression)
     case True
     case False
 }
 
-let relational_expression = success(RelationalExpression.True)
+public let relational_expression = success(RelationalExpression.True)

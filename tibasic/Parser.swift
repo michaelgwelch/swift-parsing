@@ -95,24 +95,24 @@ public func many1<T>(t:Parser<T>) -> Parser<List<T>> {
     return cons <§> t <*> many(t)
 }
 
-let isSpace:Character -> Bool = { (c:Character) -> Bool in
+public let isSpace:Character -> Bool = { (c:Character) -> Bool in
     c == " " || c == "\n" || c == "\r" || c == "\t" }
 
-let space:Parser<()> = many(sat(isSpace)) *> success(())
+public let space:Parser<()> = many(sat(isSpace)) *> success(())
 
-let ident:Parser<String> = String.init <§> (cons <§> letter <*> many(alphanum))
+public let ident:Parser<String> = String.init <§> (cons <§> letter <*> many(alphanum))
 
 private let int:String -> Int = { Int($0)!} // Construct an int out of a string of digits
 
-let nat:Parser<Int> = int <§> (String.init <§> (cons <§> digit <*> many(digit)))
+public let nat:Parser<Int> = int <§> (String.init <§> (cons <§> digit <*> many(digit)))
 
-func token<T>(t:Parser<T>) -> Parser<T> { return (space *> t) <* space }
+public func token<T>(t:Parser<T>) -> Parser<T> { return (space *> t) <* space }
 
-let identifier = token(ident)
+public let identifier = token(ident)
 
-let natural = token(nat)
+public let natural = token(nat)
 
-let symbol:String -> Parser<String> = { (token • string) § $0 } // fancy way of saying token(string($0))
+public let symbol:String -> Parser<String> = { (token • string) § $0 } // fancy way of saying token(string($0))
 
 
 

@@ -8,8 +8,8 @@
 
 import Foundation
 
-enum StringExpression {
+public enum StringExpression {
     case Literal(s:String)
 }
 
-let string_expression = StringExpression.Literal <§> string("")
+public let string_expression = StringExpression.Literal <§> string("")

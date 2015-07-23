@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		E3811F2C1B5F204B00248BA0 /* Tokenizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3811F2B1B5F204B00248BA0 /* Tokenizer.swift */; };
-		E3811F2D1B5F204B00248BA0 /* Tokenizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3811F2B1B5F204B00248BA0 /* Tokenizer.swift */; };
+		E3811F2C1B5F204B00248BA0 /* Parser.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3811F2B1B5F204B00248BA0 /* Parser.swift */; };
+		E3811F2D1B5F204B00248BA0 /* Parser.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3811F2B1B5F204B00248BA0 /* Parser.swift */; };
 		E38AC5EF1B603F9C0079A22F /* Operators.swift in Sources */ = {isa = PBXBuildFile; fileRef = E38AC5EE1B603F9C0079A22F /* Operators.swift */; };
 		E38AC5F01B603F9C0079A22F /* Operators.swift in Sources */ = {isa = PBXBuildFile; fileRef = E38AC5EE1B603F9C0079A22F /* Operators.swift */; };
 		E38AC5F21B6042AD0079A22F /* NumericExpression.swift in Sources */ = {isa = PBXBuildFile; fileRef = E38AC5F11B6042AD0079A22F /* NumericExpression.swift */; };
@@ -47,14 +47,14 @@
 		E38AC68B1B608C2F0079A22F /* Functions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E38AC5FC1B60438C0079A22F /* Functions.swift */; };
 		E38AC68C1B608C2F0079A22F /* Applicative.swift in Sources */ = {isa = PBXBuildFile; fileRef = E38AC5F71B6042ED0079A22F /* Applicative.swift */; };
 		E38AC68D1B608C2F0079A22F /* Operators.swift in Sources */ = {isa = PBXBuildFile; fileRef = E38AC5EE1B603F9C0079A22F /* Operators.swift */; };
-		E38AC68E1B608C2F0079A22F /* Tokenizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3811F2B1B5F204B00248BA0 /* Tokenizer.swift */; };
+		E38AC68E1B608C2F0079A22F /* Parser.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3811F2B1B5F204B00248BA0 /* Parser.swift */; };
 		E38AC68F1B608C2F0079A22F /* Monad.swift in Sources */ = {isa = PBXBuildFile; fileRef = E38AC5FF1B6043A50079A22F /* Monad.swift */; };
 		E38AC6901B608C2F0079A22F /* Functor.swift in Sources */ = {isa = PBXBuildFile; fileRef = E38AC6021B6048970079A22F /* Functor.swift */; };
 		E38AC6911B608C2F0079A22F /* List.swift in Sources */ = {isa = PBXBuildFile; fileRef = E38AC5F41B6042C50079A22F /* List.swift */; };
 		E38AC6921B608C300079A22F /* Functions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E38AC5FC1B60438C0079A22F /* Functions.swift */; };
 		E38AC6931B608C300079A22F /* Applicative.swift in Sources */ = {isa = PBXBuildFile; fileRef = E38AC5F71B6042ED0079A22F /* Applicative.swift */; };
 		E38AC6941B608C300079A22F /* Operators.swift in Sources */ = {isa = PBXBuildFile; fileRef = E38AC5EE1B603F9C0079A22F /* Operators.swift */; };
-		E38AC6951B608C300079A22F /* Tokenizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3811F2B1B5F204B00248BA0 /* Tokenizer.swift */; };
+		E38AC6951B608C300079A22F /* Parser.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3811F2B1B5F204B00248BA0 /* Parser.swift */; };
 		E38AC6961B608C300079A22F /* Monad.swift in Sources */ = {isa = PBXBuildFile; fileRef = E38AC5FF1B6043A50079A22F /* Monad.swift */; };
 		E38AC6971B608C300079A22F /* Functor.swift in Sources */ = {isa = PBXBuildFile; fileRef = E38AC6021B6048970079A22F /* Functor.swift */; };
 		E38AC6981B608C300079A22F /* List.swift in Sources */ = {isa = PBXBuildFile; fileRef = E38AC5F41B6042C50079A22F /* List.swift */; };
@@ -84,7 +84,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		E3811F2B1B5F204B00248BA0 /* Tokenizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Tokenizer.swift; path = tibasic/Tokenizer.swift; sourceTree = "<group>"; };
+		E3811F2B1B5F204B00248BA0 /* Parser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Parser.swift; path = tibasic/Parser.swift; sourceTree = "<group>"; };
 		E38AC5EE1B603F9C0079A22F /* Operators.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Operators.swift; path = tibasic/Operators.swift; sourceTree = "<group>"; };
 		E38AC5F11B6042AD0079A22F /* NumericExpression.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NumericExpression.swift; path = tibasic/NumericExpression.swift; sourceTree = "<group>"; };
 		E38AC5F41B6042C50079A22F /* List.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = List.swift; sourceTree = "<group>"; };
@@ -146,7 +146,7 @@
 			children = (
 				E38AC5F71B6042ED0079A22F /* Applicative.swift */,
 				E38AC5EE1B603F9C0079A22F /* Operators.swift */,
-				E3811F2B1B5F204B00248BA0 /* Tokenizer.swift */,
+				E3811F2B1B5F204B00248BA0 /* Parser.swift */,
 				E38AC5FF1B6043A50079A22F /* Monad.swift */,
 				E38AC6021B6048970079A22F /* Functor.swift */,
 			);
@@ -407,7 +407,7 @@
 				E38AC68C1B608C2F0079A22F /* Applicative.swift in Sources */,
 				E38AC6901B608C2F0079A22F /* Functor.swift in Sources */,
 				E38AC6841B608C1B0079A22F /* Expression.swift in Sources */,
-				E38AC68E1B608C2F0079A22F /* Tokenizer.swift in Sources */,
+				E38AC68E1B608C2F0079A22F /* Parser.swift in Sources */,
 				E38AC68B1B608C2F0079A22F /* Functions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -417,7 +417,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E38AC6871B608C1C0079A22F /* StringExpression.swift in Sources */,
-				E38AC6951B608C300079A22F /* Tokenizer.swift in Sources */,
+				E38AC6951B608C300079A22F /* Parser.swift in Sources */,
 				E38AC68A1B608C1C0079A22F /* Statements.swift in Sources */,
 				E38AC6881B608C1C0079A22F /* NumericExpression.swift in Sources */,
 				E38AC6981B608C300079A22F /* List.swift in Sources */,
@@ -438,7 +438,7 @@
 			files = (
 				E3C5EF8F1B5B091200AF07B9 /* main.swift in Sources */,
 				E38AC5EF1B603F9C0079A22F /* Operators.swift in Sources */,
-				E3811F2C1B5F204B00248BA0 /* Tokenizer.swift in Sources */,
+				E3811F2C1B5F204B00248BA0 /* Parser.swift in Sources */,
 				E38AC5FD1B60438C0079A22F /* Functions.swift in Sources */,
 				E38AC5F51B6042C50079A22F /* List.swift in Sources */,
 				E38AC6001B6043A50079A22F /* Monad.swift in Sources */,
@@ -464,7 +464,7 @@
 				E38AC6221B605E150079A22F /* Expression.swift in Sources */,
 				E38AC5F31B6042AD0079A22F /* NumericExpression.swift in Sources */,
 				E38AC6251B605F1E0079A22F /* Statements.swift in Sources */,
-				E3811F2D1B5F204B00248BA0 /* Tokenizer.swift in Sources */,
+				E3811F2D1B5F204B00248BA0 /* Parser.swift in Sources */,
 				E38AC61B1B605D040079A22F /* StringExpression.swift in Sources */,
 				E38AC5FE1B60438C0079A22F /* Functions.swift in Sources */,
 				E38AC6011B6043A50079A22F /* Monad.swift in Sources */,

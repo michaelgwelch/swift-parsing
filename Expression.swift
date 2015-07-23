@@ -8,12 +8,12 @@
 
 import Foundation
 
-enum Expression {
+public enum Expression {
     case Numeric(NumericExpression)
     case String(StringExpression)
     case Relational(RelationalExpression)
 }
 
-let expression = Expression.Numeric <§> numeric_expression
+public let expression = Expression.Numeric <§> numeric_expression
     <|> Expression.Relational <§> relational_expression
     <|> Expression.String <§> string_expression
