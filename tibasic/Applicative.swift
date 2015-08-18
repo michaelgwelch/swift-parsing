@@ -40,6 +40,10 @@ public func *><A,B>(lhs:Parser<A>, rhs:Parser<B>) -> Parser<B> {
     return liftA2(const(id))(lhs)(rhs)
 }
 
+//public func lazySeq<A,B>(@autoclosure lhs:() -> Parser<A>, @autoclosure rhs:() -> Parser<B>) -> Parser<B> {
+//    return failure()
+//}
+
 public func liftA2<A,B,C>(f:A -> B -> C)(_ a:Parser<A>)(_ b:Parser<B>) -> Parser<C> {
     return f <§> a <*> b
 }

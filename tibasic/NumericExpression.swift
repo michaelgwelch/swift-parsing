@@ -38,7 +38,7 @@ public let mult_op = char("*")
 public let divide_op = char("/")
 public let plus_op = char("+")
 public let subtract_op = char("-")
-public let number = nat
+
 
 // TODO: This algorithm requires a bit of backtracking -- can rewrite to avoid that.
 // Example: 3 + 5, the number 3 is parsed several times before we back track up to the add_expression

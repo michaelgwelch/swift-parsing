@@ -4,24 +4,34 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
-		<key>TIBasic.xcscheme</key>
-		<dict>
-			<key>orderHint</key>
-			<integer>2</integer>
-		</dict>
-		<key>tibasic-unit-test.xcscheme</key>
+		<key>All in Failure.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>1</integer>
 		</dict>
-		<key>tibasic.xcscheme</key>
+		<key>Parsing.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>0</integer>
 		</dict>
+		<key>tibasic.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>2</integer>
+		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
+		<key>E36792E11B7D7794000879BC</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>E36792EA1B7D7794000879BC</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>E38AC6691B608BE90079A22F</key>
 		<dict>
 			<key>primary</key>

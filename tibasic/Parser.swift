@@ -27,6 +27,9 @@ public struct Parser<T> {
     }
 }
 
+
+
+
 ///////////////////////////////
 
 
@@ -56,7 +59,6 @@ public let item:Parser<Character> = Parser<Character> { input in
     guard (input.characters.count > 0) else {
         return nil
     }
-
     let index0 = input.startIndex
     return (input[index0], input.substringFromIndex(index0.successor()))
 }
@@ -72,7 +74,6 @@ let digit:Parser<Character> = sat(isDigit)
 let upper:Parser<Character> = sat(isUpper)
 let lower:Parser<Character> = sat(isLower)
 let alphanum:Parser<Character> = sat(isAlphanum)
-
 
 
 public func string(s:String) -> Parser<String> {
@@ -92,7 +93,17 @@ public func many<T>(t:Parser<T>) -> Parser<List<T>> {
 }
 
 public func many1<T>(t:Parser<T>) -> Parser<List<T>> {
-    return cons <§> t <*> many(t)
+    // using monad style here because else infinite loop
+
+    // Won't work:
+    //return cons <§> t <*> many(t) // results in an infinite loop,
+
+    return t.bind { token in
+        many(t).bind { tokens in
+            return pure(cons(token)(tokens))
+        }
+    }
+
 }
 
 public let isSpace:Character -> Bool = { (c:Character) -> Bool in

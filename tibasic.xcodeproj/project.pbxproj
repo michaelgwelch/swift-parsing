@@ -7,29 +7,22 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		E3811F2C1B5F204B00248BA0 /* Parser.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3811F2B1B5F204B00248BA0 /* Parser.swift */; };
-		E3811F2D1B5F204B00248BA0 /* Parser.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3811F2B1B5F204B00248BA0 /* Parser.swift */; };
+		E313AD0B1B82E27E00FD03F6 /* NumberExpression.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3A3907F1B7AD116004E7454 /* NumberExpression.swift */; };
+		E36792DC1B7D7608000879BC /* Parser.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3811F2B1B5F204B00248BA0 /* Parser.swift */; };
+		E36792E51B7D7794000879BC /* Parsing.h in Headers */ = {isa = PBXBuildFile; fileRef = E36792E41B7D7794000879BC /* Parsing.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E36792EC1B7D7794000879BC /* Parsing.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E36792E21B7D7794000879BC /* Parsing.framework */; };
+		E36792F11B7D7794000879BC /* ParsingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E36792F01B7D7794000879BC /* ParsingTests.swift */; };
+		E36792F91B7D77AF000879BC /* Parser.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3811F2B1B5F204B00248BA0 /* Parser.swift */; };
+		E36792FA1B7D77C6000879BC /* Functor.swift in Sources */ = {isa = PBXBuildFile; fileRef = E38AC6A31B611EAE0079A22F /* Functor.swift */; };
+		E36792FB1B7D77C6000879BC /* Monad.swift in Sources */ = {isa = PBXBuildFile; fileRef = E38AC6A41B611EAE0079A22F /* Monad.swift */; };
+		E36792FC1B7D77C6000879BC /* Applicative.swift in Sources */ = {isa = PBXBuildFile; fileRef = E38AC5F71B6042ED0079A22F /* Applicative.swift */; };
+		E36792FD1B7D77C6000879BC /* Operators.swift in Sources */ = {isa = PBXBuildFile; fileRef = E38AC5EE1B603F9C0079A22F /* Operators.swift */; };
+		E36792FE1B7D77EC000879BC /* Functions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E38AC6A11B611E9C0079A22F /* Functions.swift */; };
+		E36792FF1B7D77FE000879BC /* List.swift in Sources */ = {isa = PBXBuildFile; fileRef = E38AC5F41B6042C50079A22F /* List.swift */; };
 		E38AC5EF1B603F9C0079A22F /* Operators.swift in Sources */ = {isa = PBXBuildFile; fileRef = E38AC5EE1B603F9C0079A22F /* Operators.swift */; };
-		E38AC5F01B603F9C0079A22F /* Operators.swift in Sources */ = {isa = PBXBuildFile; fileRef = E38AC5EE1B603F9C0079A22F /* Operators.swift */; };
 		E38AC5F21B6042AD0079A22F /* NumericExpression.swift in Sources */ = {isa = PBXBuildFile; fileRef = E38AC5F11B6042AD0079A22F /* NumericExpression.swift */; };
-		E38AC5F31B6042AD0079A22F /* NumericExpression.swift in Sources */ = {isa = PBXBuildFile; fileRef = E38AC5F11B6042AD0079A22F /* NumericExpression.swift */; };
 		E38AC5F51B6042C50079A22F /* List.swift in Sources */ = {isa = PBXBuildFile; fileRef = E38AC5F41B6042C50079A22F /* List.swift */; };
-		E38AC5F61B6042C50079A22F /* List.swift in Sources */ = {isa = PBXBuildFile; fileRef = E38AC5F41B6042C50079A22F /* List.swift */; };
 		E38AC5F81B6042ED0079A22F /* Applicative.swift in Sources */ = {isa = PBXBuildFile; fileRef = E38AC5F71B6042ED0079A22F /* Applicative.swift */; };
-		E38AC5F91B6042ED0079A22F /* Applicative.swift in Sources */ = {isa = PBXBuildFile; fileRef = E38AC5F71B6042ED0079A22F /* Applicative.swift */; };
-		E38AC66D1B608BE90079A22F /* TIBasic.h in Headers */ = {isa = PBXBuildFile; fileRef = E38AC66C1B608BE90079A22F /* TIBasic.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		E38AC6741B608BE90079A22F /* TIBasic.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E38AC66A1B608BE90079A22F /* TIBasic.framework */; };
-		E38AC6791B608BE90079A22F /* TIBasicTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E38AC6781B608BE90079A22F /* TIBasicTests.swift */; };
-		E38AC6831B608C1B0079A22F /* NumericExpression.swift in Sources */ = {isa = PBXBuildFile; fileRef = E38AC5F11B6042AD0079A22F /* NumericExpression.swift */; };
-		E38AC6881B608C1C0079A22F /* NumericExpression.swift in Sources */ = {isa = PBXBuildFile; fileRef = E38AC5F11B6042AD0079A22F /* NumericExpression.swift */; };
-		E38AC68C1B608C2F0079A22F /* Applicative.swift in Sources */ = {isa = PBXBuildFile; fileRef = E38AC5F71B6042ED0079A22F /* Applicative.swift */; };
-		E38AC68D1B608C2F0079A22F /* Operators.swift in Sources */ = {isa = PBXBuildFile; fileRef = E38AC5EE1B603F9C0079A22F /* Operators.swift */; };
-		E38AC68E1B608C2F0079A22F /* Parser.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3811F2B1B5F204B00248BA0 /* Parser.swift */; };
-		E38AC6911B608C2F0079A22F /* List.swift in Sources */ = {isa = PBXBuildFile; fileRef = E38AC5F41B6042C50079A22F /* List.swift */; };
-		E38AC6931B608C300079A22F /* Applicative.swift in Sources */ = {isa = PBXBuildFile; fileRef = E38AC5F71B6042ED0079A22F /* Applicative.swift */; };
-		E38AC6941B608C300079A22F /* Operators.swift in Sources */ = {isa = PBXBuildFile; fileRef = E38AC5EE1B603F9C0079A22F /* Operators.swift */; };
-		E38AC6951B608C300079A22F /* Parser.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3811F2B1B5F204B00248BA0 /* Parser.swift */; };
-		E38AC6981B608C300079A22F /* List.swift in Sources */ = {isa = PBXBuildFile; fileRef = E38AC5F41B6042C50079A22F /* List.swift */; };
 		E38AC69D1B611E5F0079A22F /* Expression.swift in Sources */ = {isa = PBXBuildFile; fileRef = E38AC6991B611E5F0079A22F /* Expression.swift */; };
 		E38AC69E1B611E5F0079A22F /* RelationalExpression.swift in Sources */ = {isa = PBXBuildFile; fileRef = E38AC69A1B611E5F0079A22F /* RelationalExpression.swift */; };
 		E38AC69F1B611E5F0079A22F /* Statements.swift in Sources */ = {isa = PBXBuildFile; fileRef = E38AC69B1B611E5F0079A22F /* Statements.swift */; };
@@ -37,16 +30,17 @@
 		E38AC6A21B611E9C0079A22F /* Functions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E38AC6A11B611E9C0079A22F /* Functions.swift */; };
 		E38AC6A51B611EAE0079A22F /* Functor.swift in Sources */ = {isa = PBXBuildFile; fileRef = E38AC6A31B611EAE0079A22F /* Functor.swift */; };
 		E38AC6A61B611EAE0079A22F /* Monad.swift in Sources */ = {isa = PBXBuildFile; fileRef = E38AC6A41B611EAE0079A22F /* Monad.swift */; };
+		E3A390801B7AD116004E7454 /* NumberExpression.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3A3907F1B7AD116004E7454 /* NumberExpression.swift */; };
 		E3C5EF8F1B5B091200AF07B9 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3C5EF8E1B5B091200AF07B9 /* main.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		E38AC6751B608BE90079A22F /* PBXContainerItemProxy */ = {
+		E36792ED1B7D7794000879BC /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = E3C5EF831B5B091200AF07B9 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = E38AC6691B608BE90079A22F;
-			remoteInfo = TIBasic;
+			remoteGlobalIDString = E36792E11B7D7794000879BC;
+			remoteInfo = Parsing;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -63,17 +57,18 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		E36792D91B7D653C000879BC /* grammar.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = grammar.md; sourceTree = "<group>"; };
+		E36792E21B7D7794000879BC /* Parsing.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Parsing.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		E36792E41B7D7794000879BC /* Parsing.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Parsing.h; sourceTree = "<group>"; };
+		E36792E61B7D7794000879BC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E36792EB1B7D7794000879BC /* ParsingTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ParsingTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		E36792F01B7D7794000879BC /* ParsingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParsingTests.swift; sourceTree = "<group>"; };
+		E36792F21B7D7794000879BC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E3811F2B1B5F204B00248BA0 /* Parser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Parser.swift; path = tibasic/Parser.swift; sourceTree = "<group>"; };
 		E38AC5EE1B603F9C0079A22F /* Operators.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Operators.swift; path = tibasic/Operators.swift; sourceTree = "<group>"; };
 		E38AC5F11B6042AD0079A22F /* NumericExpression.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NumericExpression.swift; path = tibasic/NumericExpression.swift; sourceTree = "<group>"; };
 		E38AC5F41B6042C50079A22F /* List.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = List.swift; sourceTree = "<group>"; };
 		E38AC5F71B6042ED0079A22F /* Applicative.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Applicative.swift; path = tibasic/Applicative.swift; sourceTree = "<group>"; };
-		E38AC66A1B608BE90079A22F /* TIBasic.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = TIBasic.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		E38AC66C1B608BE90079A22F /* TIBasic.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TIBasic.h; sourceTree = "<group>"; };
-		E38AC66E1B608BE90079A22F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		E38AC6731B608BE90079A22F /* TIBasicTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TIBasicTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		E38AC6781B608BE90079A22F /* TIBasicTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TIBasicTests.swift; sourceTree = "<group>"; };
-		E38AC67A1B608BE90079A22F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E38AC6991B611E5F0079A22F /* Expression.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Expression.swift; path = tibasic/Expression.swift; sourceTree = "<group>"; };
 		E38AC69A1B611E5F0079A22F /* RelationalExpression.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RelationalExpression.swift; path = tibasic/RelationalExpression.swift; sourceTree = "<group>"; };
 		E38AC69B1B611E5F0079A22F /* Statements.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Statements.swift; path = tibasic/Statements.swift; sourceTree = "<group>"; };
@@ -81,25 +76,24 @@
 		E38AC6A11B611E9C0079A22F /* Functions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Functions.swift; path = tibasic/Functions.swift; sourceTree = "<group>"; };
 		E38AC6A31B611EAE0079A22F /* Functor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Functor.swift; path = tibasic/Functor.swift; sourceTree = "<group>"; };
 		E38AC6A41B611EAE0079A22F /* Monad.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Monad.swift; path = tibasic/Monad.swift; sourceTree = "<group>"; };
+		E3A3907F1B7AD116004E7454 /* NumberExpression.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NumberExpression.swift; sourceTree = "<group>"; };
 		E3C5EF8B1B5B091200AF07B9 /* tibasic */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = tibasic; sourceTree = BUILT_PRODUCTS_DIR; };
 		E3C5EF8E1B5B091200AF07B9 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
-		E3C5EF9D1B5BDB6E00AF07B9 /* tibasic-unit-test.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "tibasic-unit-test.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		E3C5EFA11B5BDB6E00AF07B9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		E38AC6661B608BE90079A22F /* Frameworks */ = {
+		E36792DE1B7D7794000879BC /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		E38AC6701B608BE90079A22F /* Frameworks */ = {
+		E36792E81B7D7794000879BC /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E38AC6741B608BE90079A22F /* TIBasic.framework in Frameworks */,
+				E36792EC1B7D7794000879BC /* Parsing.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -110,16 +104,27 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		E3C5EF9A1B5BDB6E00AF07B9 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		E36792E31B7D7794000879BC /* Parsing */ = {
+			isa = PBXGroup;
+			children = (
+				E36792E41B7D7794000879BC /* Parsing.h */,
+				E36792E61B7D7794000879BC /* Info.plist */,
+			);
+			path = Parsing;
+			sourceTree = "<group>";
+		};
+		E36792EF1B7D7794000879BC /* ParsingTests */ = {
+			isa = PBXGroup;
+			children = (
+				E36792F01B7D7794000879BC /* ParsingTests.swift */,
+				E36792F21B7D7794000879BC /* Info.plist */,
+			);
+			path = ParsingTests;
+			sourceTree = "<group>";
+		};
 		E38AC5FA1B6043380079A22F /* Parser Primitives */ = {
 			isa = PBXGroup;
 			children = (
@@ -156,26 +161,10 @@
 				E38AC69A1B611E5F0079A22F /* RelationalExpression.swift */,
 				E38AC69C1B611E5F0079A22F /* StringExpression.swift */,
 				E38AC5F11B6042AD0079A22F /* NumericExpression.swift */,
+				E3A3907F1B7AD116004E7454 /* NumberExpression.swift */,
+				E36792D91B7D653C000879BC /* grammar.md */,
 			);
 			name = Expression;
-			sourceTree = "<group>";
-		};
-		E38AC66B1B608BE90079A22F /* TIBasic */ = {
-			isa = PBXGroup;
-			children = (
-				E38AC66C1B608BE90079A22F /* TIBasic.h */,
-				E38AC66E1B608BE90079A22F /* Info.plist */,
-			);
-			path = TIBasic;
-			sourceTree = "<group>";
-		};
-		E38AC6771B608BE90079A22F /* TIBasicTests */ = {
-			isa = PBXGroup;
-			children = (
-				E38AC6781B608BE90079A22F /* TIBasicTests.swift */,
-				E38AC67A1B608BE90079A22F /* Info.plist */,
-			);
-			path = TIBasicTests;
 			sourceTree = "<group>";
 		};
 		E3C5EF821B5B091200AF07B9 = {
@@ -185,9 +174,8 @@
 				E38AC5FB1B6043710079A22F /* FunctionalCore */,
 				E38AC5FA1B6043380079A22F /* Parser Primitives */,
 				E3C5EF8D1B5B091200AF07B9 /* tibasic */,
-				E3C5EF9E1B5BDB6E00AF07B9 /* tibasic-unit-test */,
-				E38AC66B1B608BE90079A22F /* TIBasic */,
-				E38AC6771B608BE90079A22F /* TIBasicTests */,
+				E36792E31B7D7794000879BC /* Parsing */,
+				E36792EF1B7D7794000879BC /* ParsingTests */,
 				E3C5EF8C1B5B091200AF07B9 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -196,9 +184,8 @@
 			isa = PBXGroup;
 			children = (
 				E3C5EF8B1B5B091200AF07B9 /* tibasic */,
-				E3C5EF9D1B5BDB6E00AF07B9 /* tibasic-unit-test.xctest */,
-				E38AC66A1B608BE90079A22F /* TIBasic.framework */,
-				E38AC6731B608BE90079A22F /* TIBasicTests.xctest */,
+				E36792E21B7D7794000879BC /* Parsing.framework */,
+				E36792EB1B7D7794000879BC /* ParsingTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -212,62 +199,54 @@
 			path = tibasic;
 			sourceTree = "<group>";
 		};
-		E3C5EF9E1B5BDB6E00AF07B9 /* tibasic-unit-test */ = {
-			isa = PBXGroup;
-			children = (
-				E3C5EFA11B5BDB6E00AF07B9 /* Info.plist */,
-			);
-			path = "tibasic-unit-test";
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
-		E38AC6671B608BE90079A22F /* Headers */ = {
+		E36792DF1B7D7794000879BC /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E38AC66D1B608BE90079A22F /* TIBasic.h in Headers */,
+				E36792E51B7D7794000879BC /* Parsing.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		E38AC6691B608BE90079A22F /* TIBasic */ = {
+		E36792E11B7D7794000879BC /* Parsing */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = E38AC67F1B608BE90079A22F /* Build configuration list for PBXNativeTarget "TIBasic" */;
+			buildConfigurationList = E36792F31B7D7794000879BC /* Build configuration list for PBXNativeTarget "Parsing" */;
 			buildPhases = (
-				E38AC6651B608BE90079A22F /* Sources */,
-				E38AC6661B608BE90079A22F /* Frameworks */,
-				E38AC6671B608BE90079A22F /* Headers */,
-				E38AC6681B608BE90079A22F /* Resources */,
+				E36792DD1B7D7794000879BC /* Sources */,
+				E36792DE1B7D7794000879BC /* Frameworks */,
+				E36792DF1B7D7794000879BC /* Headers */,
+				E36792E01B7D7794000879BC /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
-			name = TIBasic;
-			productName = TIBasic;
-			productReference = E38AC66A1B608BE90079A22F /* TIBasic.framework */;
+			name = Parsing;
+			productName = Parsing;
+			productReference = E36792E21B7D7794000879BC /* Parsing.framework */;
 			productType = "com.apple.product-type.framework";
 		};
-		E38AC6721B608BE90079A22F /* TIBasicTests */ = {
+		E36792EA1B7D7794000879BC /* ParsingTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = E38AC6801B608BE90079A22F /* Build configuration list for PBXNativeTarget "TIBasicTests" */;
+			buildConfigurationList = E36792F61B7D7794000879BC /* Build configuration list for PBXNativeTarget "ParsingTests" */;
 			buildPhases = (
-				E38AC66F1B608BE90079A22F /* Sources */,
-				E38AC6701B608BE90079A22F /* Frameworks */,
-				E38AC6711B608BE90079A22F /* Resources */,
+				E36792E71B7D7794000879BC /* Sources */,
+				E36792E81B7D7794000879BC /* Frameworks */,
+				E36792E91B7D7794000879BC /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				E38AC6761B608BE90079A22F /* PBXTargetDependency */,
+				E36792EE1B7D7794000879BC /* PBXTargetDependency */,
 			);
-			name = TIBasicTests;
-			productName = TIBasicTests;
-			productReference = E38AC6731B608BE90079A22F /* TIBasicTests.xctest */;
+			name = ParsingTests;
+			productName = ParsingTests;
+			productReference = E36792EB1B7D7794000879BC /* ParsingTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 		E3C5EF8A1B5B091200AF07B9 /* tibasic */ = {
@@ -287,42 +266,24 @@
 			productReference = E3C5EF8B1B5B091200AF07B9 /* tibasic */;
 			productType = "com.apple.product-type.tool";
 		};
-		E3C5EF9C1B5BDB6E00AF07B9 /* tibasic-unit-test */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = E3C5EFA21B5BDB6E00AF07B9 /* Build configuration list for PBXNativeTarget "tibasic-unit-test" */;
-			buildPhases = (
-				E3C5EF991B5BDB6E00AF07B9 /* Sources */,
-				E3C5EF9A1B5BDB6E00AF07B9 /* Frameworks */,
-				E3C5EF9B1B5BDB6E00AF07B9 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = "tibasic-unit-test";
-			productName = "tibasic-unit-test";
-			productReference = E3C5EF9D1B5BDB6E00AF07B9 /* tibasic-unit-test.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
 		E3C5EF831B5B091200AF07B9 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftMigration = 0700;
+				LastSwiftUpdateCheck = 0700;
 				LastUpgradeCheck = 0700;
 				ORGANIZATIONNAME = "Michael Welch";
 				TargetAttributes = {
-					E38AC6691B608BE90079A22F = {
+					E36792E11B7D7794000879BC = {
 						CreatedOnToolsVersion = 7.0;
 					};
-					E38AC6721B608BE90079A22F = {
+					E36792EA1B7D7794000879BC = {
 						CreatedOnToolsVersion = 7.0;
 					};
 					E3C5EF8A1B5B091200AF07B9 = {
-						CreatedOnToolsVersion = 7.0;
-					};
-					E3C5EF9C1B5BDB6E00AF07B9 = {
 						CreatedOnToolsVersion = 7.0;
 					};
 				};
@@ -340,29 +301,21 @@
 			projectRoot = "";
 			targets = (
 				E3C5EF8A1B5B091200AF07B9 /* tibasic */,
-				E3C5EF9C1B5BDB6E00AF07B9 /* tibasic-unit-test */,
-				E38AC6691B608BE90079A22F /* TIBasic */,
-				E38AC6721B608BE90079A22F /* TIBasicTests */,
+				E36792E11B7D7794000879BC /* Parsing */,
+				E36792EA1B7D7794000879BC /* ParsingTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		E38AC6681B608BE90079A22F /* Resources */ = {
+		E36792E01B7D7794000879BC /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		E38AC6711B608BE90079A22F /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		E3C5EF9B1B5BDB6E00AF07B9 /* Resources */ = {
+		E36792E91B7D7794000879BC /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -372,28 +325,26 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		E38AC6651B608BE90079A22F /* Sources */ = {
+		E36792DD1B7D7794000879BC /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E38AC68D1B608C2F0079A22F /* Operators.swift in Sources */,
-				E38AC6831B608C1B0079A22F /* NumericExpression.swift in Sources */,
-				E38AC6911B608C2F0079A22F /* List.swift in Sources */,
-				E38AC68C1B608C2F0079A22F /* Applicative.swift in Sources */,
-				E38AC68E1B608C2F0079A22F /* Parser.swift in Sources */,
+				E36792F91B7D77AF000879BC /* Parser.swift in Sources */,
+				E36792FD1B7D77C6000879BC /* Operators.swift in Sources */,
+				E313AD0B1B82E27E00FD03F6 /* NumberExpression.swift in Sources */,
+				E36792FF1B7D77FE000879BC /* List.swift in Sources */,
+				E36792FB1B7D77C6000879BC /* Monad.swift in Sources */,
+				E36792FC1B7D77C6000879BC /* Applicative.swift in Sources */,
+				E36792FA1B7D77C6000879BC /* Functor.swift in Sources */,
+				E36792FE1B7D77EC000879BC /* Functions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		E38AC66F1B608BE90079A22F /* Sources */ = {
+		E36792E71B7D7794000879BC /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E38AC6951B608C300079A22F /* Parser.swift in Sources */,
-				E38AC6881B608C1C0079A22F /* NumericExpression.swift in Sources */,
-				E38AC6981B608C300079A22F /* List.swift in Sources */,
-				E38AC6791B608BE90079A22F /* TIBasicTests.swift in Sources */,
-				E38AC6931B608C300079A22F /* Applicative.swift in Sources */,
-				E38AC6941B608C300079A22F /* Operators.swift in Sources */,
+				E36792F11B7D7794000879BC /* ParsingTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -404,43 +355,32 @@
 				E3C5EF8F1B5B091200AF07B9 /* main.swift in Sources */,
 				E38AC6A61B611EAE0079A22F /* Monad.swift in Sources */,
 				E38AC5EF1B603F9C0079A22F /* Operators.swift in Sources */,
-				E3811F2C1B5F204B00248BA0 /* Parser.swift in Sources */,
 				E38AC6A21B611E9C0079A22F /* Functions.swift in Sources */,
 				E38AC69F1B611E5F0079A22F /* Statements.swift in Sources */,
 				E38AC6A51B611EAE0079A22F /* Functor.swift in Sources */,
+				E36792DC1B7D7608000879BC /* Parser.swift in Sources */,
 				E38AC5F51B6042C50079A22F /* List.swift in Sources */,
 				E38AC69E1B611E5F0079A22F /* RelationalExpression.swift in Sources */,
 				E38AC69D1B611E5F0079A22F /* Expression.swift in Sources */,
 				E38AC5F21B6042AD0079A22F /* NumericExpression.swift in Sources */,
+				E3A390801B7AD116004E7454 /* NumberExpression.swift in Sources */,
 				E38AC5F81B6042ED0079A22F /* Applicative.swift in Sources */,
 				E38AC6A01B611E5F0079A22F /* StringExpression.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		E3C5EF991B5BDB6E00AF07B9 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				E38AC5F01B603F9C0079A22F /* Operators.swift in Sources */,
-				E38AC5F91B6042ED0079A22F /* Applicative.swift in Sources */,
-				E38AC5F61B6042C50079A22F /* List.swift in Sources */,
-				E38AC5F31B6042AD0079A22F /* NumericExpression.swift in Sources */,
-				E3811F2D1B5F204B00248BA0 /* Parser.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		E38AC6761B608BE90079A22F /* PBXTargetDependency */ = {
+		E36792EE1B7D7794000879BC /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = E38AC6691B608BE90079A22F /* TIBasic */;
-			targetProxy = E38AC6751B608BE90079A22F /* PBXContainerItemProxy */;
+			target = E36792E11B7D7794000879BC /* Parsing */;
+			targetProxy = E36792ED1B7D7794000879BC /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
-		E38AC67B1B608BE90079A22F /* Debug */ = {
+		E36792F41B7D7794000879BC /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
@@ -450,10 +390,10 @@
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_VERSION = A;
-				INFOPLIST_FILE = TIBasic/Info.plist;
+				INFOPLIST_FILE = Parsing/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.welch.TIBasic;
+				PRODUCT_BUNDLE_IDENTIFIER = com.welch.Parsing;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -461,7 +401,7 @@
 			};
 			name = Debug;
 		};
-		E38AC67C1B608BE90079A22F /* Release */ = {
+		E36792F51B7D7794000879BC /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
@@ -471,10 +411,10 @@
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_VERSION = A;
-				INFOPLIST_FILE = TIBasic/Info.plist;
+				INFOPLIST_FILE = Parsing/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.welch.TIBasic;
+				PRODUCT_BUNDLE_IDENTIFIER = com.welch.Parsing;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -482,24 +422,24 @@
 			};
 			name = Release;
 		};
-		E38AC67D1B608BE90079A22F /* Debug */ = {
+		E36792F71B7D7794000879BC /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
-				INFOPLIST_FILE = TIBasicTests/Info.plist;
+				INFOPLIST_FILE = ParsingTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.welch.TIBasicTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.welch.ParsingTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
 		};
-		E38AC67E1B608BE90079A22F /* Release */ = {
+		E36792F81B7D7794000879BC /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
-				INFOPLIST_FILE = TIBasicTests/Info.plist;
+				INFOPLIST_FILE = ParsingTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.welch.TIBasicTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.welch.ParsingTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -596,45 +536,23 @@
 			};
 			name = Release;
 		};
-		E3C5EFA31B5BDB6E00AF07B9 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COMBINE_HIDPI_IMAGES = YES;
-				INFOPLIST_FILE = "tibasic-unit-test/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.welch.tibasic-unit-test";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Debug;
-		};
-		E3C5EFA41B5BDB6E00AF07B9 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COMBINE_HIDPI_IMAGES = YES;
-				INFOPLIST_FILE = "tibasic-unit-test/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.welch.tibasic-unit-test";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		E38AC67F1B608BE90079A22F /* Build configuration list for PBXNativeTarget "TIBasic" */ = {
+		E36792F31B7D7794000879BC /* Build configuration list for PBXNativeTarget "Parsing" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				E38AC67B1B608BE90079A22F /* Debug */,
-				E38AC67C1B608BE90079A22F /* Release */,
+				E36792F41B7D7794000879BC /* Debug */,
+				E36792F51B7D7794000879BC /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		E38AC6801B608BE90079A22F /* Build configuration list for PBXNativeTarget "TIBasicTests" */ = {
+		E36792F61B7D7794000879BC /* Build configuration list for PBXNativeTarget "ParsingTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				E38AC67D1B608BE90079A22F /* Debug */,
-				E38AC67E1B608BE90079A22F /* Release */,
+				E36792F71B7D7794000879BC /* Debug */,
+				E36792F81B7D7794000879BC /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -653,15 +571,6 @@
 			buildConfigurations = (
 				E3C5EF931B5B091200AF07B9 /* Debug */,
 				E3C5EF941B5B091200AF07B9 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		E3C5EFA21B5BDB6E00AF07B9 /* Build configuration list for PBXNativeTarget "tibasic-unit-test" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				E3C5EFA31B5BDB6E00AF07B9 /* Debug */,
-				E3C5EFA41B5BDB6E00AF07B9 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

@@ -18,3 +18,9 @@ public func fmap<A,B>(f:A->B, _ t:Parser<A>) -> Parser<B> {
 public func <§><A,B>(lhs:A->B, rhs:Parser<A>) -> Parser<B> {
     return fmap(lhs, rhs)
 }
+
+
+// Tuple Functor on rhs
+public func <§><A,B,C>(lhs:A->B, rhs:(A,C)) -> (B,C) {
+    return (lhs(rhs.0), rhs.1)
+}

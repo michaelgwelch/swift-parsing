@@ -28,3 +28,9 @@ public func •<A,B,C>(f:B->C, g:A->B)(_ a:A) -> C {
 public func curry<A,B,C>(f:(A,B)->C)(_ a:A)(_ b:B) -> C {
     return f(a,b)
 }
+
+public func uncurry<A,B,C>(f:A->B->C)(_ a:A,_ b:B) -> C {
+    return f(a)(b)
+}
+
+

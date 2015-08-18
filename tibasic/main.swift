@@ -10,3 +10,4 @@ import Foundation
 
 print("Hello, World!")
 
+var result = exp_operand.tokenize("1")
