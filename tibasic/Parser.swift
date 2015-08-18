@@ -30,64 +30,34 @@ public struct Parser<T> {
     public func tokenize(input: String) -> (token: T, output: String)? {
         return parse(input)
     }
-
-    public var lazy:LazyParser<T> {
-        get {
-            return LazyParser(parser: self)
-        }
-    }
 }
 
 extension Parser : ParserType {
 
 }
 
-public struct LazyParser<T> {
-    private let getParser:() -> Parser<T>
+public struct LazyParser<ParserT:ParserType, T where ParserT.ParsedType==T> {
+    private let getParser:() -> ParserT
     // Hunch: Source of memory leaks when we get into recursive parsers later.
-    public init(@autoclosure(escaping) parser:() -> Parser<T>) {
+    public init(@autoclosure(escaping) parser:() -> ParserT) {
         self.getParser = parser
+    }
+    public init(getParser:() -> ParserT) {
+        self.getParser = getParser
     }
     public func tokenize(input: String) -> (token: T, output: String)? {
         return getParser().tokenize(input)
     }
 }
 
+//* Wrap a parser so that it is evaluated lazily
+public func lazy<ParserT:ParserType, T where ParserT.ParsedType==T>(@autoclosure(escaping) getParser:() -> ParserT) -> LazyParser<ParserT, ParserT.ParsedType> {
+    return LazyParser { getParser() }
+}
+
 extension LazyParser : ParserType {
 
 }
-
-public struct ManyParser<ParserT:ParserType, T where ParserT.ParsedType==T> {
-
-    private let t:ParserT
-    public init(t:ParserT) {
-        self.t = t
-    }
-
-}
-
-extension ManyParser : ParserType {
-    public typealias ParsedType=List<T>
-    public func tokenize(input: String) -> (token: List<T>, output: String)? {
-        return (Many1Parser(t: t) <|> success(List<T>.Nil)).tokenize(input)
-    }
-}
-
-public struct Many1Parser<ParserT:ParserType, T where ParserT.ParsedType==T> {
-    private let t:ParserT
-    public init(t:ParserT) {
-        self.t = t
-    }
-
-}
-
-extension Many1Parser : ParserType {
-    public typealias ParsedType=List<T>
-    public func tokenize(input: String) -> (token: List<T>, output: String)? {
-        return (cons <§> t <*> ManyParser(t: t)).tokenize(input)
-    }
-}
-
 
 public struct AnyParser<T> : ParserType {
     private let _tokenize:(String) -> (token: T, output: String)?
@@ -98,9 +68,6 @@ public struct AnyParser<T> : ParserType {
         return _tokenize(input)
     }
 }
-
-
-
 
 
 ///////////////////////////////
@@ -159,12 +126,12 @@ public func string(s:String) -> Parser<String> {
     return char(c) *> string(cs) *> success(s)
 }
 
-public func many<ParserT:ParserType, T where ParserT.ParsedType==T>(t:ParserT) -> ManyParser<ParserT, ParserT.ParsedType> {
-    return ManyParser(t: t)
+public func many<ParserT:ParserType, T where ParserT.ParsedType==T>(t:ParserT) -> Parser<List<T>> {
+    return lazy(many1(t)) <|> success(List<T>.Nil)
 }
 
-public func many1<ParserT:ParserType, T where ParserT.ParsedType==T>(t:ParserT) -> Many1Parser<ParserT, ParserT.ParsedType> {
-    return Many1Parser(t: t)
+public func many1<ParserT:ParserType, T where ParserT.ParsedType==T>(t:ParserT) -> Parser<List<T>> {
+    return cons <§> t <*> many(t)
 }
 
 
