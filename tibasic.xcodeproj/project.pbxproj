@@ -7,30 +7,23 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		E313AD0B1B82E27E00FD03F6 /* NumberExpression.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3A3907F1B7AD116004E7454 /* NumberExpression.swift */; };
+		E34C8B8E1B83BE0A000E644A /* Functions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E38AC6A11B611E9C0079A22F /* Functions.swift */; };
+		E34C8B8F1B83BE0B000E644A /* Functions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E38AC6A11B611E9C0079A22F /* Functions.swift */; };
+		E34C8B901B83BE14000E644A /* Operators.swift in Sources */ = {isa = PBXBuildFile; fileRef = E38AC5EE1B603F9C0079A22F /* Operators.swift */; };
+		E34C8B911B83BE15000E644A /* Operators.swift in Sources */ = {isa = PBXBuildFile; fileRef = E38AC5EE1B603F9C0079A22F /* Operators.swift */; };
+		E34C8B921B83BFD7000E644A /* Applicative.swift in Sources */ = {isa = PBXBuildFile; fileRef = E38AC5F71B6042ED0079A22F /* Applicative.swift */; };
+		E34C8B931B83BFD8000E644A /* Applicative.swift in Sources */ = {isa = PBXBuildFile; fileRef = E38AC5F71B6042ED0079A22F /* Applicative.swift */; };
+		E34C8B941B83C933000E644A /* Functor.swift in Sources */ = {isa = PBXBuildFile; fileRef = E38AC6A31B611EAE0079A22F /* Functor.swift */; };
+		E34C8B951B83C934000E644A /* Functor.swift in Sources */ = {isa = PBXBuildFile; fileRef = E38AC6A31B611EAE0079A22F /* Functor.swift */; };
 		E36792DC1B7D7608000879BC /* Parser.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3811F2B1B5F204B00248BA0 /* Parser.swift */; };
 		E36792E51B7D7794000879BC /* Parsing.h in Headers */ = {isa = PBXBuildFile; fileRef = E36792E41B7D7794000879BC /* Parsing.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E36792EC1B7D7794000879BC /* Parsing.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E36792E21B7D7794000879BC /* Parsing.framework */; };
 		E36792F11B7D7794000879BC /* ParsingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E36792F01B7D7794000879BC /* ParsingTests.swift */; };
 		E36792F91B7D77AF000879BC /* Parser.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3811F2B1B5F204B00248BA0 /* Parser.swift */; };
-		E36792FA1B7D77C6000879BC /* Functor.swift in Sources */ = {isa = PBXBuildFile; fileRef = E38AC6A31B611EAE0079A22F /* Functor.swift */; };
 		E36792FB1B7D77C6000879BC /* Monad.swift in Sources */ = {isa = PBXBuildFile; fileRef = E38AC6A41B611EAE0079A22F /* Monad.swift */; };
-		E36792FC1B7D77C6000879BC /* Applicative.swift in Sources */ = {isa = PBXBuildFile; fileRef = E38AC5F71B6042ED0079A22F /* Applicative.swift */; };
-		E36792FD1B7D77C6000879BC /* Operators.swift in Sources */ = {isa = PBXBuildFile; fileRef = E38AC5EE1B603F9C0079A22F /* Operators.swift */; };
-		E36792FE1B7D77EC000879BC /* Functions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E38AC6A11B611E9C0079A22F /* Functions.swift */; };
 		E36792FF1B7D77FE000879BC /* List.swift in Sources */ = {isa = PBXBuildFile; fileRef = E38AC5F41B6042C50079A22F /* List.swift */; };
-		E38AC5EF1B603F9C0079A22F /* Operators.swift in Sources */ = {isa = PBXBuildFile; fileRef = E38AC5EE1B603F9C0079A22F /* Operators.swift */; };
-		E38AC5F21B6042AD0079A22F /* NumericExpression.swift in Sources */ = {isa = PBXBuildFile; fileRef = E38AC5F11B6042AD0079A22F /* NumericExpression.swift */; };
 		E38AC5F51B6042C50079A22F /* List.swift in Sources */ = {isa = PBXBuildFile; fileRef = E38AC5F41B6042C50079A22F /* List.swift */; };
-		E38AC5F81B6042ED0079A22F /* Applicative.swift in Sources */ = {isa = PBXBuildFile; fileRef = E38AC5F71B6042ED0079A22F /* Applicative.swift */; };
-		E38AC69D1B611E5F0079A22F /* Expression.swift in Sources */ = {isa = PBXBuildFile; fileRef = E38AC6991B611E5F0079A22F /* Expression.swift */; };
-		E38AC69E1B611E5F0079A22F /* RelationalExpression.swift in Sources */ = {isa = PBXBuildFile; fileRef = E38AC69A1B611E5F0079A22F /* RelationalExpression.swift */; };
-		E38AC69F1B611E5F0079A22F /* Statements.swift in Sources */ = {isa = PBXBuildFile; fileRef = E38AC69B1B611E5F0079A22F /* Statements.swift */; };
-		E38AC6A01B611E5F0079A22F /* StringExpression.swift in Sources */ = {isa = PBXBuildFile; fileRef = E38AC69C1B611E5F0079A22F /* StringExpression.swift */; };
-		E38AC6A21B611E9C0079A22F /* Functions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E38AC6A11B611E9C0079A22F /* Functions.swift */; };
-		E38AC6A51B611EAE0079A22F /* Functor.swift in Sources */ = {isa = PBXBuildFile; fileRef = E38AC6A31B611EAE0079A22F /* Functor.swift */; };
 		E38AC6A61B611EAE0079A22F /* Monad.swift in Sources */ = {isa = PBXBuildFile; fileRef = E38AC6A41B611EAE0079A22F /* Monad.swift */; };
-		E3A390801B7AD116004E7454 /* NumberExpression.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3A3907F1B7AD116004E7454 /* NumberExpression.swift */; };
 		E3C5EF8F1B5B091200AF07B9 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3C5EF8E1B5B091200AF07B9 /* main.swift */; };
 /* End PBXBuildFile section */
 
@@ -330,13 +323,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				E36792F91B7D77AF000879BC /* Parser.swift in Sources */,
-				E36792FD1B7D77C6000879BC /* Operators.swift in Sources */,
-				E313AD0B1B82E27E00FD03F6 /* NumberExpression.swift in Sources */,
+				E34C8B911B83BE15000E644A /* Operators.swift in Sources */,
 				E36792FF1B7D77FE000879BC /* List.swift in Sources */,
 				E36792FB1B7D77C6000879BC /* Monad.swift in Sources */,
-				E36792FC1B7D77C6000879BC /* Applicative.swift in Sources */,
-				E36792FA1B7D77C6000879BC /* Functor.swift in Sources */,
-				E36792FE1B7D77EC000879BC /* Functions.swift in Sources */,
+				E34C8B931B83BFD8000E644A /* Applicative.swift in Sources */,
+				E34C8B951B83C934000E644A /* Functor.swift in Sources */,
+				E34C8B8F1B83BE0B000E644A /* Functions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -353,19 +345,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				E3C5EF8F1B5B091200AF07B9 /* main.swift in Sources */,
+				E34C8B941B83C933000E644A /* Functor.swift in Sources */,
 				E38AC6A61B611EAE0079A22F /* Monad.swift in Sources */,
-				E38AC5EF1B603F9C0079A22F /* Operators.swift in Sources */,
-				E38AC6A21B611E9C0079A22F /* Functions.swift in Sources */,
-				E38AC69F1B611E5F0079A22F /* Statements.swift in Sources */,
-				E38AC6A51B611EAE0079A22F /* Functor.swift in Sources */,
 				E36792DC1B7D7608000879BC /* Parser.swift in Sources */,
+				E34C8B8E1B83BE0A000E644A /* Functions.swift in Sources */,
+				E34C8B921B83BFD7000E644A /* Applicative.swift in Sources */,
 				E38AC5F51B6042C50079A22F /* List.swift in Sources */,
-				E38AC69E1B611E5F0079A22F /* RelationalExpression.swift in Sources */,
-				E38AC69D1B611E5F0079A22F /* Expression.swift in Sources */,
-				E38AC5F21B6042AD0079A22F /* NumericExpression.swift in Sources */,
-				E3A390801B7AD116004E7454 /* NumberExpression.swift in Sources */,
-				E38AC5F81B6042ED0079A22F /* Applicative.swift in Sources */,
-				E38AC6A01B611E5F0079A22F /* StringExpression.swift in Sources */,
+				E34C8B901B83BE14000E644A /* Operators.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

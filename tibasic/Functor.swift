@@ -8,14 +8,12 @@
 
 import Foundation
 
-public func fmap<A,B>(f:A->B, _ t:Parser<A>) -> Parser<B> {
-    return t.bind { v in
-        return success(f(v))
-    }
+public func fmap<ParserA:ParserType, A, B where ParserA.ParsedType==A>(f:A->B, _ t:ParserA) -> Parser<B> {
+    return t.bind { success(f($0)) }
 }
 
 // Like Haskell fmap, <$>
-public func <§><A,B>(lhs:A->B, rhs:Parser<A>) -> Parser<B> {
+public func <§><ParserA:ParserType, A, B where ParserA.ParsedType==A>(lhs:A->B, rhs:ParserA) -> Parser<B> {
     return fmap(lhs, rhs)
 }
 

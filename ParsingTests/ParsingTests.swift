@@ -118,7 +118,7 @@ class StringParser: XCTestCase {
         AssertEqual(expected, actual)
 
         actual = string("").tokenize("hello")!
-        AssertEqual(expected, ("","hello"))
+        AssertEqual(("","hello"), actual)
     }
     func testParsesSingleCharString() {
         let expected = ("l", "etter")
@@ -149,7 +149,7 @@ class Choice: XCTestCase {
         // If first choice fails, return results of second
         let wrappedValue = [UInt8]()
         let expected = (wrappedValue,"hello")
-        let actual = (failure() <|> pure(wrappedValue)).tokenize("hello")!
+        let actual = (failure() <|> success(wrappedValue)).tokenize("hello")!
         AssertEqual(expected, actual)
     }
 }

@@ -19,17 +19,16 @@ import Foundation
 //    return lhs.bind { _ in rhs }
 //}
 
-extension Parser {
-    func bind<TB>(f:T -> Parser<TB>) -> Parser<TB> {
-        return flatMap(self, f)
-    }
-}
 
-private func flatMap<TA, TB>(ma:Parser<TA>, _ f:TA -> Parser<TB>) -> Parser<TB> {
-    return Parser { input in
-        switch ma.tokenize(input) {
-        case .None: return nil
-        case .Some((let a, let output)): return f(a).tokenize(output)
+
+extension ParserType {
+    func bind<TB, PB:ParserType where PB.ParsedType == TB>(f:ParsedType -> PB) -> Parser<TB> {
+        return Parser { input in
+            switch self.tokenize(input) {
+            case .None: return nil
+            case .Some((let a, let output)): return f(a).tokenize(output)
+            }
         }
     }
 }
+

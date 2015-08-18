@@ -16,6 +16,11 @@ import Foundation
 // Parser struct and protocol
 //////////////////
 
+public protocol ParserType {
+    typealias ParsedType
+    func tokenize(input: String) -> (token: ParsedType, output:String)?
+}
+
 public struct Parser<T> {
     private let parse:String -> (T,String)?
     public init(parse:String -> (T,String)?) {
@@ -25,13 +30,80 @@ public struct Parser<T> {
     public func tokenize(input: String) -> (token: T, output: String)? {
         return parse(input)
     }
+
+    public var lazy:LazyParser<T> {
+        get {
+            return LazyParser(parser: self)
+        }
+    }
+}
+
+extension Parser : ParserType {
+
+}
+
+public struct LazyParser<T> {
+    private let getParser:() -> Parser<T>
+    // Hunch: Source of memory leaks when we get into recursive parsers later.
+    public init(@autoclosure(escaping) parser:() -> Parser<T>) {
+        self.getParser = parser
+    }
+    public func tokenize(input: String) -> (token: T, output: String)? {
+        return getParser().tokenize(input)
+    }
+}
+
+extension LazyParser : ParserType {
+
+}
+
+public struct ManyParser<ParserT:ParserType, T where ParserT.ParsedType==T> {
+
+    private let t:ParserT
+    public init(t:ParserT) {
+        self.t = t
+    }
+
+}
+
+extension ManyParser : ParserType {
+    public typealias ParsedType=List<T>
+    public func tokenize(input: String) -> (token: List<T>, output: String)? {
+        return (Many1Parser(t: t) <|> success(List<T>.Nil)).tokenize(input)
+    }
+}
+
+public struct Many1Parser<ParserT:ParserType, T where ParserT.ParsedType==T> {
+    private let t:ParserT
+    public init(t:ParserT) {
+        self.t = t
+    }
+
+}
+
+extension Many1Parser : ParserType {
+    public typealias ParsedType=List<T>
+    public func tokenize(input: String) -> (token: List<T>, output: String)? {
+        return (cons <§> t <*> ManyParser(t: t)).tokenize(input)
+    }
+}
+
+
+public struct AnyParser<T> : ParserType {
+    private let _tokenize:(String) -> (token: T, output: String)?
+    public init<Base: ParserType where Base.ParsedType == T>(_ base: Base) {
+        _tokenize = base.tokenize
+    }
+    public func tokenize(input: String) -> (token: T, output: String)? {
+        return _tokenize(input)
+    }
 }
 
 
 
 
-///////////////////////////////
 
+///////////////////////////////
 
 
 // Functions that return Tokenizers
@@ -53,7 +125,7 @@ public func char(c:Character) -> Parser<Character> {
     return sat() { c == $0 }
 }
 
-// Parser primitives
+//// Parser primitives
 
 public let item:Parser<Character> = Parser<Character> { input in
     guard (input.characters.count > 0) else {
@@ -78,33 +150,23 @@ let alphanum:Parser<Character> = sat(isAlphanum)
 
 public func string(s:String) -> Parser<String> {
     guard (!s.isEmpty) else {
-        return pure("")
+        return success("")
     }
 
     let c = s[s.startIndex]
     let cs = s.substringFromIndex(s.startIndex.successor())
 
-    return char(c) *> string(cs) *> pure(s)
+    return char(c) *> string(cs) *> success(s)
 }
 
-
-public func many<T>(t:Parser<T>) -> Parser<List<T>> {
-    return many1(t) <|> success(List<T>.Nil)
+public func many<ParserT:ParserType, T where ParserT.ParsedType==T>(t:ParserT) -> ManyParser<ParserT, ParserT.ParsedType> {
+    return ManyParser(t: t)
 }
 
-public func many1<T>(t:Parser<T>) -> Parser<List<T>> {
-    // using monad style here because else infinite loop
-
-    // Won't work:
-    //return cons <§> t <*> many(t) // results in an infinite loop,
-
-    return t.bind { token in
-        many(t).bind { tokens in
-            return pure(cons(token)(tokens))
-        }
-    }
-
+public func many1<ParserT:ParserType, T where ParserT.ParsedType==T>(t:ParserT) -> Many1Parser<ParserT, ParserT.ParsedType> {
+    return Many1Parser(t: t)
 }
+
 
 public let isSpace:Character -> Bool = { (c:Character) -> Bool in
     c == " " || c == "\n" || c == "\r" || c == "\t" }
