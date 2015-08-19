@@ -10,3 +10,10 @@ import Foundation
 
 print("Hello, World!")
 
+let result = num_expression.parse("a+b")
+
+public func parseStuff() {
+    natural.parse("234567")
+}
+
+parseStuff()

@@ -33,12 +33,12 @@ class Success: XCTestCase {
 
     func testConsumesNoInput() {
         let expected = (5, "Hello")
-        let actual = success(5).tokenize("Hello")!
+        let actual = success(5).parse("Hello")!
         AssertEqual(expected, actual)
     }
 
     func testCanReturnWhateverIsWrapped() {
-        let (token, _) = success([UInt8]()).tokenize("hello")!
+        let (token, _) = success([UInt8]()).parse("hello")!
         XCTAssertEqual(token, [UInt8]())
     }
 
@@ -46,67 +46,67 @@ class Success: XCTestCase {
 
 class Failure: XCTestCase {
     func testAlwaysReturnsNil() {
-        var result:(Int,String)? = failure().tokenize("")
+        var result:(Int,String)? = failure().parse("")
         AssertNil(result)
 
-        result = failure().tokenize("hello")
+        result = failure().parse("hello")
         AssertNil(result)
     }
 }
 
 class Item: XCTestCase {
     func testFailsOnEmptyString() {
-        let result:(Character,String)? = item.tokenize("")
+        let result:(Character,String)? = item.parse("")
         AssertNil(result)
     }
 
     func testConsumesAndReturnsOneCharacter() {
         let expected:(Character,String) = ("i", "tem")
-        let actual = item.tokenize("item")!
+        let actual = item.parse("item")!
         AssertEqual(expected, actual)
     }
 }
 
 class Sat: XCTestCase {
     func testFailsIfPredicateEvaluatesToFalse() {
-        let result = sat { $0 < "a" }.tokenize("boat")
+        let result = sat { $0 < "a" }.parse("boat")
         AssertNil(result)
     }
     func testConsumesAndReturnsOneCharacterIfPredicateEvaluatesToTrue() {
         let expected:(Character,String) = ("b", "oat")
-        let actual = sat { $0 > "a" }.tokenize("boat")!
+        let actual = sat { $0 > "a" }.parse("boat")!
         AssertEqual(expected, actual)
     }
 }
 
 class Char: XCTestCase {
     func testFailsOnEmptyStringInput() {
-        let result = char("a").tokenize("")
+        let result = char("a").parse("")
         AssertNil(result)
     }
     func testFailsIfCharDoesNotMatch() {
-        let result = char("z").tokenize("chair")
+        let result = char("z").parse("chair")
         AssertNil(result)
     }
     func testConsumesAndReturnsOneCharacterIfItMatches() {
         let expected:(Character, String) = ("c", "hair")
-        let actual = char("c").tokenize("chair")!
+        let actual = char("c").parse("chair")!
         AssertEqual(expected, actual)
     }
 }
 
 class Letter: XCTestCase {
     func testFailsIfEmptyStringInput() {
-        let result = letter.tokenize("")
+        let result = letter.parse("")
         AssertNil(result)
     }
     func testFailsIfFirstCharIsNotALetter() {
-        let result = letter.tokenize("[]")
+        let result = letter.parse("[]")
         AssertNil(result)
     }
     func testConsumesAndReturnsOneCharacterIfALetter() {
         let expected = ExpectedResult("l", "etter")
-        let actual = letter.tokenize("letter")!
+        let actual = letter.parse("letter")!
         AssertEqual(expected, actual)
     }
 }
@@ -114,20 +114,20 @@ class Letter: XCTestCase {
 class StringParser: XCTestCase {
     func testAlwaysParsesEmptyString() {
         let expected = ("", "")
-        var actual = string("").tokenize("")!
+        var actual = string("").parse("")!
         AssertEqual(expected, actual)
 
-        actual = string("").tokenize("hello")!
+        actual = string("").parse("hello")!
         AssertEqual(("","hello"), actual)
     }
     func testParsesSingleCharString() {
         let expected = ("l", "etter")
-        let actual = string("l").tokenize("letter")!
+        let actual = string("l").parse("letter")!
         AssertEqual(expected, actual)
     }
     func testParsesString() {
         let expected = ("let","ter")
-        let actual = string("let").tokenize("letter")!
+        let actual = string("let").parse("letter")!
         AssertEqual(expected, actual)
     }
 }
@@ -135,7 +135,7 @@ class StringParser: XCTestCase {
 class Number: XCTestCase {
     func testParsesANumber() {
         let expected = (123, "")
-        let actual = natural.tokenize("123")!
+        let actual = natural.parse("123")!
         AssertEqual(expected, actual)
     }
 }
@@ -149,7 +149,7 @@ class Choice: XCTestCase {
         // If first choice fails, return results of second
         let wrappedValue = [UInt8]()
         let expected = (wrappedValue,"hello")
-        let actual = (failure() <|> success(wrappedValue)).tokenize("hello")!
+        let actual = (failure() <|> success(wrappedValue)).parse("hello")!
         AssertEqual(expected, actual)
     }
 }
@@ -157,7 +157,7 @@ class Choice: XCTestCase {
 class Many: XCTestCase {
     func testZeroMatches() {
         let expected = ("", "hello")
-        let actual = String.init <§> many(char("a")).tokenize("hello")!
+        let actual = String.init <§> many(char("a")).parse("hello")!
         AssertEqual(expected, actual)
     }
 }

@@ -6,21 +6,32 @@ import Parsing
 
 print("qu", appendNewline: false)
 
-var rrkd = natural.tokenize("23")
+var rrkd = natural.parse("23")
 
-var result = (NumExpression.NumberLiteral <§> number).tokenize("234 ")
-result = (NumExpression.Id <§> identifier).tokenize("abd")
-result = ((NumExpression.Id <§> identifier) <|> (NumExpression.NumberLiteral <§> number)).tokenize("abc")
-
-let lparen = char("(")
-let rparen = char(")")
-
-result = (lparen *> (NumExpression.NumberLiteral <§> number) <* rparen).tokenize("(23)")
-
-result = exp_operand.tokenize("1")
+var result = (NumExpression.NumberLiteral <§> number).parse("234 ")
+result = num_expression.parse("-(alphaNum)")
 
 
-var h = NumExpression.NumberLiteral(345)
+result = num_expression.parse("a+b")
+
+
+
+result!.token.debugDescription
+
+
+
+//result = (NumExpression.Id <§> identifier).tokenize("abd")
+//result = ((NumExpression.Id <§> identifier) <|> (NumExpression.NumberLiteral <§> number)).tokenize("abc")
+//
+//let lparen = char("(")
+//let rparen = char(")")
+//
+//result = (lparen *> (NumExpression.NumberLiteral <§> number) <* rparen).tokenize("(23)")
+//
+//result = exp_operand.tokenize("1")
+//
+//
+//var h = NumExpression.NumberLiteral(345)
 
 
 

@@ -22,11 +22,11 @@ import Foundation
 
 
 extension ParserType {
-    func bind<TB, PB:ParserType where PB.ParsedType == TB>(f:ParsedType -> PB) -> Parser<TB> {
+    func bind<TB, PB:ParserType where PB.TokenType == TB>(f:TokenType -> PB) -> Parser<TB> {
         return Parser { input in
-            switch self.tokenize(input) {
+            switch self.parse(input) {
             case .None: return nil
-            case .Some((let a, let output)): return f(a).tokenize(output)
+            case .Some((let a, let output)): return f(a).parse(output)
             }
         }
     }

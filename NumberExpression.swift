@@ -60,6 +60,10 @@ extension NumExpression : CustomStringConvertible {
     }
 }
 
+extension NumExpression : CustomDebugStringConvertible {
+    public var debugDescription:String { return description }
+}
+
 let lparen = char("(")
 let rparen = char(")")
 
@@ -71,33 +75,38 @@ let expop = char("^")
 public let number = nat
 
 
-public let num_expression = NumExpression.CreateExpr <§> term <*> term_tail()
+public let num_expression:Parser<NumExpression> = NumExpression.CreateExpr <§> term <*> term_tail()
+//public let num_expression:Parser<NumExpression> = term
+let lazy_num_expression = lazy(num_expression)
 
 func term_tail() -> Parser<NumExpression> {
-    return NumExpression.CreatePlus <§> (plusop *> term) <*> term_tail()
-      <|> NumExpression.CreateSub <§> (subop *> term) <*> term_tail()
+    return NumExpression.CreatePlus <§> (plusop *> term) <*> lazy_term_tail
+      <|> NumExpression.CreateSub <§> (subop *> term) <*> lazy_term_tail
       <|> epsilon
 }
+let lazy_term_tail = lazy(term_tail())
+
 
 let term = NumExpression.CreateTerm <§> factor <*> factor_tail()
 
 func factor_tail() -> Parser<NumExpression> {
-    return NumExpression.CreateMult <§> factor <*> factor_tail()
-      <|> NumExpression.CreateDiv <§> factor <*> factor_tail()
+    return NumExpression.CreateMult <§> (multop *> factor) <*> lazy_factor_tail
+      <|> NumExpression.CreateDiv <§> (divop *> factor) <*> lazy_factor_tail
       <|> epsilon
 }
+let lazy_factor_tail = lazy(factor_tail())
 
 let factor = NumExpression.CreateFact <§> exp_operand <*> exp_operand_tail()
 
 func exp_operand_tail() -> Parser<NumExpression> {
-    return NumExpression.CreateExp <§> (expop *> exp_operand) <*> exp_operand_tail()
+    return NumExpression.CreateExp <§> (expop *> exp_operand) <*> lazy(exp_operand_tail())
       <|> epsilon
 }
 
-public let exp_operand:Parser<NumExpression> = (lparen *> num_expression <* rparen)
+public let exp_operand = (lparen *> lazy_num_expression <* rparen)
   <|> NumExpression.NumberLiteral <§> number
   <|> NumExpression.Id <§> identifier
-  <|> (plusop *> num_expression)
-  <|> NumExpression.Negate <§> num_expression
+  <|> (plusop *> lazy_num_expression)
+  <|> NumExpression.Negate <§> (subop *> lazy_num_expression)
 
 let epsilon = success(NumExpression.Epsilon)

@@ -7,7 +7,7 @@
 //
 
 import Foundation
-
+import Swift
 
 
 
@@ -17,18 +17,18 @@ import Foundation
 //////////////////
 
 public protocol ParserType {
-    typealias ParsedType
-    func tokenize(input: String) -> (token: ParsedType, output:String)?
+    typealias TokenType
+    func parse(input: String) -> (token: TokenType, output:String)?
 }
 
 public struct Parser<T> {
-    private let parse:String -> (T,String)?
-    public init(parse:String -> (T,String)?) {
-        self.parse = parse
+    private let parser:String -> (T,String)?
+    public init(parser:String -> (T,String)?) {
+        self.parser = parser
     }
 
-    public func tokenize(input: String) -> (token: T, output: String)? {
-        return parse(input)
+    public func parse(input: String) -> (token: T, output: String)? {
+        return parser(input)
     }
 }
 
@@ -36,22 +36,22 @@ extension Parser : ParserType {
 
 }
 
-public struct LazyParser<ParserT:ParserType, T where ParserT.ParsedType==T> {
-    private let getParser:() -> ParserT
+public struct LazyParser<TokenType, P:ParserType where P.TokenType==TokenType> {
+    private let getParser:() -> P
     // Hunch: Source of memory leaks when we get into recursive parsers later.
-    public init(@autoclosure(escaping) parser:() -> ParserT) {
+    public init(@autoclosure(escaping) parser:() -> P) {
         self.getParser = parser
     }
-    public init(getParser:() -> ParserT) {
+    public init(getParser:() -> P) {
         self.getParser = getParser
     }
-    public func tokenize(input: String) -> (token: T, output: String)? {
-        return getParser().tokenize(input)
+    public func parse(input: String) -> (token: TokenType, output: String)? {
+        return getParser().parse(input)
     }
 }
 
 //* Wrap a parser so that it is evaluated lazily
-public func lazy<ParserT:ParserType, T where ParserT.ParsedType==T>(@autoclosure(escaping) getParser:() -> ParserT) -> LazyParser<ParserT, ParserT.ParsedType> {
+public func lazy<TokenType, P:ParserType where P.TokenType==TokenType>(@autoclosure(escaping) getParser:() -> P) -> LazyParser<TokenType, P> {
     return LazyParser { getParser() }
 }
 
@@ -60,12 +60,12 @@ extension LazyParser : ParserType {
 }
 
 public struct AnyParser<T> : ParserType {
-    private let _tokenize:(String) -> (token: T, output: String)?
-    public init<Base: ParserType where Base.ParsedType == T>(_ base: Base) {
-        _tokenize = base.tokenize
+    private let _parse:(String) -> (token: T, output: String)?
+    public init<P: ParserType where P.TokenType == T>(_ parser: P) {
+        _parse = parser.parse
     }
-    public func tokenize(input: String) -> (token: T, output: String)? {
-        return _tokenize(input)
+    public func parse(input: String) -> (token: T, output: String)? {
+        return _parse(input)
     }
 }
 
@@ -94,12 +94,10 @@ public func char(c:Character) -> Parser<Character> {
 
 //// Parser primitives
 
+
+
 public let item:Parser<Character> = Parser<Character> { input in
-    guard (input.characters.count > 0) else {
-        return nil
-    }
-    let index0 = input.startIndex
-    return (input[index0], input.substringFromIndex(index0.successor()))
+    return input.uncons()
 }
 
 let isLetter:Character -> Bool = { c in isUpper(c) || isLower(c) }
@@ -126,11 +124,11 @@ public func string(s:String) -> Parser<String> {
     return char(c) *> string(cs) *> success(s)
 }
 
-public func many<ParserT:ParserType, T where ParserT.ParsedType==T>(t:ParserT) -> Parser<List<T>> {
+public func many<ParserT:ParserType, T where ParserT.TokenType==T>(t:ParserT) -> Parser<List<T>> {
     return lazy(many1(t)) <|> success(List<T>.Nil)
 }
 
-public func many1<ParserT:ParserType, T where ParserT.ParsedType==T>(t:ParserT) -> Parser<List<T>> {
+public func many1<ParserT:ParserType, T where ParserT.TokenType==T>(t:ParserT) -> Parser<List<T>> {
     return cons <§> t <*> many(t)
 }
 
@@ -152,7 +150,7 @@ public let identifier = token(ident)
 
 public let natural = token(nat)
 
-public let symbol:String -> Parser<String> = { (token • string) § $0 } // fancy way of saying token(string($0))
+public let symbol:String -> Parser<String> = { token • string § $0 } // fancy way of saying token(string($0))
 
 
 

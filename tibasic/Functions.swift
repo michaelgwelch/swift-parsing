@@ -33,4 +33,17 @@ public func uncurry<A,B,C>(f:A->B->C)(_ a:A,_ b:B) -> C {
     return f(a)(b)
 }
 
-
+extension String {
+    /// A tuple compromised of the first character and the remaining characters of
+    /// self if self is not empty. Else nil.
+    public func uncons() -> (head:Character, tail:String)? {
+        return uncons(id)
+    }
+    public func uncons<T>(f:(head:Character, tail:String) -> T) -> T? {
+        guard (!self.isEmpty) else {
+            return nil
+        }
+        let index0 = self.startIndex
+        return f(head: self[index0], tail: self.substringFromIndex(index0.successor()))
+    }
+}

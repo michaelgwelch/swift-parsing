@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E31C526D1B84266E00D8FC6C /* NumberExpression.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3A3907F1B7AD116004E7454 /* NumberExpression.swift */; };
+		E31C526E1B84266E00D8FC6C /* NumberExpression.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3A3907F1B7AD116004E7454 /* NumberExpression.swift */; };
 		E34C8B8E1B83BE0A000E644A /* Functions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E38AC6A11B611E9C0079A22F /* Functions.swift */; };
 		E34C8B8F1B83BE0B000E644A /* Functions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E38AC6A11B611E9C0079A22F /* Functions.swift */; };
 		E34C8B901B83BE14000E644A /* Operators.swift in Sources */ = {isa = PBXBuildFile; fileRef = E38AC5EE1B603F9C0079A22F /* Operators.swift */; };
@@ -324,6 +326,7 @@
 			files = (
 				E36792F91B7D77AF000879BC /* Parser.swift in Sources */,
 				E34C8B911B83BE15000E644A /* Operators.swift in Sources */,
+				E31C526D1B84266E00D8FC6C /* NumberExpression.swift in Sources */,
 				E36792FF1B7D77FE000879BC /* List.swift in Sources */,
 				E36792FB1B7D77C6000879BC /* Monad.swift in Sources */,
 				E34C8B931B83BFD8000E644A /* Applicative.swift in Sources */,
@@ -346,6 +349,7 @@
 			files = (
 				E3C5EF8F1B5B091200AF07B9 /* main.swift in Sources */,
 				E34C8B941B83C933000E644A /* Functor.swift in Sources */,
+				E31C526E1B84266E00D8FC6C /* NumberExpression.swift in Sources */,
 				E38AC6A61B611EAE0079A22F /* Monad.swift in Sources */,
 				E36792DC1B7D7608000879BC /* Parser.swift in Sources */,
 				E34C8B8E1B83BE0A000E644A /* Functions.swift in Sources */,

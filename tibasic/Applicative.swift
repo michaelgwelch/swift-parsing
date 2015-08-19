@@ -10,11 +10,11 @@ import Foundation
 
 
 // Like Haskell Alternative <|>
-public func <|><ParserA1:ParserType, ParserA2:ParserType, A where ParserA1.ParsedType==A, ParserA2.ParsedType==A>(lhs:ParserA1, rhs:ParserA2) -> Parser<A> {
+public func <|><ParserA1:ParserType, ParserA2:ParserType, A where ParserA1.TokenType==A, ParserA2.TokenType==A>(lhs:ParserA1, rhs:ParserA2) -> Parser<A> {
     return Parser { input in
-        let result = lhs.tokenize(input)
+        let result = lhs.parse(input)
         switch result {
-        case .None: return rhs.tokenize(input)
+        case .None: return rhs.parse(input)
         case .Some(_): return result
         }
     }
@@ -22,30 +22,30 @@ public func <|><ParserA1:ParserType, ParserA2:ParserType, A where ParserA1.Parse
 
 
 // Like Haskell Applicative <*>
-public func <*><ParserAB:ParserType, ParserA:ParserType, A, B where ParserAB.ParsedType==A->B,
-    ParserA.ParsedType==A>(lhs:ParserAB, rhs:ParserA) -> Parser<B> {
+public func <*><ParserAB:ParserType, ParserA:ParserType, A, B where ParserAB.TokenType==A->B,
+    ParserA.TokenType==A>(lhs:ParserAB, rhs:ParserA) -> Parser<B> {
         return apply(lhs, rhs)
 }
 
 // Haskell Applicative <*
 public func <*<ParserA:ParserType, ParserB:ParserType, A, B where
-    ParserA.ParsedType==A, ParserB.ParsedType==B>(lhs:ParserA, rhs:ParserB) -> Parser<A> {
+    ParserA.TokenType==A, ParserB.TokenType==B>(lhs:ParserA, rhs:ParserB) -> Parser<A> {
         return liftA2(const)(lhs)(rhs)
 }
 
 // Haskell Applictive *>
 public func *><ParserA:ParserType, ParserB:ParserType, A, B where
-    ParserA.ParsedType==A, ParserB.ParsedType==B>(lhs:ParserA, rhs:ParserB) -> Parser<B> {
+    ParserA.TokenType==A, ParserB.TokenType==B>(lhs:ParserA, rhs:ParserB) -> Parser<B> {
         return liftA2(const(id))(lhs)(rhs)
 }
 
 public func liftA2<ParserA:ParserType, ParserB:ParserType, A, B, C
-    where ParserA.ParsedType==A, ParserB.ParsedType==B>(f:A -> B -> C)(_ a:ParserA)(_ b:ParserB) -> Parser<C> {
+    where ParserA.TokenType==A, ParserB.TokenType==B>(f:A -> B -> C)(_ a:ParserA)(_ b:ParserB) -> Parser<C> {
         return f <§> a <*> b
 }
 
 
-func apply<Parser1:ParserType, ParserA:ParserType, A, B where Parser1.ParsedType==A->B,
-    ParserA.ParsedType==A>(tf:Parser1, _ ta:ParserA) -> Parser<B> {
+func apply<Parser1:ParserType, ParserA:ParserType, A, B where Parser1.TokenType==A->B,
+    ParserA.TokenType==A>(tf:Parser1, _ ta:ParserA) -> Parser<B> {
         return tf.bind { f in fmap(f, ta) }
 }
