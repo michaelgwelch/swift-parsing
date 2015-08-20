@@ -17,6 +17,10 @@ public func <§><ParserA:ParserType, A, B where ParserA.TokenType==A>(lhs:A->B, 
     return fmap(lhs, rhs)
 }
 
+public func <§><A,B>(lhs:A->B, rhs:A?) -> B? {
+    return rhs.map(lhs)
+}
+
 
 // Tuple Functor on rhs
 public func <§><A,B,C>(lhs:A->B, rhs:(A,C)) -> (B,C) {
