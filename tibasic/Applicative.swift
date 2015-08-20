@@ -27,6 +27,10 @@ public func <*><ParserAB:ParserType, ParserA:ParserType, A, B where ParserAB.Tok
         return apply(lhs, rhs)
 }
 
+public func <*><A,B>(lhs:(A->B)?, rhs:A?) -> B? {
+    return lhs.flatMap { rhs.map($0) }
+}
+
 // Haskell Applicative <*
 public func <*<ParserA:ParserType, ParserB:ParserType, A, B where
     ParserA.TokenType==A, ParserB.TokenType==B>(lhs:ParserA, rhs:ParserB) -> Parser<A> {
