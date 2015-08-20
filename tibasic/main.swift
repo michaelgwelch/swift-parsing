@@ -8,12 +8,15 @@
 
 import Foundation
 
+
+
 print("Hello, World!")
 
-let result = num_expression.parse("a+b")
+let result = num_expression.parse("2^3*5")
 
-public func parseStuff() {
-    natural.parse("234567")
-}
 
-parseStuff()
+
+print(result?.token.eval( ["a":7, "b":3 ] ))
+
+
+

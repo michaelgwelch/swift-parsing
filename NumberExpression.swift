@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Darwin
 
 public indirect enum NumExpression {
     case Id(String)
@@ -56,6 +57,84 @@ extension NumExpression : CustomStringConvertible {
         case .Exp(let e1, let e2): return "^" + e1.description + e2.description
         case .Expr(let e1, let e2): return e1.description + e2.description
         case .Paren(let e): return "(" + e.description + ")"
+        }
+    }
+}
+
+extension NumExpression {
+    var identifiers:[String] {
+        switch self {
+        case .Id(let s): return [s]
+        case .Negate(let n): return n.identifiers
+        case .Factor(let e1, let e2): return e1.identifiers + e2.identifiers
+        case .FactTailMult(let e1, let e2): return e1.identifiers + e2.identifiers
+        case .FactTailDiv(let e1, let e2): return e1.identifiers + e2.identifiers
+        case .Term(let e1, let e2): return e1.identifiers + e2.identifiers
+        case .TermTailPlus(let e1, let e2): return e1.identifiers + e2.identifiers
+        case .TermTailSub(let e1, let e2): return e1.identifiers + e2.identifiers
+        case .Exp(let e1, let e2): return e1.identifiers + e2.identifiers
+        case .Expr(let e1, let e2): return e1.identifiers + e2.identifiers
+        case .Paren(let e): return e.identifiers
+        default: return []
+        }
+    }
+}
+
+extension NumExpression {
+    var isEpsilon:Bool {
+        switch self {
+        case .Epsilon: return true
+        default: return false
+        }
+    }
+}
+
+func intPow(lhs:Int, _ rhs:Int) -> Int {
+    return Int(pow(Double(lhs), Double(rhs)))
+}
+let mult:Int -> Int -> Int = { lhs in { lhs * $0 }}
+let plus:Int -> Int -> Int = { lhs in { lhs + $0 }}
+let div:Int -> Int -> Int = { lhs in { lhs / $0 }}
+let sub:Int -> Int -> Int = { lhs in { lhs - $0 }}
+let exp:Int -> Int -> Int = { lhs in { intPow(lhs, $0) }}
+
+extension NumExpression {
+    public func eval() -> Int? {
+        var store = [String:Int]()
+        store = identifiers.reduce(store) { (var currentStore, let key) -> [String:Int] in
+            currentStore[key] = 1
+            return currentStore
+        }
+        return eval(store)
+    }
+    public func eval(store: [String:Int]) -> Int? {
+        switch self {
+
+        case .Id(let s): return store[s] ?? 0
+        case .NumberLiteral(let i): return i
+        case .Epsilon: return nil
+        case .Negate(let e): return e.eval(store).map { -$0 }
+        case .Factor(let e1, let e2): return e2.eval(store, initialValue: e1.eval(store))
+        case .FactTailMult(let e1, let e2): return e2.eval(store, initialValue: e1.eval(store))
+        case .FactTailDiv(let e1, let e2): return e2.eval(store, initialValue: e1.eval(store))
+        case .Term(let e1, let e2): return e2.eval(store, initialValue: e1.eval(store))
+        case .TermTailPlus(let e1, let e2): return e2.eval(store, initialValue: e1.eval(store))
+        case .TermTailSub(let e1, let e2): return e2.eval(store, initialValue: e1.eval(store))
+        case .Exp(let e1, let e2): return e2.eval(store, initialValue: e1.eval(store))
+        case .Expr(let e1, let e2): return e2.eval(store, initialValue:e1.eval(store))
+        case .Paren(let e): return e.eval(store)
+            
+        }
+    }
+    func eval(store: [String:Int], initialValue value: Int?) -> Int? {
+        switch self {
+        case .FactTailMult(let e1, let e2): return mult <§> value <*> e2.eval(store, initialValue: e1.eval(store))
+        case .FactTailDiv(let e1, let e2): return div <§> value <*> e2.eval(store, initialValue: e1.eval(store))
+        case .TermTailPlus(let e1, let e2): return plus <§> value <*> e2.eval(store, initialValue: e1.eval(store))
+        case .TermTailSub(let e1, let e2): return sub <§> value <*> e2.eval(store, initialValue: e1.eval(store))
+        case .Exp(let e1, let e2): return exp <§> value <*> e2.eval(store, initialValue: e1.eval(store))
+        case .Epsilon: return value
+        default: fatalError("What sort of expression is this")
         }
     }
 }

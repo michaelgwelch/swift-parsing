@@ -1,7 +1,11 @@
 //: Playground - noun: a place where people can play
 
 import Cocoa
+import Darwin
 import Parsing
+
+pow(2.0,3.0)
+
 
 
 print("qu", appendNewline: false)
@@ -12,7 +16,11 @@ var result = (NumExpression.NumberLiteral <§> number).parse("234 ")
 result = num_expression.parse("-(alphaNum)")
 
 
-result = num_expression.parse("a+b")
+
+result = num_expression.parse("a*b^2+4")
+
+
+result?.token.eval( ["a":7, "b":3 ] )
 
 
 

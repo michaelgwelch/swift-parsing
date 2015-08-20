@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		E31C526D1B84266E00D8FC6C /* NumberExpression.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3A3907F1B7AD116004E7454 /* NumberExpression.swift */; };
 		E31C526E1B84266E00D8FC6C /* NumberExpression.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3A3907F1B7AD116004E7454 /* NumberExpression.swift */; };
+		E33B7A011B84BF5C00C28ACD /* Monoid.swift in Sources */ = {isa = PBXBuildFile; fileRef = E33B7A001B84BF5C00C28ACD /* Monoid.swift */; };
+		E33B7A021B84BF5C00C28ACD /* Monoid.swift in Sources */ = {isa = PBXBuildFile; fileRef = E33B7A001B84BF5C00C28ACD /* Monoid.swift */; };
 		E34C8B8E1B83BE0A000E644A /* Functions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E38AC6A11B611E9C0079A22F /* Functions.swift */; };
 		E34C8B8F1B83BE0B000E644A /* Functions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E38AC6A11B611E9C0079A22F /* Functions.swift */; };
 		E34C8B901B83BE14000E644A /* Operators.swift in Sources */ = {isa = PBXBuildFile; fileRef = E38AC5EE1B603F9C0079A22F /* Operators.swift */; };
@@ -52,6 +54,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		E33B7A001B84BF5C00C28ACD /* Monoid.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Monoid.swift; sourceTree = "<group>"; };
 		E36792D91B7D653C000879BC /* grammar.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = grammar.md; sourceTree = "<group>"; };
 		E36792E21B7D7794000879BC /* Parsing.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Parsing.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E36792E41B7D7794000879BC /* Parsing.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Parsing.h; sourceTree = "<group>"; };
@@ -136,6 +139,7 @@
 			isa = PBXGroup;
 			children = (
 				E38AC6A11B611E9C0079A22F /* Functions.swift */,
+				E33B7A001B84BF5C00C28ACD /* Monoid.swift */,
 			);
 			name = FunctionalCore;
 			sourceTree = "<group>";
@@ -330,6 +334,7 @@
 				E36792FF1B7D77FE000879BC /* List.swift in Sources */,
 				E36792FB1B7D77C6000879BC /* Monad.swift in Sources */,
 				E34C8B931B83BFD8000E644A /* Applicative.swift in Sources */,
+				E33B7A021B84BF5C00C28ACD /* Monoid.swift in Sources */,
 				E34C8B951B83C934000E644A /* Functor.swift in Sources */,
 				E34C8B8F1B83BE0B000E644A /* Functions.swift in Sources */,
 			);
@@ -356,6 +361,7 @@
 				E34C8B921B83BFD7000E644A /* Applicative.swift in Sources */,
 				E38AC5F51B6042C50079A22F /* List.swift in Sources */,
 				E34C8B901B83BE14000E644A /* Operators.swift in Sources */,
+				E33B7A011B84BF5C00C28ACD /* Monoid.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
