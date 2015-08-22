@@ -34,22 +34,26 @@ public func <*><A,B>(lhs:(A->B)?, rhs:A?) -> B? {
 // Haskell Applicative <*
 public func <*<ParserA:ParserType, ParserB:ParserType, A, B where
     ParserA.TokenType==A, ParserB.TokenType==B>(lhs:ParserA, rhs:ParserB) -> Parser<A> {
-        return liftA2(const)(lhs)(rhs)
+        return Parse.liftA2(const)(lhs)(rhs)
 }
 
 // Haskell Applictive *>
 public func *><ParserA:ParserType, ParserB:ParserType, A, B where
     ParserA.TokenType==A, ParserB.TokenType==B>(lhs:ParserA, rhs:ParserB) -> Parser<B> {
-        return liftA2(const(id))(lhs)(rhs)
+        return Parse.liftA2(const(id))(lhs)(rhs)
 }
 
-public func liftA2<ParserA:ParserType, ParserB:ParserType, A, B, C
-    where ParserA.TokenType==A, ParserB.TokenType==B>(f:A -> B -> C)(_ a:ParserA)(_ b:ParserB) -> Parser<C> {
-        return f <§> a <*> b
+extension Parse {
+    public static func liftA2<ParserA:ParserType, ParserB:ParserType, A, B, C
+        where ParserA.TokenType==A, ParserB.TokenType==B>(f:A -> B -> C)(_ a:ParserA)(_ b:ParserB) -> Parser<C> {
+            return f <§> a <*> b
+    }
 }
+
+
 
 
 func apply<Parser1:ParserType, ParserA:ParserType, A, B where Parser1.TokenType==A->B,
     ParserA.TokenType==A>(tf:Parser1, _ ta:ParserA) -> Parser<B> {
-        return tf.bind { f in fmap(f, ta) }
+        return tf.bind { f in f <§> ta }
 }

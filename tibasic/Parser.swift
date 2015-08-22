@@ -21,7 +21,7 @@ public protocol ParserType {
     func parse(input: String) -> (token: TokenType, output:String)?
 }
 
-public struct Parser<T> {
+public struct Parser<T> : ParserType {
     private let parser:String -> (T,String)?
     public init(parser:String -> (T,String)?) {
         self.parser = parser
@@ -32,11 +32,8 @@ public struct Parser<T> {
     }
 }
 
-extension Parser : ParserType {
 
-}
-
-public struct LazyParser<TokenType, P:ParserType where P.TokenType==TokenType> {
+public struct LazyParser<TokenType, P:ParserType where P.TokenType==TokenType> : ParserType {
     private let getParser:() -> P
     // Hunch: Source of memory leaks when we get into recursive parsers later.
     public init(@autoclosure(escaping) parser:() -> P) {
@@ -50,14 +47,7 @@ public struct LazyParser<TokenType, P:ParserType where P.TokenType==TokenType> {
     }
 }
 
-//* Wrap a parser so that it is evaluated lazily
-public func lazy<TokenType, P:ParserType where P.TokenType==TokenType>(@autoclosure(escaping) getParser:() -> P) -> LazyParser<TokenType, P> {
-    return LazyParser { getParser() }
-}
 
-extension LazyParser : ParserType {
-
-}
 
 public struct AnyParser<T> : ParserType {
     private let _parse:(String) -> (token: T, output: String)?
@@ -70,35 +60,71 @@ public struct AnyParser<T> : ParserType {
 }
 
 
+
 ///////////////////////////////
 
+public class Parse {
+    public static func failure<T>() -> Parser<T> {
+        return Parser { _ in nil }
+    }
 
-// Functions that return Tokenizers
+    public static func success<T>(t:T) -> Parser<T> {
+        return Parser { (t, $0) }
+    }
 
-public func failure<T>() -> Parser<T> {
-    return Parser { _ in nil }
+    public static let item = Parser<Character> { input in
+        return input.uncons()
+    }
+
+    public static func sat(predicate:Character -> Bool) -> Parser<Character> {
+        return item.bind { predicate($0) ? success($0) : failure() }
+    }
+
+    public static func char(c:Character) -> Parser<Character> {
+        return sat() { c == $0 }
+    }
+
+    public static let count = 5
+
+    public static let letter = Parse.sat § isLetter
+    public static let digit = Parse.sat(isDigit)
+    public static let upper = Parse.sat(isUpper)
+    public static let lower = Parse.sat(isLower)
+    public static let alphanum = Parse.sat(isAlphanum)
+
+    public static func string(s:String) -> Parser<String> {
+        guard (!s.isEmpty) else {
+            return success("")
+        }
+
+        let c = s[s.startIndex]
+        let cs = s.substringFromIndex(s.startIndex.successor())
+
+        return char(c) *> string(cs) *> success(s)
+    }
+
+    public static let isSpace:Character -> Bool = { (c:Character) -> Bool in
+        c == " " || c == "\n" || c == "\r" || c == "\t" }
+
+    public static let space:Parser<()> = Parse.sat(isSpace)* *> Parse.success(())
+
+    public static let ident:Parser<String> = String.init <§> (cons <§> letter <*> alphanum*)
+    public static let int:String -> Int = { Int($0)!} // Construct an int out of a string of digits
+
+    public static let nat:Parser<Int> = int <§> (String.init <§> (cons <§> digit <*> digit*))
+    public static let identifier = ident.token()
+
+    public static let natural = nat.token()
+
+    public static let symbol:String -> Parser<String> = { (Parse.string § $0).token() }
+
+    //* Wrap a parser so that it is evaluated lazily
+    public static func lazy<TokenType, P:ParserType where P.TokenType==TokenType>(@autoclosure(escaping) getParser:() -> P) -> LazyParser<TokenType, P> {
+        return LazyParser { getParser() }
+    }
+
 }
 
-public func success<T>(t:T) -> Parser<T> {
-    return Parser { (t, $0) }
-}
-
-
-public func sat(predicate:Character -> Bool) -> Parser<Character> {
-    return item.bind { predicate($0) ? success($0) : failure() }
-}
-
-public func char(c:Character) -> Parser<Character> {
-    return sat() { c == $0 }
-}
-
-//// Parser primitives
-
-
-
-public let item:Parser<Character> = Parser<Character> { input in
-    return input.uncons()
-}
 
 let isLetter:Character -> Bool = { c in isUpper(c) || isLower(c) }
 let isDigit:Character -> Bool = { c in (c >= "0" && c <= "9") }
@@ -106,52 +132,31 @@ let isUpper:Character -> Bool = { c in (c >= "A" && c <= "Z") }
 let isLower:Character -> Bool = { c in (c >= "a" && c <= "z") }
 let isAlphanum:Character -> Bool = { isLetter($0) || isDigit($0) }
 
-let letter:Parser<Character> = sat § isLetter
-let digit:Parser<Character> = sat(isDigit)
-let upper:Parser<Character> = sat(isUpper)
-let lower:Parser<Character> = sat(isLower)
-let alphanum:Parser<Character> = sat(isAlphanum)
 
+// MARK: ParserType extension
 
-public func string(s:String) -> Parser<String> {
-    guard (!s.isEmpty) else {
-        return success("")
+extension ParserType {
+    func repeatMany() -> Parser<List<TokenType>> {
+        return Parse.lazy(self.repeatOneOrMany()) <|> Parse.success(List<TokenType>.Nil)
     }
-
-    let c = s[s.startIndex]
-    let cs = s.substringFromIndex(s.startIndex.successor())
-
-    return char(c) *> string(cs) *> success(s)
+    func repeatOneOrMany() -> Parser<List<TokenType>> {
+        return cons <§> self <*> self.repeatMany()
+    }
+    func token() -> Parser<TokenType> {
+        return Parse.space *> self <* Parse.space
+    }
+    func void() -> Parser<()> {
+        return (self) *> Parse.success(())
+    }
 }
 
-public func many<ParserT:ParserType, T where ParserT.TokenType==T>(t:ParserT) -> Parser<List<T>> {
-    return lazy(many1(t)) <|> success(List<T>.Nil)
+public postfix func *<PT:ParserType, T where PT.TokenType==T>(p:PT) -> Parser<List<T>> {
+    return p.repeatMany()
 }
 
-public func many1<ParserT:ParserType, T where ParserT.TokenType==T>(t:ParserT) -> Parser<List<T>> {
-    return cons <§> t <*> many(t)
+public postfix func +<PT:ParserType, T where PT.TokenType==T>(p:PT) -> Parser<List<T>> {
+    return p.repeatOneOrMany()
 }
-
-
-public let isSpace:Character -> Bool = { (c:Character) -> Bool in
-    c == " " || c == "\n" || c == "\r" || c == "\t" }
-
-public let space:Parser<()> = many(sat(isSpace)) *> success(())
-
-public let ident:Parser<String> = String.init <§> (cons <§> letter <*> many(alphanum))
-
-private let int:String -> Int = { Int($0)!} // Construct an int out of a string of digits
-
-public let nat:Parser<Int> = int <§> (String.init <§> (cons <§> digit <*> many(digit)))
-
-public func token<T>(t:Parser<T>) -> Parser<T> { return (space *> t) <* space }
-
-public let identifier = token(ident)
-
-public let natural = token(nat)
-
-public let symbol:String -> Parser<String> = { token • string § $0 } // fancy way of saying token(string($0))
-
 
 
 

@@ -36,3 +36,6 @@ infix operator § { associativity right precedence 50 }
 // Like Haskell . (compose)
 infix operator • { associativity right precedence 190 }
 
+// repeatMany
+postfix operator * {}
+postfix operator + {}
