@@ -19,19 +19,21 @@ import Swift
 public struct ParserContext {
     public private(set) var row:Int
     public private(set) var col:Int
-    public private(set) var position:String.Index
+    public private(set) var position:Int
+    private var index:String.Index
     public let string:String
 
     mutating func next() -> Character? {
-        guard (position != string.endIndex) else {
+        guard (index != string.endIndex) else {
             return nil
         }
 
-        let currentChar = string[position]
-        position = position.successor()
+        let currentChar = string[index]
+        index = index.successor()
+        position++
         if currentChar == "\n" {
             row++
-            col = -1
+            col = 1
         } else {
             col++
         }
@@ -42,8 +44,9 @@ public struct ParserContext {
 extension ParserContext {
     init(string:String) {
         row = 1
-        col = 0
-        position = string.startIndex
+        col = 1
+        position = 0
+        index = string.startIndex
         self.string = string
     }
 }
@@ -59,10 +62,8 @@ public extension ParserType {
     /// For backward compatiblity with prewritten tests.
     func parse(input: String) -> (token: Self.TokenType, output: String)? {
         let context = ParserContext(string: input)
-        return self.parse(context).map { ($0.token, $0.output.string.substringFromIndex($0.output.position)) }
+        return self.parse(context).map { ($0.token, $0.output.string.substringFromIndex($0.output.index)) }
     }
-
-
 }
 
 public struct Parser<T> : ParserType {
@@ -167,7 +168,6 @@ public class Parse {
     public static func lazy<TokenType, P:ParserType where P.TokenType==TokenType>(@autoclosure(escaping) getParser:() -> P) -> LazyParser<TokenType, P> {
         return LazyParser { getParser() }
     }
-
 }
 
 
@@ -179,6 +179,10 @@ let isAlphanum:Character -> Bool = { isLetter($0) || isDigit($0) }
 
 
 // MARK: ParserType extension
+
+func tuple3<T1,T2,T3>(t1:T1)(_ t2:T2)(_ t3:T3) -> (T1,T2,T3) {
+    return (t1, t2, t3)
+}
 
 extension ParserType {
     func repeatMany() -> Parser<List<TokenType>> {
@@ -192,6 +196,22 @@ extension ParserType {
     }
     func void() -> Parser<()> {
         return (self) *> Parse.success(())
+    }
+
+    func currentPosition() -> Parser<Int> {
+        return Parser { ($0.position, $0) }
+    }
+
+    func currentRow() -> Parser<Int> {
+        return Parser { ($0.row, $0) }
+    }
+
+    func currentCol() -> Parser<Int> {
+        return Parser { ($0.col, $0) }
+    }
+
+    func currentLocation() -> Parser<(row:Int, col:Int, pos:Int)> {
+        return tuple3 <§> currentRow() <*> currentCol() <*> currentPosition()
     }
 }
 
