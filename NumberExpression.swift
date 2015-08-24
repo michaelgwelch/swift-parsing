@@ -9,10 +9,11 @@
 import Foundation
 import Darwin
 
+
 public indirect enum NumExpression {
-    case Id(String)
+    case Id(String, start:Location, end:Location)
     case Expr(NumExpression, NumExpression)
-    case NumberLiteral(Int)
+    case NumberLiteral(Int, start:Location, end:Location)
     case Term(NumExpression, NumExpression)
     case TermTailPlus(NumExpression, NumExpression)
     case TermTailSub(NumExpression, NumExpression)
@@ -23,11 +24,14 @@ public indirect enum NumExpression {
     case Negate(NumExpression)
     case Epsilon
     case Exp(NumExpression, NumExpression)
-//    case Negate(NumericExpression)
-//    case Multiply(NumericExpression, NumericExpression)
-//    case Divide(NumericExpression, NumericExpression)
-//    case Add(NumericExpression, NumericExpression)
-//    case Subtract(NumericExpression, NumericExpression)
+
+    public static func CreateId(startLoc:Location)(_ value:String)(_ endLoc:Location) -> NumExpression {
+        return Id(value, start: startLoc, end: endLoc)
+    }
+
+    public static func CreateNumberLiteral(value:Int, startLoc:Location, endLoc:Location) -> NumExpression {
+        return NumberLiteral(value, start: startLoc, end: endLoc)
+    }
 
     static let CreateExpr = curry(Expr)
     static let CreateExp = curry(Exp)
@@ -44,7 +48,7 @@ public indirect enum NumExpression {
 extension NumExpression : CustomStringConvertible {
     public var description:String {
         switch self {
-        case .Id(let s): return s
+        case .Id(let s, _, _): return s
         case .NumberLiteral(let i): return String(i)
         case .Epsilon: return ""
         case .Negate(let n): return "-" + n.description
@@ -64,7 +68,7 @@ extension NumExpression : CustomStringConvertible {
 extension NumExpression {
     var identifiers:[String] {
         switch self {
-        case .Id(let s): return [s]
+        case .Id(let s, _, _): return [s]
         case .Negate(let n): return n.identifiers
         case .Factor(let e1, let e2): return e1.identifiers + e2.identifiers
         case .FactTailMult(let e1, let e2): return e1.identifiers + e2.identifiers
@@ -110,8 +114,8 @@ extension NumExpression {
     public func eval(store: [String:Int]) -> Int? {
         switch self {
 
-        case .Id(let s): return store[s] ?? 0
-        case .NumberLiteral(let i): return i
+        case .Id(let s, _, _): return store[s] ?? 0
+        case .NumberLiteral(let i, _, _): return i
         case .Epsilon: return nil
         case .Negate(let e): return e.eval(store).map { -$0 }
         case .Factor(let e1, let e2): return e2.eval(store, initialValue: e1.eval(store))
@@ -183,9 +187,11 @@ func exp_operand_tail() -> Parser<NumExpression> {
       <|> epsilon
 }
 
+
+
 public let exp_operand = (lparen *> lazy_num_expression <* rparen)
-  <|> NumExpression.NumberLiteral <§> number
-  <|> NumExpression.Id <§> Parse.identifier
+  <|> NumExpression.CreateNumberLiteral <§>  number.withLocation()
+  <|> NumExpression.CreateId <§> Parse.currentLocation() <*> Parse.identifier <*> Parse.currentLocation()
   <|> (plusop *> lazy_num_expression)
   <|> NumExpression.Negate <§> (subop *> lazy_num_expression)
 

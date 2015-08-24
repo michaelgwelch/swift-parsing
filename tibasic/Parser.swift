@@ -7,8 +7,6 @@
 //
 
 import Foundation
-import Swift
-
 
 
 
@@ -19,8 +17,7 @@ import Swift
 public struct ParserContext {
     public private(set) var row:Int
     public private(set) var col:Int
-    public private(set) var position:Int
-    private var index:String.Index
+    public private(set) var index:String.Index
     public let string:String
 
     mutating func next() -> Character? {
@@ -30,22 +27,32 @@ public struct ParserContext {
 
         let currentChar = string[index]
         index = index.successor()
-        position++
         if currentChar == "\n" {
             row++
             col = 1
         } else {
             col++
         }
+
         return currentChar
     }
+}
+
+extension ParserContext:Equatable {
+
+}
+
+public func ==(lhs:ParserContext, rhs:ParserContext) -> Bool {
+    return lhs.col == rhs.col
+    && lhs.row == rhs.row
+    && lhs.index == rhs.index
+    && lhs.string == rhs.string
 }
 
 extension ParserContext {
     init(string:String) {
         row = 1
         col = 1
-        position = 0
         index = string.startIndex
         self.string = string
     }
@@ -168,7 +175,23 @@ public class Parse {
     public static func lazy<TokenType, P:ParserType where P.TokenType==TokenType>(@autoclosure(escaping) getParser:() -> P) -> LazyParser<TokenType, P> {
         return LazyParser { getParser() }
     }
+
+    static func currentRow() -> Parser<Int> {
+        return Parser { ($0.row, $0) }
+    }
+
+    static func currentCol() -> Parser<Int> {
+        return Parser { ($0.col, $0) }
+    }
+
+    public static func currentLocation() -> Parser<Location> {
+        func tuple(row:Int)(_ col:Int) -> Location {
+            return (row, col)
+        }
+        return tuple <§> currentRow() <*> currentCol()
+    }
 }
+public typealias Location = (row:Int, col:Int)
 
 
 let isLetter:Character -> Bool = { c in isUpper(c) || isLower(c) }
@@ -198,20 +221,14 @@ extension ParserType {
         return (self) *> Parse.success(())
     }
 
-    func currentPosition() -> Parser<Int> {
-        return Parser { ($0.position, $0) }
-    }
+    // How can I avoid doing the start and end location for each parsing expression. How about
+    // something like this:
 
-    func currentRow() -> Parser<Int> {
-        return Parser { ($0.row, $0) }
-    }
-
-    func currentCol() -> Parser<Int> {
-        return Parser { ($0.col, $0) }
-    }
-
-    func currentLocation() -> Parser<(row:Int, col:Int, pos:Int)> {
-        return tuple3 <§> currentRow() <*> currentCol() <*> currentPosition()
+    func withLocation() -> Parser<(TokenType,Location,Location)> {
+        func reorderTuple(startLoc:Location)(_ token:TokenType)(_ endLoc:Location) -> (TokenType,Location,Location) {
+            return (token, startLoc, endLoc)
+        }
+        return reorderTuple <§> Parse.currentLocation() <*> self <*> Parse.currentLocation()
     }
 }
 
@@ -222,6 +239,7 @@ public postfix func *<PT:ParserType, T where PT.TokenType==T>(p:PT) -> Parser<Li
 public postfix func +<PT:ParserType, T where PT.TokenType==T>(p:PT) -> Parser<List<T>> {
     return p.repeatOneOrMany()
 }
+
 
 
 
