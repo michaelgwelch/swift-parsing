@@ -16,6 +16,10 @@ public func id<A>(a:A) -> A {
     return a
 }
 
+public func flip<TA, TB, TC>(f:TA -> TB -> TC)(_ b:TB)(_ a:TA) -> TC {
+    return f(a)(b)
+}
+
 // Like Haskell $
 public func §<A,B>(lhs:A->B, rhs:A) -> B {
     return lhs(rhs)

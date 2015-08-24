@@ -43,6 +43,18 @@ class Success: XCTestCase {
         XCTAssertEqual(token, [UInt8]())
     }
 
+    func testContextDoesNotChange() {
+        // Arrange
+        let string = "watch television"
+        let index = string.rangeOfString(" ")?.startIndex
+        let expected = ParserContext(row: 1, col:6, index:index!, string:string)
+        // Act
+        let (_, actual) = P.success(24).parse(expected)!
+
+        // Assert
+        XCTAssertEqual(expected, actual)
+    }
+
 }
 
 class Failure: XCTestCase {
@@ -65,6 +77,31 @@ class Item: XCTestCase {
         let expected:(Character,String) = ("i", "tem")
         let actual = P.item.parse("item")!
         AssertEqual(expected, actual)
+    }
+
+    func testOnSameLineColumnIncreases() {
+        // Arrange
+        let string = "alphabet"
+        let index = (string.rangeOfString("p")?.startIndex)!
+        let context = ParserContext(row: 1, col: 3, index: index, string: string)
+        let expected = ParserContext(row: 1, col: 4, index: index.successor(), string: string)
+        // Act
+        let (_, actual) = P.item.parse(context)!
+        // Assert
+        XCTAssertEqual(expected, actual)
+    }
+
+    func testWhenNewLineParsedRowIncreasesColumnSetToOne() {
+        let string = "hello\nMichael"
+        let index = (string.rangeOfString("\n")?.startIndex)!
+        let context = ParserContext(row: 1, col: 6, index: index, string: string)
+        let expected = ParserContext(row: 2, col: 1, index: index.successor(), string: string)
+
+        // Act
+        let (_, actual) = P.item.parse(context)!
+        // Assert
+        XCTAssertEqual(expected, actual)
+
     }
 }
 
@@ -130,6 +167,17 @@ class StringParser: XCTestCase {
         let expected = ("let","ter")
         let actual = P.string("let").parse("letter")!
         AssertEqual(expected, actual)
+    }
+    func testColumnIncreasesByNumberOfCharactersInString() {
+        let string = "hello\nMichael"
+        let index = (string.rangeOfString("\n")?.startIndex)!
+        let context = ParserContext(row: 1, col: 6, index: index, string: string)
+        let expected = ParserContext(row: 2, col: 8, index: string.endIndex, string: string)
+
+        // Act
+        let (_, actual) = P.string("\nMichael").parse(context)!
+        // Assert
+        XCTAssertEqual(expected, actual)
     }
 }
 
