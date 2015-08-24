@@ -16,18 +16,62 @@ import Swift
 // Parser struct and protocol
 //////////////////
 
+public struct ParserContext {
+    public private(set) var row:Int
+    public private(set) var col:Int
+    public private(set) var position:String.Index
+    public let string:String
+
+    mutating func next() -> Character? {
+        guard (position != string.endIndex) else {
+            return nil
+        }
+
+        let currentChar = string[position]
+        position = position.successor()
+        if currentChar == "\n" {
+            row++
+            col = -1
+        } else {
+            col++
+        }
+        return currentChar
+    }
+}
+
+extension ParserContext {
+    init(string:String) {
+        row = 1
+        col = 0
+        position = string.startIndex
+        self.string = string
+    }
+}
+
+
+
 public protocol ParserType {
     typealias TokenType
-    func parse(input: String) -> (token: TokenType, output:String)?
+    func parse(input: ParserContext) -> (token: Self.TokenType, output: ParserContext)?
+}
+
+public extension ParserType {
+    /// For backward compatiblity with prewritten tests.
+    func parse(input: String) -> (token: Self.TokenType, output: String)? {
+        let context = ParserContext(string: input)
+        return self.parse(context).map { ($0.token, $0.output.string.substringFromIndex($0.output.position)) }
+    }
+
+
 }
 
 public struct Parser<T> : ParserType {
-    private let parser:String -> (T,String)?
-    public init(parser:String -> (T,String)?) {
+    private let parser:ParserContext -> (T,ParserContext)?
+    init(parser:ParserContext -> (T,ParserContext)?) {
         self.parser = parser
     }
 
-    public func parse(input: String) -> (token: T, output: String)? {
+    public func parse(input: ParserContext) -> (token: T, output: ParserContext)? {
         return parser(input)
     }
 }
@@ -42,7 +86,7 @@ public struct LazyParser<TokenType, P:ParserType where P.TokenType==TokenType> :
     public init(getParser:() -> P) {
         self.getParser = getParser
     }
-    public func parse(input: String) -> (token: TokenType, output: String)? {
+    public func parse(input: ParserContext) -> (token: TokenType, output: ParserContext)? {
         return getParser().parse(input)
     }
 }
@@ -50,11 +94,11 @@ public struct LazyParser<TokenType, P:ParserType where P.TokenType==TokenType> :
 
 
 public struct AnyParser<T> : ParserType {
-    private let _parse:(String) -> (token: T, output: String)?
+    private let _parse:(ParserContext) -> (token: T, output: ParserContext)?
     public init<P: ParserType where P.TokenType == T>(_ parser: P) {
         _parse = parser.parse
     }
-    public func parse(input: String) -> (token: T, output: String)? {
+    public func parse(input: ParserContext) -> (token: T, output: ParserContext)? {
         return _parse(input)
     }
 }
@@ -72,8 +116,9 @@ public class Parse {
         return Parser { (t, $0) }
     }
 
-    public static let item = Parser<Character> { input in
-        return input.uncons()
+    public static let item = Parser<Character> { (var input) in
+        let currentChar = input.next()
+        return currentChar.map { ($0, input) }
     }
 
     public static func sat(predicate:Character -> Bool) -> Parser<Character> {
