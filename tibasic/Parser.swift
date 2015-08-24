@@ -20,7 +20,7 @@ public struct ParserContext {
     public private(set) var index:String.Index
     public let string:String
 
-    mutating func next() -> Character? {
+    mutating func advance() -> Character? {
         guard (index != string.endIndex) else {
             return nil
         }
@@ -40,6 +40,18 @@ public struct ParserContext {
 
 extension ParserContext:Equatable {
 
+}
+
+extension ParserContext : GeneratorType {
+    public mutating func next() -> Character? {
+        return advance()
+    }
+}
+
+extension ParserContext : SequenceType {
+    public func generate() -> ParserContext {
+        return self
+    }
 }
 
 public func ==(lhs:ParserContext, rhs:ParserContext) -> Bool {
