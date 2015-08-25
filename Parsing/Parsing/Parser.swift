@@ -141,21 +141,21 @@ public class Parse {
         return currentChar.map { ($0, input) }
     }
 
-    public static func sat(predicate:Character -> Bool) -> Parser<Character> {
+    public static func satisfy(predicate:Character -> Bool) -> Parser<Character> {
         return item.bind { predicate($0) ? success($0) : failure() }
     }
 
     public static func char(c:Character) -> Parser<Character> {
-        return sat() { c == $0 }
+        return satisfy() { c == $0 }
     }
 
     public static let count = 5
 
-    public static let letter = Parse.sat § isLetter
-    public static let digit = Parse.sat(isDigit)
-    public static let upper = Parse.sat(isUpper)
-    public static let lower = Parse.sat(isLower)
-    public static let alphanum = Parse.sat(isAlphanum)
+    public static let letter = Parse.satisfy § isLetter
+    public static let digit = Parse.satisfy(isDigit)
+    public static let upper = Parse.satisfy(isUpper)
+    public static let lower = Parse.satisfy(isLower)
+    public static let alphanum = Parse.satisfy(isAlphanum)
 
     public static func string(s:String) -> Parser<String> {
         guard (!s.isEmpty) else {
@@ -171,7 +171,7 @@ public class Parse {
     public static let isSpace:Character -> Bool = { (c:Character) -> Bool in
         c == " " || c == "\n" || c == "\r" || c == "\t" }
 
-    public static let space:Parser<()> = Parse.sat(isSpace)* *> Parse.success(())
+    public static let space:Parser<()> = Parse.satisfy(isSpace)* *> Parse.success(())
 
     public static let ident:Parser<String> = String.init <§> (cons <§> letter <*> alphanum*)
     public static let int:String -> Int = { Int($0)!} // Construct an int out of a string of digits
