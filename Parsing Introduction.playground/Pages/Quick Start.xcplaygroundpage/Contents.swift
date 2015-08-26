@@ -25,12 +25,20 @@ parseExpression.parse(" 3 + 5 ")!.token
 
 //: Alternatively we could do this without the lambda expressions
 //: But first we need a curried version of addition
-let sum:Int -> Int -> Int = { x in { x + $0 } }
+let sumFunny:Int -> Character -> Int -> Int = { x in { _ in { x + $0 } } }
 
 //: `parseExpression2` is functionally equivalent to `parseExpression` and arguable
 //: simpler once you learn the funny operators: `<§>` , `<*>` and `*>`
-let parseExpression2 = sum <§> Parse.natural <*> (Parse.char("+") *> Parse.natural)
+let parseExpression2 = sumFunny <§> Parse.natural <*> Parse.char("+") <*> Parse.natural
 parseExpression2.parse(" 19 + 24 ")!.token
+
+//: While this works you might notice that we defined `sumFunny` to take an `Int`, a `Character`,
+//: and another `Int`. This is because these are the three things we parsed. But we don't
+//: really want to pass the `+` to the `sumFunny` function. To parse the `+` and
+//: "throw it away" we can use the `*>` operator like this:
+
+func sum(x:Int)(_ y:Int) -> Int { return x + y }
+(sum <§> Parse.natural <*> (Parse.char("+") *> Parse.natural)).parse(" 19 + 24 ")!.token
 //: ## The Primitives
 //: The `Parse` class provides many parser primitives. A parser
 //: is any type that conforms to `ParserType`. Most of the primitives

@@ -36,3 +36,15 @@ extension List : SequenceType {
     }
 }
 
+//extension List {
+//    public func bind<U>(f:T -> List<U>) -> List<U> {
+//        return .Nil
+//    }
+//}
+//
+//extension List where T : SequenceType {
+//    public func concat() -> List<T.Generator.Element> {
+//        return self.bind(id)
+//    }
+//}
+
