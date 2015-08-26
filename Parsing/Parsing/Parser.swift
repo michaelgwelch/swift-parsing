@@ -220,13 +220,13 @@ func tuple3<T1,T2,T3>(t1:T1)(_ t2:T2)(_ t3:T3) -> (T1,T2,T3) {
 }
 
 extension ParserType {
-    func repeatMany() -> Parser<List<TokenType>> {
+    public func repeatMany() -> Parser<List<TokenType>> {
         return Parse.lazy(self.repeatOneOrMany()) <|> Parse.success(List<TokenType>.Nil)
     }
     func repeatOneOrMany() -> Parser<List<TokenType>> {
         return cons <§> self <*> self.repeatMany()
     }
-    func token() -> Parser<TokenType> {
+    public func token() -> Parser<TokenType> {
         return Parse.space *> self <* Parse.space
     }
     func void() -> Parser<()> {

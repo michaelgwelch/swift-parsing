@@ -11,17 +11,26 @@ let regChar:Parser<Character> = Parse.satisfy { (c:Character) -> Bool in
     c != "|" && c != "*" && c != "(" && c != ")"
 }
 
-let basicExpr:Parser<Parser<String>>
-let regExpr = Parse.lazy(basicExpr)
+let repeatExpr:Parser<Parser<String>>
+let regExpr = Parse.lazy(repeatExpr)
 
 let parenExpr:Parser<Parser<String>> = Parse.char("(") *> regExpr <* Parse.char(")")
 
 func charToString(c:Character) -> String { return String(c) }
 let charExpr:Parser<Parser<String>> = regChar |>>= { return Parse.success(charToString <§> Parse.char($0)) }
 
-basicExpr = parenExpr <|> charExpr
+let basicExpr = parenExpr <|> charExpr
+
+func concat<S:SequenceType where S.Generator.Element==String>(strings:S) -> String {
+    return strings.joinWithSeparator("")
+}
 
 
+
+repeatExpr = basicExpr |>>= { be in
+    (Parse.char("*") |>> (Parse.success § concat <§> be.repeatMany()))
+    <|> Parse.success(be)
+}
 
 
 var parseAna = regExpr.parse("a")!.token
@@ -33,4 +42,7 @@ parseAna = regExpr.parse("(a)")!.token
 parseAna.parse("ab")
 parseAna.parse("b")
 
+var parseAs = repeatExpr.parse("a*")!.token
+parseAs.parse("")!.token
+parseAs.parse("aaaaab")!
 //: [Next](@next)
