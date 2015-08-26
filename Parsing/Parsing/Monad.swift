@@ -10,14 +10,14 @@ import Foundation
 
 
 // Like Haskell >>=, bind
-//func |>>=<T1, T2>(lhs:Parser<T1>, rhs:T1 -> Parser<T2>) -> Parser<T2> {
-//    return lhs.bind(rhs)
-//}
+public func |>>=<T1, T2>(lhs:Parser<T1>, rhs:T1 -> Parser<T2>) -> Parser<T2> {
+    return lhs.bind(rhs)
+}
 
-//// Like Haskell >>
-//func |>><T1,T2>(lhs:Parser<T1>, rhs:Parser<T2>) -> Parser<T2> {
-//    return lhs.bind { _ in rhs }
-//}
+// Like Haskell >>
+public func |>><T1,T2>(lhs:Parser<T1>, rhs:Parser<T2>) -> Parser<T2> {
+    return lhs.bind { _ in rhs }
+}
 
 
 

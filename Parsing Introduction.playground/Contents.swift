@@ -13,8 +13,15 @@ let parseExpression = Parse.natural.bind { x in
         }
     }
 }
-
 parseExpression.parse(" 3 + 5 ")!.token
+
+//: We can simplify slightly by using the `|>>` operator to avoid the
+//: unused variable `c`. 
+(Parse.natural |>>= { x in
+    Parse.char("+") |>> Parse.natural |>>= {
+        return Parse.success(x + $0)
+    }
+}).parse("    12  + 23  ")!.token
 
 //: Alternatively we could do this without the lambda expressions
 //: But first we need a curried version of addition
