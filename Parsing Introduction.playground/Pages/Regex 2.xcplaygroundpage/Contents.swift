@@ -5,19 +5,11 @@ import Parsing
 
 //: **Figure 1: The grammar for regular expressions**
 //:
-//:     regexpr    ::= orexpr
-//:     orexpr     ::= concatexpr { { | orexpr } • ε }
-//:     concatexpr ::= repeatexpr { concatexpr • ε}
-//:     repeatexpr ::= basicexpr { * • ε }
-//:     basicexpr  ::= parenexpr • charexpr
-//:     parenexpr  ::= ( regexpr )
-//:     charexpr   ::= regchar
-//:     regchar    ::= "any character except {'|','(',')','*'}"
 //:
 //:     reg_expr         ::= term term_tail
 //:     term_tail        ::= { | term term_tail } • ε
 //:     term             ::= factor factor_tail
-//:     factor_tail      ::= { factor factor_tail } • ε
+//:     factor_tail      ::= { term } • ε
 //:     factor           ::= basic_expr basic_expr_tail
 //:     basic_expr_tail  ::= * • ε
 //:     basic_expr       ::= paren_expr • char_expr
@@ -35,19 +27,25 @@ import Parsing
 //:     a*       { ε, a, aa, aaa, ... }               Matches an infinite set
 //:     a(bc*)*d {ad, abd, abbd, abcd, abbcd, ... }   Matches an infinite set
 
+//: We want a tree we can parse our results into. The RegEx enum
+//: has cases for each production in the grammar. We could eliminated cases for
+//: term_tail, factor_tail, basic_expr_tail, paren_expr and basic.
+//: term_tail can be eliminated because it's results can be stored in an Expr or Epsilon
+//: Likewise, factor_tail, can be stored as a Term or Epsilon.
+//: basic_expr_tail can be stored as a Repeat or Epsilon
+//: basic can be stored as a Paren or Char
+//: paren_expr can just return whatever reg_expr returns.
+
 indirect enum RegEx {
     case Expr(RegEx, RegEx)
-    case TermTail(RegEx, RegEx) // Used only for the | case, else it's Epsilon
     case Term(RegEx, RegEx)
-    // No case for FactorTail. It's either a Factor or Epsilon
     case Factor(RegEx, RegEx)
-    // No case for basic expr tail. It's either a Repeat or Epsilon
-    // No case for basic. It's either a paren expr or a char expr
     case Repeat
     case Paren(RegEx)
     case Char(Character)
     case Epsilon()
 }
+
 
 //: Concatenate the strings and return the result
 //: For example:
@@ -65,7 +63,6 @@ let concat:String -> String -> String = { x in { x + $0 }}
 
 let createExpr = curry(RegEx.Expr)
 let createTerm = curry(RegEx.Term)
-let createTermTail = curry(RegEx.TermTail)
 let createFactor = curry(RegEx.Factor)
 
 
@@ -88,10 +85,11 @@ let basic_expr = paren_expr <|> char_expr
 let basic_expr_tail = star <|> epsilon
 let factor = createFactor <§> basic_expr <*> basic_expr_tail
 let factor_tail:MonadicParser<RegEx>
-factor_tail = createFactor <§> factor <*> Parser.lazy(factor_tail) <|> epsilon
-let term = createTerm <§> factor <*> factor_tail
+let term:MonadicParser<RegEx>
+factor_tail = Parser.lazy(term) <|> epsilon
+term = createTerm <§> factor <*> factor_tail
 let term_tail:MonadicParser<RegEx>
-term_tail = createTermTail <§> (or *> term) <*> Parser.lazy(term_tail) <|> epsilon
+term_tail = createExpr <§> (or *> term) <*> Parser.lazy(term_tail) <|> epsilon
 reg_expr = createExpr <§> term <*> term_tail
 
 extension RegEx {
@@ -101,20 +99,18 @@ extension RegEx {
         default: return false
         }
     }
-    var isTermTail:Bool {
-        switch self {
-        case .TermTail(_): return true
-        default: return false
+    var isEpsilon:Bool {
+        if case Epsilon() = self {
+            return true
         }
+        return false
     }
+
     func compile() -> MonadicParser<String> {
         switch self {
         case .Expr(let r1, let r2):
             let r1Parser = r1.compile()
-            return r2.isTermTail ? r1Parser <|> r2.compile() : r1Parser
-        case .TermTail(let r1, let r2):
-            let r1Parser = r1.compile()
-            return r2.isTermTail ? r1Parser <|> r2.compile() : r1Parser
+            return r2.isEpsilon ?  r1Parser : r1Parser <|> r2.compile()
         case .Term(let r1, let r2):
             return concat <§> r1.compile() <*> r2.compile()
         case .Factor(let r1, let r2):
@@ -124,6 +120,18 @@ extension RegEx {
         case .Paren(let r): return r.compile()
         case .Char(let c): return Parser.char(c).map { String.init($0) }
         case .Epsilon: return Parser.success("")
+        }
+    }
+
+    var description:String {
+        switch self {
+        case .Expr(let r1, let r2): return r1.description + (r2.isEpsilon ? "" : "|\(r2.description)")
+        case .Term(let r1, let r2): return r1.description + r2.description
+        case .Factor(let r1, let r2): return r1.description + r2.description
+        case .Repeat: return "*"
+        case .Paren(let r): return "(\(r.description))"
+        case .Char(let c): return String(c)
+        case .Epsilon(): return ""
         }
     }
 }
@@ -177,14 +185,14 @@ p.parse("ba")
 
 // repeat again
 p = compile("ab*|b*")
-p.parse("abbbbg")?.token
+p.parse("abbbg")?.token
 
 // or
 let r = reg_expr.parse("a|b")!.token
-print(r)
 p = compile("a|b")
 p.parse("b")
 
-print(epsilon.parse("b")!.token)
+reg_expr.parse("ab*|b*")!.token.description
+
 
 //: [Next](@next)

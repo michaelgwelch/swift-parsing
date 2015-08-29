@@ -1,3 +1,13 @@
+//
+//  main.swift
+//  TestParser
+//
+//  Created by Michael Welch on 8/29/15.
+//  Copyright © 2015 Michael Welch. All rights reserved.
+//
+
+import Foundation
+
 //: [Previous](@previous)
 
 import Foundation
@@ -66,54 +76,29 @@ indirect enum RegEx {
         }
         return false;
     }
-    var isEpsilon:Bool {
-        switch self {
-        case .TermTailEpsilon(), .FactorTailEpsilon(), .BasicEpsilon(): return true
-        default: return false
-        }
-    }
 
 
     func compile() -> MonadicParser<String> {
-        //let epsilon = Parser.success("")
+        let epsilon = Parser.success("")
         let concat = { (s1:String) in { s1 + $0 } }
 
         switch self {
-        case .Expr(let r1, let r2):
-            return r2.isEpsilon ? r1.compile() : r1.compile() <|> r2.compile()
-
-        case .TermTailContinue(let r1, let r2):
-            return r2.isEpsilon ? r1.compile() : r1.compile() <|> r2.compile()
-
-        case .TermTailEpsilon():
-            fatalError("t eps shouldn't be called")
-
-        case .Term(let r1, let r2):
-            return r2.isEpsilon ? r1.compile() : concat <§> r1.compile() <*> r2.compile()
-
-        case .FactorTailContinue(let r1, let r2):
-            return r2.isEpsilon ? r1.compile() : concat <§> r1.compile() <*> r2.compile()
-
-        case .FactorTailEpsilon():
-            fatalError("f eps shouldn't be called")
-
+        case .Expr(let r1, let r2): return r1.compile() <|> r2.compile()
+        case .TermTailContinue(let r1, let r2): return r1.compile() <|> r2.compile()
+        case .TermTailEpsilon(): return epsilon
+        case .Term(let r1, let r2): return concat <§> r1.compile() <*> r2.compile()
+        case .FactorTailContinue(let r1, let r2): return concat <§> r1.compile() <*> r2.compile()
+        case .FactorTailEpsilon(): return epsilon
         case .Factor(let r1, let r2):
             return r2.isStar ? join <§> r1.compile().repeatMany() : r1.compile()
-
-        case .BasicStar():
-            fatalError("* is not a valid regular expression")
-
-        case .BasicEpsilon(): fatalError("shouldn't be called")
+        case .BasicStar(): fatalError("* is not a valid regular expression")
+        case .BasicEpsilon(): return epsilon
         case .Basic(let r): return r.compile()
         case .Paren(let r): return r.compile()
         case .Char(let c): return Parser.string(String(c))
 
         }
     }
-
-//    func compileTail(withPrefix prefix:MonadicParser<String>) -> MonadicParser<String> {
-//        let concat = { (s1:String) in { s1 + $0 } }
-//    }
 
 }
 
@@ -176,9 +161,6 @@ p.parse("b")
 
 // repeat paren
 p = compile("(a)*")
-let epsilon = Parser.success("")
-let concat = { (s1:String) in { s1 + $0 } }
-p = (concat <§> ((join <§> (concat <§> (Parser.string(String("a"))) <*> (epsilon)).repeatMany())) <*> (epsilon))
 print(reg_expr.parse("(a)*")!.token)
 
 p.parse("aaaa")
@@ -231,3 +213,4 @@ p.parse("b")
 
 
 //: [Next](@next)
+

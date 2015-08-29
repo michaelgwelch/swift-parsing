@@ -244,6 +244,16 @@ extension ParserType {
     }
 }
 
+func joinStrings<S:SequenceType where S.Generator.Element==String>(strings:S) -> String {
+    return strings.joinWithSeparator("")
+}
+
+extension ParserType where TokenType==List<String> {
+    public func join() -> MonadicParser<String> {
+        return joinStrings <§> self
+    }
+}
+
 public postfix func *<PT:ParserType, T where PT.TokenType==T>(p:PT) -> MonadicParser<List<T>> {
     return p.repeatMany()
 }
