@@ -2,6 +2,10 @@
 <playground version='6.0' target-platform='osx' requires-full-environment='true' display-mode='raw'>
     <pages>
         <page name='Quick Start'/>
-        <page name='Example1 RegEx'/>
+        <page name='Expressions'/>
+        <page name='RegEx No Operators'/>
+        <page name='RegEx'/>
+        <page name='Regex 2'/>
+        <page name='Regex 3'/>
     </pages>
 </playground>

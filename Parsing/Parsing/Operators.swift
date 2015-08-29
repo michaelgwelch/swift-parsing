@@ -10,10 +10,7 @@ import Foundation
 
 
 // Like Haskell fmap, <$>
-infix operator <§> { associativity left precedence 120 }
-
-// Like Haskell Alternative <|>
-infix operator <|> { associativity left precedence 110 }
+infix operator <§> { associativity left precedence 140 }
 
 // Like Haskell Applicative <*>
 infix operator <*> { associativity left precedence 120 }
@@ -23,6 +20,10 @@ infix operator <* { associativity left precedence 120 }
 
 // Haskell Applictive *>
 infix operator *> { associativity left precedence 120 }
+
+// Like Haskell Alternative <|>
+infix operator <|> { associativity left precedence 110 }
+
 
 // Like Haskell >>=, bind
 infix operator |>>= { associativity left precedence 100 }
@@ -39,3 +40,4 @@ infix operator • { associativity right precedence 190 }
 // repeatMany
 postfix operator * {}
 postfix operator + {}
+

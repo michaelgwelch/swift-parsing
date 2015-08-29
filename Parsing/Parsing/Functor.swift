@@ -9,13 +9,14 @@
 import Foundation
 
 extension ParserType {
-    func map<B>(f:TokenType -> B) -> Parser<B> {
-        return self.bind { Parse.success(f($0)) }
+    public func map<B>(f:TokenType -> B) -> MonadicParser<B> {
+        return self.bind { Parser.success(f($0)) }
     }
 }
 
+
 // Like Haskell fmap, <$>
-public func <§><ParserA:ParserType, A, B where ParserA.TokenType==A>(lhs:A->B, rhs:ParserA) -> Parser<B> {
+public func <§><ParserA:ParserType, A, B where ParserA.TokenType==A>(lhs:A->B, rhs:ParserA) -> MonadicParser<B> {
     return rhs.map(lhs)
 }
 
