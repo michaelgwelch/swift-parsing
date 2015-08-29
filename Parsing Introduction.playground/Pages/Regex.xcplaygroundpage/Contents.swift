@@ -55,7 +55,11 @@ import Parsing
 //:     a(bc*)*d {ad, abd, abbd, abcd, abbcd, ... }   Matches an infinite set
 
 
-//: Some helper functions
+//: Some helper functions we'll be using later.
+typealias P = Parser
+let satisfy = P.satisfy
+let char = P.char
+
 
 //: Concatenate the strings and return the result
 //: For example:
@@ -71,54 +75,47 @@ func join<S:SequenceType where S.Generator.Element==String>(strings:S) -> String
 //:     concat("foo")("bar") // "foobar"
 let concat:String -> String -> String = { x in { x + $0 }}
 
+//: Create a `String` from a `Character`
+let charToString:Character -> String = { String.init($0) }
 
-let regChar:Parser<Character> = Parse.satisfy { (c:Character) -> Bool in
+
+//: A parser that parses any character except the special chars '|', '*', '(', and ')'
+let regChar:MonadicParser<Character> = satisfy { (c:Character) -> Bool in
     c != "|" && c != "*" && c != "(" && c != ")"
 }
 
-let orExpr:Parser<Parser<String>>
+//: A forward reference for `orExpr`
+let orExpr:MonadicParser<MonadicParser<String>>
 
 //: Use lazy in next line because `orExpr` is not yet assigned.
 //: It's a *forward reference* because Playgrounds apparently can't refer
 //: to something that has not yet been defined (unlike normal source files)
 //: It can't be defined yet because it's circular. This safely breaks the circular
 //: reference
-let regExpr = Parse.lazy(orExpr)
-
-let parenExpr = Parse.char("(") *> regExpr <* Parse.char(")")
-
-let charToString:Character -> String = { String.init($0) }
+let regExpr = Parser.lazy(orExpr)
 
 
-let charExpr = regChar |>>= { return Parse.success(charToString <§> Parse.char($0)) }
+//: Parses a parenexpr. Note that the `*>` operator parses two expressions
+//: and returns the right hand side. The `<*` operator parses two expressions
+//: and returns the left hand side. So the following parser parses a "(", a
+//: regExpr and a ")" but only returns the the results of regExpr.
+let parenExpr = char("(") *> regExpr <* char(")")
+
+let charExpr = regChar |>>= { return P.success(charToString <§> char($0)) }
 
 let basicExpr = parenExpr <|> charExpr
 
-
-
 let repeatExpr = basicExpr |>>= { be in
-    (Parse.char("*") |>> (Parse.success(join <§> be.repeatMany())))
-    <|> Parse.success(be)
+    char("*") *> P.success(join <§> be*) <|> P.success(be)
 }
 
-
-func concatExprF() -> Parser<Parser<String>> {
-    return repeatExpr |>>= { re in
-        (concatExprF() |>>= { ce in
-            return Parse.success(concat <§> re <*> ce)
-            }) <|> Parse.success(re)
-    }
-
+let concatExpr:MonadicParser<MonadicParser<String>>
+concatExpr = repeatExpr |>>= { re in
+    (concatExpr |>>= { ce in return P.success(concat <§> re <*> ce) }) <|> P.success(re)
 }
 
-let concatExpr = concatExprF()
-
-orExpr = concatExpr |>>= { (ce:Parser<String>) in
-    (
-        Parse.char("|") |>> orExpr |>>= { oe in
-            return Parse.success(ce <|> oe)
-        }
-    ) <|> Parse.success(ce)
+orExpr = concatExpr |>>= { ce in
+    (char("|") *> orExpr |>>= { oe in return P.success(ce <|> oe) }) <|> P.success(ce)
 }
 
 var parseAna = regExpr.parse("a")!.token
@@ -142,11 +139,11 @@ var parseAsOrBs = regExpr.parse("a*|(b*)")!.token
 parseAsOrBs.parse("aaaaaaab")!.token
 parseAsOrBs.parse("b")!.token
 
-func compile(regex:String) -> Parser<String> {
+func compile(regex:String) -> MonadicParser<String> {
     return regExpr.parse(regex)!.token
 }
 
-func runParser(p:Parser<String>)(_ s:String) -> String {
+func runParser(p:MonadicParser<String>)(_ s:String) -> String {
     return p.parse(s)!.token
 }
 
@@ -186,7 +183,7 @@ p.parse("ba")
 
 // repeat again
 p = compile("ab*|b*")
-p.parse("abb")
+p.parse("abbg")?.token
 
 
 
