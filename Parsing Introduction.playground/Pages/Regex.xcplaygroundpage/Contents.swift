@@ -60,45 +60,46 @@ indirect enum RegEx {
     static let createFactorTailContinue = curry(FactorTailContinue)
     static let createFactor = curry(Factor)
 
-    var isStar:Bool {
-        if case BasicStar = self {
-            return true
-        }
-        return false;
-    }
-    var isEpsilon:Bool {
-        switch self {
-        case .TermTailEpsilon(), .FactorTailEpsilon(), .BasicEpsilon(): return true
-        default: return false
-        }
-    }
+//    var isStar:Bool {
+//        if case BasicStar = self {
+//            return true
+//        }
+//        return false;
+//    }
+//    var isEpsilon:Bool {
+//        switch self {
+//        case .TermTailEpsilon(), .FactorTailEpsilon(), .BasicEpsilon(): return true
+//        default: return false
+//        }
+//    }
 
 
     func compile() -> MonadicParser<String> {
-        //let epsilon = Parser.success("")
-        let concat = { (s1:String) in { s1 + $0 } }
 
         switch self {
         case .Expr(let r1, let r2):
-            return r2.isEpsilon ? r1.compile() : r1.compile() <|> r2.compile()
+            return r2.compileTail(withPrefix: r1.compile())
 
         case .TermTailContinue(let r1, let r2):
-            return r2.isEpsilon ? r1.compile() : r1.compile() <|> r2.compile()
+            return r2.compileTail(withPrefix: r1.compile())
 
         case .TermTailEpsilon():
             fatalError("t eps shouldn't be called")
 
         case .Term(let r1, let r2):
-            return r2.isEpsilon ? r1.compile() : concat <§> r1.compile() <*> r2.compile()
+            return r2.compileTail(withPrefix: r1.compile())
+            //return r2.isEpsilon ? r1.compile() : concat <§> r1.compile() <*> r2.compile()
 
         case .FactorTailContinue(let r1, let r2):
-            return r2.isEpsilon ? r1.compile() : concat <§> r1.compile() <*> r2.compile()
+            return r2.compileTail(withPrefix: r1.compile())
+            //return r2.isEpsilon ? r1.compile() : concat <§> r1.compile() <*> r2.compile()
 
         case .FactorTailEpsilon():
             fatalError("f eps shouldn't be called")
 
         case .Factor(let r1, let r2):
-            return r2.isStar ? join <§> r1.compile().repeatMany() : r1.compile()
+            return r2.compileTail(withPrefix: r1.compile())
+            //return r2.isStar ? join <§> r1.compile().repeatMany() : r1.compile()
 
         case .BasicStar():
             fatalError("* is not a valid regular expression")
@@ -111,9 +112,26 @@ indirect enum RegEx {
         }
     }
 
-//    func compileTail(withPrefix prefix:MonadicParser<String>) -> MonadicParser<String> {
-//        let concat = { (s1:String) in { s1 + $0 } }
-//    }
+    func compileTail(withPrefix prefix:MonadicParser<String>) -> MonadicParser<String> {
+        let concat = { (s1:String) in { s1 + $0 } }
+
+        switch self {
+        case .TermTailContinue(let r1, let r2):
+            return prefix <|> r2.compileTail(withPrefix: r1.compile())
+
+        case .FactorTailContinue(let r1, let r2):
+            return concat <§> prefix <*> r2.compileTail(withPrefix: r1.compile())
+
+        case .BasicStar():
+            return prefix.repeatMany().join()
+
+        case .BasicEpsilon(), .FactorTailEpsilon(), .TermTailEpsilon(): return prefix
+
+        default:
+            fatalError()
+        }
+    }
+
 
 }
 
@@ -172,17 +190,6 @@ func runParser(p:MonadicParser<String>)(_ s:String) -> String {
 var p = compile("a")
 runParser(p)("a")
 p.parse("b")
-
-
-// repeat paren
-p = compile("(a)*")
-let epsilon = Parser.success("")
-let concat = { (s1:String) in { s1 + $0 } }
-p = (concat <§> ((join <§> (concat <§> (Parser.string(String("a"))) <*> (epsilon)).repeatMany())) <*> (epsilon))
-print(reg_expr.parse("(a)*")!.token)
-
-p.parse("aaaa")
-p.parse("bbbcd")
 
 // concat expr
 p = compile("ab")
