@@ -227,3 +227,5 @@ print(parsedExpression.graph)
 
 NumericExpression.eval <§> parsedExpression <*> [String:Int]()
 
+
+

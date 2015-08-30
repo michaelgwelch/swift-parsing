@@ -46,8 +46,7 @@ class Success: XCTestCase {
     func testContextDoesNotChange() {
         // Arrange
         let string = "watch television"
-        let index = string.rangeOfString(" ")?.startIndex
-        let expected = ParserContext(row: 1, col:6, index:index!, string:string)
+        let expected = ParserContext(row: 1, col:6, string:string)
         // Act
         let (_, actual) = P.success(24).parse(expected)!
 
@@ -82,9 +81,8 @@ class Item: XCTestCase {
     func testOnSameLineColumnIncreases() {
         // Arrange
         let string = "alphabet"
-        let index = (string.rangeOfString("p")?.startIndex)!
-        let context = ParserContext(row: 1, col: 3, index: index, string: string)
-        let expected = ParserContext(row: 1, col: 4, index: index.successor(), string: string)
+        let context = ParserContext(row: 1, col: 3, string: string)
+        let expected = ParserContext(row: 1, col: 4, string: "lphabet")
         // Act
         let (_, actual) = P.item.parse(context)!
         // Assert
@@ -92,10 +90,9 @@ class Item: XCTestCase {
     }
 
     func testWhenNewLineParsedRowIncreasesColumnSetToOne() {
-        let string = "hello\nMichael"
-        let index = (string.rangeOfString("\n")?.startIndex)!
-        let context = ParserContext(row: 1, col: 6, index: index, string: string)
-        let expected = ParserContext(row: 2, col: 1, index: index.successor(), string: string)
+        let string = "\nMichael"
+        let context = ParserContext(row: 1, col: 6, string: string)
+        let expected = ParserContext(row: 2, col: 1, string: "Michael")
 
         // Act
         let (_, actual) = P.item.parse(context)!
@@ -128,8 +125,9 @@ class Char: XCTestCase {
     }
     func testConsumesAndReturnsOneCharacterIfItMatches() {
         let expected:(Character, String) = ("c", "hair")
-        let actual = P.char("c").parse("chair")!
-        AssertEqual(expected, actual)
+        let parser = P.char("c")
+        let actual = parser.parse("chair")
+        AssertEqual(expected, actual!)
     }
 }
 
@@ -168,11 +166,13 @@ class StringParser: XCTestCase {
         let actual = P.string("let").parse("letter")!
         AssertEqual(expected, actual)
     }
+    func testFailsIfNoMatch() {
+        AssertNil(P.string("hello").parse("goodbye"))
+    }
     func testColumnIncreasesByNumberOfCharactersInString() {
-        let string = "hello\nMichael"
-        let index = (string.rangeOfString("\n")?.startIndex)!
-        let context = ParserContext(row: 1, col: 6, index: index, string: string)
-        let expected = ParserContext(row: 2, col: 8, index: string.endIndex, string: string)
+        let string = "\nMichael"
+        let context = ParserContext(row: 1, col: 6, string: string)
+        let expected = ParserContext(row: 2, col: 8, string: "")
 
         // Act
         let (_, actual) = P.string("\nMichael").parse(context)!

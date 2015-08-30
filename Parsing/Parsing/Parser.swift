@@ -17,16 +17,15 @@ import Foundation
 public struct ParserContext {
     public private(set) var row:Int
     public private(set) var col:Int
-    public private(set) var index:String.Index
-    public let string:String
+    public private(set) var string:String
 
     mutating func advance() -> Character? {
-        guard (index != string.endIndex) else {
+        guard (!string.isEmpty) else {
             return nil
         }
 
-        let currentChar = string[index]
-        index = index.successor()
+        let currentChar = string[string.startIndex]
+        string = string[string.startIndex.successor()..<string.endIndex]
         if currentChar == "\n" {
             row++
             col = 1
@@ -57,7 +56,6 @@ extension ParserContext : SequenceType {
 public func ==(lhs:ParserContext, rhs:ParserContext) -> Bool {
     return lhs.col == rhs.col
     && lhs.row == rhs.row
-    && lhs.index == rhs.index
     && lhs.string == rhs.string
 }
 
@@ -65,7 +63,6 @@ extension ParserContext {
     init(string:String) {
         row = 1
         col = 1
-        index = string.startIndex
         self.string = string
     }
 }
@@ -81,7 +78,8 @@ public extension ParserType {
     /// For backward compatiblity with prewritten tests.
     func parse(input: String) -> (token: Self.TokenType, output: String)? {
         let context = ParserContext(string: input)
-        return self.parse(context).map { ($0.token, $0.output.string.substringFromIndex($0.output.index)) }
+        let result = self.parse(context)
+        return result.map { ($0.token, $0.output.string) }
     }
 }
 
