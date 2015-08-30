@@ -162,53 +162,74 @@ func runParser(p:MonadicParser<String>)(_ s:String) -> String {
 }
 
 
-// char expr
-term.parse("a")!.token.compile().parse("a")
+func ==<A,B where A:Equatable, B:Equatable>(lhs:(A,B), rhs:(A,B)) -> Bool {
+    return lhs.0 == rhs.0 && lhs.1 == rhs.1
+}
 
+func assertEqual(@autoclosure result:() -> (String,String)?, _ expected:(String,String)?,
+    file: String = __FILE__, line: UInt = __LINE__) -> (String,String)? {
+        let actual = result()
+        let equal:(String,String)->(String,String)->Bool = { lhs in { lhs == $0 } }
+
+        if (actual == nil && expected == nil) {
+            return actual
+        }
+
+        let comparison = equal <§> actual <*> expected
+        if let areEqual = comparison where areEqual {
+            return actual
+        }
+
+        print("Error: \(actual) != \(expected) on line:\(line)")
+        return actual
+}
+
+// char expr
 var p = compile("a")
 runParser(p)("a")
-p.parse("b")
+assertEqual(p.parse("a"), ("a",""))
+assertEqual(p.parse("abc"), ("a","bc"))
+assertEqual(p.parse("b"), nil)
 
 // concat expr
 p = compile("ab")
-p.parse("a")
-p.parse("ab")
+assertEqual(p.parse("a"), nil)
+assertEqual(p.parse("ab"), ("ab",""))
 
 // paren expr
 p = compile("(c)")
-p.parse("cd")
+assertEqual(p.parse("cd"), ("c","d"))
 
 // repeat expr
 p = compile("a*")
-p.parse("aaaa")
+assertEqual(p.parse("aaaa"), ("aaaa",""))
 
 // repeat paren
 p = compile("(a)*")
-print(reg_expr.parse("(a)*")!.token)
-
-p.parse("aaaa")
-p.parse("bbbcd")
+assertEqual(p.parse("aaaa"), ("aaaa",""))
+assertEqual(p.parse("bbbcd"), ("","bbbcd"))
 
 // regex 7
 p = compile("a(b)*a")
-p.parse("aa")
-p.parse("aba")
-p.parse("abbbbac")
+assertEqual(p.parse("aa"), ("aa",""))
+assertEqual(p.parse("aba"), ("aba",""))
+assertEqual(p.parse("abbbbac"), ("abbbba","c"))
+
+p = compile("a(bc*)*a")
+assertEqual(p.parse("aa"), ("aa",""))
+assertEqual(p.parse("aba"), ("aba",""))
+assertEqual(p.parse("abbbbccccbcba"), ("abbbbccccbcba",""))
 
 // regex 8
 p = compile("a|b|c")
-p.parse("abc")
-p.parse("cd")
-p.parse("ba")
+assertEqual(p.parse("abc"), ("a","bc"))
+assertEqual(p.parse("cd"), ("c","d"))
+assertEqual(p.parse("ba"), ("b","a"))
 
 // repeat again
 p = compile("ab*|b*")
-p.parse("abbbbg")?.token
+assertEqual(p.parse("abbbg"), ("abbb","g"))
 
-// or
-let r = reg_expr.parse("a|b")!.token
-p = compile("a|b")
-p.parse("b")
 
 
 //: [Next](@next)
