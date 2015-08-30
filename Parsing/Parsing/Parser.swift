@@ -233,6 +233,10 @@ extension ParserType {
         return (self) *> Parser.success(())
     }
 
+    public func orElse<P:ParserType where P.TokenType==TokenType>(p:P) -> MonadicParser<TokenType> {
+        return self <|> p
+    }
+
     // How can I avoid doing the start and end location for each parsing expression. How about
     // something like this:
 

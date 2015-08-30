@@ -3,6 +3,7 @@
     <pages>
         <page name='Quick Start'/>
         <page name='Expressions'/>
+        <page name='RegEx No Operators'/>
         <page name='RegEx'/>
         <page name='Regex 2'/>
         <page name='Regex 3'/>

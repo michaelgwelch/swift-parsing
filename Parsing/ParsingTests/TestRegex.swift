@@ -244,7 +244,7 @@ class TestRegEx :XCTestCase {
         p.parse("abbbbg")?.token
         
         // or
-        let r = TestRegEx.reg_expr.parse("a|b")!.token
+      //  let r = TestRegEx.reg_expr.parse("a|b")!.token
         p = TestRegEx.compile("a|b")
         p.parse("b")
     }
