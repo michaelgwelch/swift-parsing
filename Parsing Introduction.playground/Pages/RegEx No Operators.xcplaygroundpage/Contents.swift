@@ -57,32 +57,33 @@ let reg_char = Parser.satisfy { (c:Character) in
 
 let char_expr = reg_char.map(RegEx.Char)
 
-let paren_expr_sequence = Parser.sequence(Parser.char("("), Parser.sequence(expr, Parser.char(")")).firstToken).secondToken
+let paren_expr_sequence = Parser.char("(").sequence(expr).secondToken.sequence(Parser.char(")")).firstToken
+
 let paren_expr = paren_expr_sequence.map(RegEx.Paren)
 
 let basic_expr = (paren_expr <|> char_expr).map(RegEx.Basic)
-let basic_star = Parser.sequence(Parser.char("*"), Parser.success(RegEx.BasicStar())).secondToken
+let basic_star = Parser.char("*").sequence(Parser.success(RegEx.BasicStar())).secondToken
 let basic_epsilon = Parser.success(RegEx.BasicEpsilon())
 let basic_expr_tail = basic_star.orElse(basic_epsilon)
 
-let factor_sequence = Parser.sequence(basic_expr, basic_expr_tail).bothTokens
+let factor_sequence = basic_expr.sequence(basic_expr_tail).bothTokens
 let factor = factor_sequence.map(RegEx.Factor)
 
 let factor_tail:MonadicParser<RegEx>
-let factor_tail_sequence = Parser.sequence(factor, Parser.lazy(factor_tail)).bothTokens
+let factor_tail_sequence = factor.sequence(Parser.lazy(factor_tail)).bothTokens
 let factor_tail_continue = factor_tail_sequence.map(RegEx.FactorTailContinue)
 let factor_tail_epsilon = Parser.success(RegEx.FactorTailEpsilon())
 factor_tail = factor_tail_continue.orElse(factor_tail_epsilon)
 
-let term_sequence = Parser.sequence(factor, factor_tail).bothTokens
+let term_sequence = factor.sequence(factor_tail).bothTokens
 let term = term_sequence.map(RegEx.Term)
 let term_tail:MonadicParser<RegEx>
-let term_tail_sequence = Parser.sequence(Parser.sequence(Parser.char("|"), term).secondToken, Parser.lazy(term_tail)).bothTokens
+let term_tail_sequence = Parser.char("|").sequence(term).secondToken.sequence(Parser.lazy(term_tail)).bothTokens
 let term_tail_continue = term_tail_sequence.map(RegEx.TermTailContinue)
 let term_tail_epsilon = Parser.success(RegEx.TermTailEpsilon())
 term_tail = term_tail_continue.orElse(term_tail_epsilon)
 
-let reg_expr_sequence = Parser.sequence(term, term_tail).bothTokens
+let reg_expr_sequence = term.sequence(term_tail).bothTokens
 reg_expr = reg_expr_sequence.map(RegEx.Expr)
 
 
@@ -131,9 +132,9 @@ extension RegEx {
             return prefix.orElse(r2.compileTail(withPrefix: r1.compile()))
 
         case .FactorTailContinue(let r1, let r2):
-            let sequence = Parser.sequence(prefix, r2.compileTail(withPrefix: r1.compile())).bothTokens
-            return Parser.map(function: concat, forUseOn: sequence)
-
+            let sequence = prefix.sequence(r2.compileTail(withPrefix: r1.compile())).bothTokens
+            return sequence.map(concat)
+            
         case .BasicStar():
             return prefix.repeatMany().join()
             

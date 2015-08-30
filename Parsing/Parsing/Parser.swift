@@ -94,6 +94,7 @@ public struct MonadicParser<T> : ParserType {
     public func parse(input: ParserContext) -> (token: T, output: ParserContext)? {
         return parser(input)
     }
+
 }
 
 
