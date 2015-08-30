@@ -6,7 +6,7 @@
 
 
 import Foundation
-import Parsing
+import SwiftParsing
 
 //: # Using Swift Parsing For a Reg Ex Library
 //: Regular expressions are character patterns that describe a set of strings. 
@@ -183,7 +183,7 @@ p.parse("ba")
 
 // repeat again
 p = compile("ab*|b*")
-p.parse("abbbbg")?.token
+p.parse("abbbg")?.token
 
 
 

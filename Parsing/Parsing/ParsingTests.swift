@@ -7,7 +7,7 @@
 //
 import Swift
 import XCTest
-@testable import Parsing
+@testable import SwiftParsing
 
 typealias P=Parser
 func AssertNil<T>(@autoclosure expression: () -> T?, message: String = "",

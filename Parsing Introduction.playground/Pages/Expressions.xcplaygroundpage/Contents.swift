@@ -1,7 +1,7 @@
 //: [Previous](@previous)
 
 import Foundation
-import Parsing
+import SwiftParsing
 import Darwin
 
 //: # Parsing and evaluating expressions

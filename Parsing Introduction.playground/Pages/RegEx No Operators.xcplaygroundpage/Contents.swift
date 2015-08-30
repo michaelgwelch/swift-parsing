@@ -1,7 +1,7 @@
 //: [Previous](@previous)
 
 import Foundation
-import Parsing
+import SwiftParsing
 
 //: **Figure 1: The grammar for regular expressions**
 //:
