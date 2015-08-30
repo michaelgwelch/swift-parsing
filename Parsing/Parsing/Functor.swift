@@ -14,14 +14,6 @@ extension ParserType {
     }
 }
 
-extension Parser {
-    /// Lifts a function of type `A-B` to work with a parser for type `A` and
-    /// return a parser for type `B`
-    public static func map<ParserA:ParserType, A, B where ParserA.TokenType==A>(function f:A->B, forUseOn parser:ParserA)
-        -> MonadicParser<B> {
-            return f <§> parser
-    }
-}
 
 // Like Haskell fmap, <$>
 public func <§><ParserA:ParserType, A, B where ParserA.TokenType==A>(lhs:A->B, rhs:ParserA) -> MonadicParser<B> {
