@@ -49,38 +49,38 @@ indirect enum RegEx {
 
 
 let reg_expr:MonadicParser<RegEx>
-let expr = Parser.lazy(reg_expr)
+let expr = Parsers.lazy(reg_expr)
 
-let reg_char = Parser.satisfy { (c:Character) in
+let reg_char = Parsers.satisfy { (c:Character) in
     c != "(" && c != ")" && c != "*" && c != "|"
 }
 
 let char_expr = reg_char.map(RegEx.Char)
 
-let paren_expr_sequence = Parser.char("(").sequence(expr).secondToken.sequence(Parser.char(")")).firstToken
+let paren_expr_sequence = Parsers.char("(").sequence(expr).secondToken.sequence(Parsers.char(")")).firstToken
 
 let paren_expr = paren_expr_sequence.map(RegEx.Paren)
 
 let basic_expr = (paren_expr <|> char_expr).map(RegEx.Basic)
-let basic_star = Parser.char("*").sequence(Parser.success(RegEx.BasicStar())).secondToken
-let basic_epsilon = Parser.success(RegEx.BasicEpsilon())
+let basic_star = Parsers.char("*").sequence(Parsers.success(RegEx.BasicStar())).secondToken
+let basic_epsilon = Parsers.success(RegEx.BasicEpsilon())
 let basic_expr_tail = basic_star.orElse(basic_epsilon)
 
 let factor_sequence = basic_expr.sequence(basic_expr_tail).bothTokens
 let factor = factor_sequence.map(RegEx.Factor)
 
 let factor_tail:MonadicParser<RegEx>
-let factor_tail_sequence = factor.sequence(Parser.lazy(factor_tail)).bothTokens
+let factor_tail_sequence = factor.sequence(Parsers.lazy(factor_tail)).bothTokens
 let factor_tail_continue = factor_tail_sequence.map(RegEx.FactorTailContinue)
-let factor_tail_epsilon = Parser.success(RegEx.FactorTailEpsilon())
+let factor_tail_epsilon = Parsers.success(RegEx.FactorTailEpsilon())
 factor_tail = factor_tail_continue.orElse(factor_tail_epsilon)
 
 let term_sequence = factor.sequence(factor_tail).bothTokens
 let term = term_sequence.map(RegEx.Term)
 let term_tail:MonadicParser<RegEx>
-let term_tail_sequence = Parser.char("|").sequence(term).secondToken.sequence(Parser.lazy(term_tail)).bothTokens
+let term_tail_sequence = Parsers.char("|").sequence(term).secondToken.sequence(Parsers.lazy(term_tail)).bothTokens
 let term_tail_continue = term_tail_sequence.map(RegEx.TermTailContinue)
-let term_tail_epsilon = Parser.success(RegEx.TermTailEpsilon())
+let term_tail_epsilon = Parsers.success(RegEx.TermTailEpsilon())
 term_tail = term_tail_continue.orElse(term_tail_epsilon)
 
 let reg_expr_sequence = term.sequence(term_tail).bothTokens
@@ -119,7 +119,7 @@ extension RegEx {
         case .BasicEpsilon(): fatalError("shouldn't be called")
         case .Basic(let r): return r.compile()
         case .Paren(let r): return r.compile()
-        case .Char(let c): return Parser.string(String(c))
+        case .Char(let c): return Parsers.string(String(c))
 
         }
     }
@@ -153,7 +153,7 @@ func compile(s:String)->MonadicParser<String> {
     if let regex = regex {
         return regex.compile()
     } else {
-        return Parser.failure()
+        return Parsers.failure()
     }
 }
 

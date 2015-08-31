@@ -67,39 +67,39 @@ let createFactor = curry(NumericExpression.Factor)
 let createBasic = curry(NumericExpression.BasicTail)
 
 let num_expr:MonadicParser<NumericExpression>
-let expr = Parser.lazy(num_expr)
+let expr = Parsers.lazy(num_expr)
 
 
 //: Now just start defining parsers for each line of the grammar starting at the bottom
 
-let epsilon = Parser.success(NumericExpression.Epsilon)
-let exp_op = Parser.char("^").token()
-let div_op = Parser.char("/").token()
-let mult_op = Parser.char("*").token()
-let sub_op = Parser.char("-").token()
-let plus_op = Parser.char("+").token()
-let lparen = Parser.char("(").token()
-let rparen = Parser.char(")").token()
+let epsilon = Parsers.success(NumericExpression.Epsilon)
+let exp_op = Parsers.char("^").token()
+let div_op = Parsers.char("/").token()
+let mult_op = Parsers.char("*").token()
+let sub_op = Parsers.char("-").token()
+let plus_op = Parsers.char("+").token()
+let lparen = Parsers.char("(").token()
+let rparen = Parsers.char(")").token()
 
 
 
 let unaryPlus = plus_op *> expr
 let unaryNegate = NumericExpression.Negate <§> (sub_op *> expr)
-let literal = NumericExpression.Literal <§> Parser.natural
-let identifier = NumericExpression.Identifier <§> Parser.identifier
+let literal = NumericExpression.Literal <§> Parsers.natural
+let identifier = NumericExpression.Identifier <§> Parsers.identifier
 let paren_expr = NumericExpression.Paren <§> (lparen *> expr) <* rparen
 let basic = paren_expr <|> identifier <|> literal <|> unaryNegate <|> unaryPlus
 let basic_tail:MonadicParser<NumericExpression>
-basic_tail = createBasic <§> (exp_op *> basic) <*> Parser.lazy(basic_tail) <|> epsilon
+basic_tail = createBasic <§> (exp_op *> basic) <*> Parsers.lazy(basic_tail) <|> epsilon
 let factor = createFactor <§> basic <*> basic_tail
 let factor_tail:MonadicParser<NumericExpression>
-factor_tail = createMult <§> (mult_op *> factor) <*> Parser.lazy(factor_tail)
-    <|> createDiv <§> (div_op *> factor) <*> Parser.lazy(factor_tail)
+factor_tail = createMult <§> (mult_op *> factor) <*> Parsers.lazy(factor_tail)
+    <|> createDiv <§> (div_op *> factor) <*> Parsers.lazy(factor_tail)
     <|> epsilon
 let term = createTerm <§> factor <*> factor_tail
 let term_tail:MonadicParser<NumericExpression>
-term_tail = createAdd <§> (plus_op *> term) <*> Parser.lazy(term_tail)
-    <|> createSub <§> (sub_op *> term) <*> Parser.lazy(term_tail)
+term_tail = createAdd <§> (plus_op *> term) <*> Parsers.lazy(term_tail)
+    <|> createSub <§> (sub_op *> term) <*> Parsers.lazy(term_tail)
     <|> epsilon
 num_expr = createExpression <§> term <*> term_tail
 

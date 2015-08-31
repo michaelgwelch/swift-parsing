@@ -85,7 +85,7 @@ indirect enum RegEx {
         case .BasicEpsilon(): fatalError("shouldn't be called")
         case .Basic(let r): return r.compile()
         case .Paren(let r): return r.compile()
-        case .Char(let c): return Parser.string(String(c))
+        case .Char(let c): return Parsers.string(String(c))
 
         }
     }
@@ -116,34 +116,34 @@ indirect enum RegEx {
 
 let reg_expr:MonadicParser<RegEx>
 //let term:MonadicParser<RegEx>
-let expr = Parser.lazy(reg_expr)
+let expr = Parsers.lazy(reg_expr)
 
-let reg_char = Parser.satisfy { (c:Character) in
+let reg_char = Parsers.satisfy { (c:Character) in
     c != "(" && c != ")" && c != "*" && c != "|"
 }
 
 
 let char_expr = RegEx.Char <§> reg_char
 
-let paren_expr = RegEx.Paren <§> (Parser.char("(") *> expr <* Parser.char(")"))
+let paren_expr = RegEx.Paren <§> (Parsers.char("(") *> expr <* Parsers.char(")"))
 
 let basic_expr = RegEx.Basic <§> (paren_expr <|> char_expr)
-let basic_star = Parser.char("*") *> Parser.success(RegEx.BasicStar())
-let basic_epsilon = Parser.success(RegEx.BasicEpsilon())
+let basic_star = Parsers.char("*") *> Parsers.success(RegEx.BasicStar())
+let basic_epsilon = Parsers.success(RegEx.BasicEpsilon())
 let basic_expr_tail = basic_star <|> basic_epsilon
 
 
 let factor = RegEx.createFactor <§> basic_expr <*> basic_expr_tail
 let factor_tail:MonadicParser<RegEx>
-let factor_tail_continue = RegEx.createFactorTailContinue <§> factor <*> Parser.lazy(factor_tail)
-let factor_tail_epsilon = Parser.success(RegEx.FactorTailEpsilon())
+let factor_tail_continue = RegEx.createFactorTailContinue <§> factor <*> Parsers.lazy(factor_tail)
+let factor_tail_epsilon = Parsers.success(RegEx.FactorTailEpsilon())
 factor_tail = factor_tail_continue <|> factor_tail_epsilon
 
 let term = RegEx.createTerm <§> factor <*> factor_tail
 let term_tail:MonadicParser<RegEx>
-let term_tail_continue = RegEx.createTermTailContinue <§> (Parser.char("|") *> term) <*>
-    Parser.lazy(term_tail)
-let term_tail_epsilon = Parser.success(RegEx.TermTailEpsilon())
+let term_tail_continue = RegEx.createTermTailContinue <§> (Parsers.char("|") *> term) <*>
+    Parsers.lazy(term_tail)
+let term_tail_epsilon = Parsers.success(RegEx.TermTailEpsilon())
 term_tail = term_tail_continue <|> term_tail_epsilon
 
 reg_expr = RegEx.createExpr <§> term <*> term_tail
@@ -155,7 +155,7 @@ func compile(s:String)->MonadicParser<String> {
     if let regex = regex {
         return regex.compile()
     } else {
-        return Parser.failure()
+        return Parsers.failure()
     }
 }
 

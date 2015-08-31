@@ -56,7 +56,7 @@ import SwiftParsing
 
 
 //: Some helper functions we'll be using later.
-typealias P = Parser
+typealias P = Parsers
 let satisfy = P.satisfy
 let char = P.char
 
@@ -92,7 +92,7 @@ let orExpr:MonadicParser<MonadicParser<String>>
 //: to something that has not yet been defined (unlike normal source files)
 //: It can't be defined yet because it's circular. This safely breaks the circular
 //: reference
-let regExpr = Parser.lazy(orExpr)
+let regExpr = P.lazy(orExpr)
 
 
 //: Parses a parenexpr. Note that the `*>` operator parses two expressions

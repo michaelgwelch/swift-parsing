@@ -10,7 +10,7 @@ import Foundation
 
 extension ParserType {
     public func map<B>(f:TokenType -> B) -> MonadicParser<B> {
-        return self.bind { Parser.success(f($0)) }
+        return self.bind { Parsers.success(f($0)) }
     }
 }
 

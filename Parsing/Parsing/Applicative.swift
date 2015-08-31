@@ -36,14 +36,14 @@ public func <*><ParserAB:ParserType, ParserA:ParserType, A, B where ParserAB.Tok
 public func <*<ParserA:ParserType, ParserB:ParserType, A, B where
     ParserA.TokenType==A, ParserB.TokenType==B>(lhs:ParserA, rhs:ParserB) -> MonadicParser<A> {
         let first:(A,B) -> A = { $0.0 }
-        return Parser.lift(first, lhs, rhs)
+        return Parsers.lift(first, lhs, rhs)
 }
 
 // Haskell Applictive *>
 public func *><ParserA:ParserType, ParserB:ParserType, A, B where
     ParserA.TokenType==A, ParserB.TokenType==B>(lhs:ParserA, rhs:ParserB) -> MonadicParser<B> {
         let second:(A,B) -> B = { $0.1 }
-        return Parser.lift(second, lhs, rhs)
+        return Parsers.lift(second, lhs, rhs)
 }
 
 public struct SequenceParser<PA:ParserType, PB:ParserType, A, B where PA.TokenType==A, PB.TokenType==B> : ParserType {
@@ -72,7 +72,7 @@ public struct SequenceParser<PA:ParserType, PB:ParserType, A, B where PA.TokenTy
 
 
 
-extension Parser {
+extension Parsers {
 
     /// Takes a function of type `(A,B)->C` and "lifts" it to work with a
     /// parser for type `A` and a parser for type `B` and return a parser for type `C`
@@ -80,7 +80,7 @@ extension Parser {
         where ParserA.TokenType==A, ParserB.TokenType==B>(f:(A,B) ->C, _ parserA:ParserA, _ parserB:ParserB) -> MonadicParser<C> {
             return parserA.bind { a in
                 parserB.bind { b in
-                    return Parser.success(f(a,b))
+                    return Parsers.success(f(a,b))
                 }
             }
     }

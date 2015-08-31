@@ -66,18 +66,18 @@ let createTerm = curry(RegEx.Term)
 let createFactor = curry(RegEx.Factor)
 
 
-let or = Parser.char("|").void()
-let star = Parser.char("*") *> Parser.success(RegEx.Repeat)
-let lparen = Parser.char("(").void()
-let rparen = Parser.char(")").void()
-let epsilon = Parser.success(RegEx.Epsilon())
+let or = Parsers.char("|").void()
+let star = Parsers.char("*") *> Parsers.success(RegEx.Repeat)
+let lparen = Parsers.char("(").void()
+let rparen = Parsers.char(")").void()
+let epsilon = Parsers.success(RegEx.Epsilon())
 
-let regchar = Parser.satisfy { (c:Character) in
+let regchar = Parsers.satisfy { (c:Character) in
     c != "(" && c != ")" && c != "*" && c != "|"
 }
 
 let reg_expr:MonadicParser<RegEx>
-let expr=Parser.lazy(reg_expr)
+let expr=Parsers.lazy(reg_expr)
 
 let char_expr = RegEx.Char <§> regchar
 let paren_expr = RegEx.Paren <§> (lparen *> expr) <* rparen
@@ -86,10 +86,10 @@ let basic_expr_tail = star <|> epsilon
 let factor = createFactor <§> basic_expr <*> basic_expr_tail
 let factor_tail:MonadicParser<RegEx>
 let term:MonadicParser<RegEx>
-factor_tail = Parser.lazy(term) <|> epsilon
+factor_tail = Parsers.lazy(term) <|> epsilon
 term = createTerm <§> factor <*> factor_tail
 let term_tail:MonadicParser<RegEx>
-term_tail = createExpr <§> (or *> term) <*> Parser.lazy(term_tail) <|> epsilon
+term_tail = createExpr <§> (or *> term) <*> Parsers.lazy(term_tail) <|> epsilon
 reg_expr = createExpr <§> term <*> term_tail
 
 extension RegEx {
@@ -116,10 +116,10 @@ extension RegEx {
         case .Factor(let r1, let r2):
             let r1Parser = r1.compile()
             return r2.isStar ? join <§> r1Parser.repeatMany() : r1Parser
-        case .Repeat: return Parser.failure() // shouldn't be reached
+        case .Repeat: return Parsers.failure() // shouldn't be reached
         case .Paren(let r): return r.compile()
-        case .Char(let c): return Parser.char(c).map { String.init($0) }
-        case .Epsilon: return Parser.success("")
+        case .Char(let c): return Parsers.char(c).map { String.init($0) }
+        case .Epsilon: return Parsers.success("")
         }
     }
 
@@ -141,7 +141,7 @@ func compile(s:String)->MonadicParser<String> {
     if let regex = regex {
         return regex.compile()
     } else {
-        return Parser.failure()
+        return Parsers.failure()
     }
 }
 
