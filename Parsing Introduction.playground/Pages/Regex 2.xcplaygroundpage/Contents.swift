@@ -76,7 +76,7 @@ let regchar = Parsers.satisfy { (c:Character) in
     c != "(" && c != ")" && c != "*" && c != "|"
 }
 
-let reg_expr:MonadicParser<RegEx>
+let reg_expr:Parser<RegEx>
 let expr=Parsers.lazy(reg_expr)
 
 let char_expr = RegEx.Char <§> regchar
@@ -84,11 +84,11 @@ let paren_expr = RegEx.Paren <§> (lparen *> expr) <* rparen
 let basic_expr = paren_expr <|> char_expr
 let basic_expr_tail = star <|> epsilon
 let factor = createFactor <§> basic_expr <*> basic_expr_tail
-let factor_tail:MonadicParser<RegEx>
-let term:MonadicParser<RegEx>
+let factor_tail:Parser<RegEx>
+let term:Parser<RegEx>
 factor_tail = Parsers.lazy(term) <|> epsilon
 term = createTerm <§> factor <*> factor_tail
-let term_tail:MonadicParser<RegEx>
+let term_tail:Parser<RegEx>
 term_tail = createExpr <§> (or *> term) <*> Parsers.lazy(term_tail) <|> epsilon
 reg_expr = createExpr <§> term <*> term_tail
 
@@ -106,7 +106,7 @@ extension RegEx {
         return false
     }
 
-    func compile() -> MonadicParser<String> {
+    func compile() -> Parser<String> {
         switch self {
         case .Expr(let r1, let r2):
             let r1Parser = r1.compile()
@@ -136,7 +136,7 @@ extension RegEx {
     }
 }
 
-func compile(s:String)->MonadicParser<String> {
+func compile(s:String)->Parser<String> {
     let regex = reg_expr.parse(s)?.token
     if let regex = regex {
         return regex.compile()
@@ -145,7 +145,7 @@ func compile(s:String)->MonadicParser<String> {
     }
 }
 
-func runParser(p:MonadicParser<String>)(_ s:String) -> String {
+func runParser(p:Parser<String>)(_ s:String) -> String {
     return p.parse(s)!.token
 }
 

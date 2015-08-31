@@ -71,7 +71,7 @@ public extension ParserType {
     }
 }
 
-public struct MonadicParser<T> : ParserType {
+public struct Parser<T> : ParserType {
     private let parser:ParserContext -> (T,ParserContext)?
     init(parser:ParserContext -> (T,ParserContext)?) {
         self.parser = parser
@@ -115,15 +115,15 @@ public struct AnyParser<T> : ParserType {
 ///////////////////////////////
 
 public class Parsers {
-    public static func failure<T>() -> MonadicParser<T> {
-        return MonadicParser { _ in nil }
+    public static func failure<T>() -> Parser<T> {
+        return Parser { _ in nil }
     }
 
-    public static func success<T>(t:T) -> MonadicParser<T> {
-        return MonadicParser { (t, $0) }
+    public static func success<T>(t:T) -> Parser<T> {
+        return Parser { (t, $0) }
     }
 
-    public static let item = MonadicParser<Character> { (var input) in
+    public static let item = Parser<Character> { (var input) in
         let currentChar = input.advance()
         return currentChar.map { ($0, input) }
     }
@@ -142,7 +142,7 @@ public class Parsers {
     public static let lower = satisfy(isLower)
     public static let alphanum = satisfy(isAlphanum)
 
-    public static func string(s:String) -> MonadicParser<String> {
+    public static func string(s:String) -> Parser<String> {
         guard (!s.isEmpty) else {
             return success("")
         }
@@ -156,28 +156,28 @@ public class Parsers {
     public static let isSpace:Character -> Bool = { (c:Character) -> Bool in
         c == " " || c == "\n" || c == "\r" || c == "\t" }
 
-    public static let space:MonadicParser<()> = Parsers.satisfy(isSpace)* *> Parsers.success(())
+    public static let space:Parser<()> = Parsers.satisfy(isSpace)* *> Parsers.success(())
 
-    public static let ident:MonadicParser<String> = String.init <§> (cons <§> letter <*> alphanum*)
+    public static let ident:Parser<String> = String.init <§> (cons <§> letter <*> alphanum*)
     public static let int:String -> Int = { Int($0)!} // Construct an int out of a string of digits
 
-    public static let nat:MonadicParser<Int> = int <§> (String.init <§> (cons <§> digit <*> digit*))
+    public static let nat:Parser<Int> = int <§> (String.init <§> (cons <§> digit <*> digit*))
     public static let identifier = ident.token()
 
     public static let natural = nat.token()
 
-    public static let symbol:String -> MonadicParser<String> = { (Parsers.string § $0).token() }
+    public static let symbol:String -> Parser<String> = { (Parsers.string § $0).token() }
 
     //* Wrap a parser so that it is evaluated lazily
     public static func lazy<TokenType, P:ParserType where P.TokenType==TokenType>(@autoclosure(escaping) getParser:() -> P) -> LazyParser<TokenType, P> {
         return LazyParser { getParser() }
     }
 
-    public static let currentRow:MonadicParser<Int> = MonadicParser { ($0.row, $0) }
+    public static let currentRow:Parser<Int> = Parser { ($0.row, $0) }
 
-    public static let currentCol:MonadicParser<Int> = MonadicParser { ($0.col, $0) }
+    public static let currentCol:Parser<Int> = Parser { ($0.col, $0) }
 
-    public static let currentLocation:MonadicParser<Location> = { row in { col in (row,col) } } <§> currentRow <*> currentCol
+    public static let currentLocation:Parser<Location> = { row in { col in (row,col) } } <§> currentRow <*> currentCol
 
 }
 public typealias Location = (row:Int, col:Int)
@@ -193,27 +193,27 @@ let isAlphanum:Character -> Bool = { isLetter($0) || isDigit($0) }
 // MARK: ParserType extension
 
 extension ParserType {
-    public func repeatMany() -> MonadicParser<List<TokenType>> {
+    public func repeatMany() -> Parser<List<TokenType>> {
         return Parsers.lazy(self.repeatOneOrMany()) <|> Parsers.success(List<TokenType>.Nil)
     }
-    func repeatOneOrMany() -> MonadicParser<List<TokenType>> {
+    func repeatOneOrMany() -> Parser<List<TokenType>> {
         return cons <§> self <*> self.repeatMany()
     }
-    public func token() -> MonadicParser<TokenType> {
+    public func token() -> Parser<TokenType> {
         return Parsers.space *> self <* Parsers.space
     }
-    public func void() -> MonadicParser<()> {
+    public func void() -> Parser<()> {
         return (self) *> Parsers.success(())
     }
 
-    public func orElse<P:ParserType where P.TokenType==TokenType>(p:P) -> MonadicParser<TokenType> {
+    public func orElse<P:ParserType where P.TokenType==TokenType>(p:P) -> Parser<TokenType> {
         return self <|> p
     }
 
     // How can I avoid doing the start and end location for each parsing expression. How about
     // something like this:
 
-    func withLocation() -> MonadicParser<(TokenType,Location,Location)> {
+    func withLocation() -> Parser<(TokenType,Location,Location)> {
         func reorderTuple(startLoc:Location)(_ token:TokenType)(_ endLoc:Location) -> (TokenType,Location,Location) {
             return (token, startLoc, endLoc)
         }
@@ -222,17 +222,17 @@ extension ParserType {
 }
 
 extension ParserType where TokenType==List<String> {
-    public func join() -> MonadicParser<String> {
+    public func join() -> Parser<String> {
         let join = flip(List<String>.joinWithSeparator)("")
         return join <§> self
     }
 }
 
-public postfix func *<PT:ParserType, T where PT.TokenType==T>(p:PT) -> MonadicParser<List<T>> {
+public postfix func *<PT:ParserType, T where PT.TokenType==T>(p:PT) -> Parser<List<T>> {
     return p.repeatMany()
 }
 
-public postfix func +<PT:ParserType, T where PT.TokenType==T>(p:PT) -> MonadicParser<List<T>> {
+public postfix func +<PT:ParserType, T where PT.TokenType==T>(p:PT) -> Parser<List<T>> {
     return p.repeatOneOrMany()
 }
 

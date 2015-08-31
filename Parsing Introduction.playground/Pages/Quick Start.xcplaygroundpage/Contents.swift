@@ -57,7 +57,7 @@ func sum(x:Int)(_ y:Int) -> Int { return x + y }
 
 //:
 //: `Parser.failure<T>() -> Parser<T>` This parser fails to parse anything and always returns `nil`
-let intParser:MonadicParser<Int> = Parsers.failure()
+let intParser:Parser<Int> = Parsers.failure()
 intParser.parse("any input")
 
 //: Note that since `failure` is generic in it's return type you need a type

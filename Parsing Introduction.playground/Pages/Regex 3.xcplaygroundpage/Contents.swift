@@ -80,12 +80,12 @@ let charToString:Character -> String = { String.init($0) }
 
 
 //: A parser that parses any character except the special chars '|', '*', '(', and ')'
-let regChar:MonadicParser<Character> = satisfy { (c:Character) -> Bool in
+let regChar:Parser<Character> = satisfy { (c:Character) -> Bool in
     c != "|" && c != "*" && c != "(" && c != ")"
 }
 
 //: A forward reference for `orExpr`
-let orExpr:MonadicParser<MonadicParser<String>>
+let orExpr:Parser<Parser<String>>
 
 //: Use lazy in next line because `orExpr` is not yet assigned.
 //: It's a *forward reference* because Playgrounds apparently can't refer
@@ -109,7 +109,7 @@ let repeatExpr = basicExpr |>>= { be in
     char("*") *> P.success(join <§> be*) <|> P.success(be)
 }
 
-let concatExpr:MonadicParser<MonadicParser<String>>
+let concatExpr:Parser<Parser<String>>
 concatExpr = repeatExpr |>>= { re in
     (concatExpr |>>= { ce in return P.success(concat <§> re <*> ce) }) <|> P.success(re)
 }
@@ -139,11 +139,11 @@ var parseAsOrBs = regExpr.parse("a*|(b*)")!.token
 parseAsOrBs.parse("aaaaaaab")!.token
 parseAsOrBs.parse("b")!.token
 
-func compile(regex:String) -> MonadicParser<String> {
+func compile(regex:String) -> Parser<String> {
     return regExpr.parse(regex)!.token
 }
 
-func runParser(p:MonadicParser<String>)(_ s:String) -> String {
+func runParser(p:Parser<String>)(_ s:String) -> String {
     return p.parse(s)!.token
 }
 
