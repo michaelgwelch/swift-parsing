@@ -41,18 +41,6 @@ extension ParserContext:Equatable {
 
 }
 
-extension ParserContext : GeneratorType {
-    public mutating func next() -> Character? {
-        return advance()
-    }
-}
-
-extension ParserContext : SequenceType {
-    public func generate() -> ParserContext {
-        return self
-    }
-}
-
 public func ==(lhs:ParserContext, rhs:ParserContext) -> Bool {
     return lhs.col == rhs.col
     && lhs.row == rhs.row
@@ -136,25 +124,23 @@ public class Parser {
     }
 
     public static let item = MonadicParser<Character> { (var input) in
-        let currentChar = input.next()
+        let currentChar = input.advance()
         return currentChar.map { ($0, input) }
     }
 
-    public static func satisfy(predicate:Character -> Bool) -> MonadicParser<Character> {
-        return item.bind { predicate($0) ? success($0) : failure() }
+    public static let satisfy = { (predicate:Character->Bool) in
+        return item.bind { predicate($0) ? Parser.success($0) : Parser.failure() }
     }
 
-    public static func char(c:Character) -> MonadicParser<Character> {
+    public static let char = { (c:Character) in
         return satisfy() { c == $0 }
     }
 
-    public static let count = 5
-
-    public static let letter = Parser.satisfy § isLetter
-    public static let digit = Parser.satisfy(isDigit)
-    public static let upper = Parser.satisfy(isUpper)
-    public static let lower = Parser.satisfy(isLower)
-    public static let alphanum = Parser.satisfy(isAlphanum)
+    public static let letter = satisfy § isLetter
+    public static let digit = satisfy(isDigit)
+    public static let upper = satisfy(isUpper)
+    public static let lower = satisfy(isLower)
+    public static let alphanum = satisfy(isAlphanum)
 
     public static func string(s:String) -> MonadicParser<String> {
         guard (!s.isEmpty) else {
@@ -187,20 +173,12 @@ public class Parser {
         return LazyParser { getParser() }
     }
 
-    static func currentRow() -> MonadicParser<Int> {
-        return MonadicParser { ($0.row, $0) }
-    }
+    public static let currentRow:MonadicParser<Int> = MonadicParser { ($0.row, $0) }
 
-    static func currentCol() -> MonadicParser<Int> {
-        return MonadicParser { ($0.col, $0) }
-    }
+    public static let currentCol:MonadicParser<Int> = MonadicParser { ($0.col, $0) }
 
-    public static func currentLocation() -> MonadicParser<Location> {
-        func tuple(row:Int)(_ col:Int) -> Location {
-            return (row, col)
-        }
-        return tuple <§> currentRow() <*> currentCol()
-    }
+    public static let currentLocation:MonadicParser<Location> = { row in { col in (row,col) } } <§> currentRow <*> currentCol
+
 }
 public typealias Location = (row:Int, col:Int)
 
@@ -213,10 +191,6 @@ let isAlphanum:Character -> Bool = { isLetter($0) || isDigit($0) }
 
 
 // MARK: ParserType extension
-
-func tuple3<T1,T2,T3>(t1:T1)(_ t2:T2)(_ t3:T3) -> (T1,T2,T3) {
-    return (t1, t2, t3)
-}
 
 extension ParserType {
     public func repeatMany() -> MonadicParser<List<TokenType>> {
@@ -243,17 +217,14 @@ extension ParserType {
         func reorderTuple(startLoc:Location)(_ token:TokenType)(_ endLoc:Location) -> (TokenType,Location,Location) {
             return (token, startLoc, endLoc)
         }
-        return reorderTuple <§> Parser.currentLocation() <*> self <*> Parser.currentLocation()
+        return reorderTuple <§> Parser.currentLocation <*> self <*> Parser.currentLocation
     }
-}
-
-func joinStrings<S:SequenceType where S.Generator.Element==String>(strings:S) -> String {
-    return strings.joinWithSeparator("")
 }
 
 extension ParserType where TokenType==List<String> {
     public func join() -> MonadicParser<String> {
-        return joinStrings <§> self
+        let join = flip(List<String>.joinWithSeparator)("")
+        return join <§> self
     }
 }
 

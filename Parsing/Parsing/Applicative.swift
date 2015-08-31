@@ -9,7 +9,12 @@
 import Foundation
 
 
-// Like Haskell Alternative <|>
+// MARK: ParserType Applicative
+
+/// Create a new parser that is composed of two parsers.
+/// If the first one fails to parse anything then the second run is run.
+///
+/// Like Haskell Alternative <|>
 public func <|><ParserA1:ParserType, ParserA2:ParserType, A where ParserA1.TokenType==A, ParserA2.TokenType==A>(lhs:ParserA1, rhs:ParserA2) -> MonadicParser<A> {
     return MonadicParser { input in
         if let result = lhs.parse(input) {
@@ -20,15 +25,11 @@ public func <|><ParserA1:ParserType, ParserA2:ParserType, A where ParserA1.Token
     }
 }
 
-
+///
 // Like Haskell Applicative <*>
 public func <*><ParserAB:ParserType, ParserA:ParserType, A, B where ParserAB.TokenType==A->B,
     ParserA.TokenType==A>(lhs:ParserAB, rhs:ParserA) -> MonadicParser<B> {
         return apply(lhs, rhs)
-}
-
-public func <*><A,B>(lhs:(A->B)?, rhs:A?) -> B? {
-    return lhs.flatMap { rhs.map($0) }
 }
 
 // Haskell Applicative <*
@@ -70,20 +71,19 @@ public struct SequenceParser<PA:ParserType, PB:ParserType, A, B where PA.TokenTy
 }
 
 
+
 extension Parser {
 
-    /// Takes a function of type `(A,B)->C` and "lifts" it to work with a 
+    /// Takes a function of type `(A,B)->C` and "lifts" it to work with a
     /// parser for type `A` and a parser for type `B` and return a parser for type `C`
     public static func lift<ParserA:ParserType, ParserB:ParserType, A, B, C
         where ParserA.TokenType==A, ParserB.TokenType==B>(f:(A,B) ->C, _ parserA:ParserA, _ parserB:ParserB) -> MonadicParser<C> {
             return parserA.bind { a in
-                    parserB.bind { b in
-                        return Parser.success(f(a,b))
+                parserB.bind { b in
+                    return Parser.success(f(a,b))
                 }
             }
     }
-
-
 }
 
 extension ParserType {
@@ -91,12 +91,32 @@ extension ParserType {
     public func sequence<P:ParserType, A where P.TokenType==A>(parser:P) -> SequenceParser<Self, P, TokenType, A> {
         return SequenceParser(parserA: self, parserB: parser)
     }
-
+    
 }
-
-
 
 func apply<Parser1:ParserType, ParserA:ParserType, A, B where Parser1.TokenType==A->B,
     ParserA.TokenType==A>(tf:Parser1, _ ta:ParserA) -> MonadicParser<B> {
         return tf.bind { f in f <§> ta }
 }
+
+
+// MARK: Optional Applicative
+
+public func <*><A,B>(lhs:(A->B)?, rhs:A?) -> B? {
+    return lhs.flatMap { rhs.map($0) }
+}
+
+
+public func *><A,B>(lhs:A?, rhs:B?) -> B? {
+    if lhs == nil { return nil }
+    return rhs
+}
+
+public func <*<A,B>(lhs:A?, rhs:B?) -> A? {
+    return rhs *> lhs
+}
+
+
+
+
+
