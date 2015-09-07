@@ -41,6 +41,7 @@ extension ParserContext:Equatable {
 
 }
 
+@warn_unused_result
 public func ==(lhs:ParserContext, rhs:ParserContext) -> Bool {
     return lhs.col == rhs.col
     && lhs.row == rhs.row
@@ -59,11 +60,13 @@ extension ParserContext {
 
 public protocol ParserType {
     typealias TokenType
-    func parse(input: ParserContext) -> (token: Self.TokenType, output: ParserContext)?
+    @warn_unused_result
+    func parse(input: ParserContext) -> (token: TokenType, output: ParserContext)?
 }
 
 public extension ParserType {
     /// For backward compatiblity with prewritten tests.
+    @warn_unused_result
     func parse(input: String) -> (token: Self.TokenType, output: String)? {
         let context = ParserContext(string: input)
         let result = self.parse(context)
@@ -77,6 +80,7 @@ public struct Parser<T> : ParserType {
         self.parser = parser
     }
 
+    @warn_unused_result
     public func parse(input: ParserContext) -> (token: T, output: ParserContext)? {
         return parser(input)
     }
@@ -93,6 +97,7 @@ public struct LazyParser<TokenType, P:ParserType where P.TokenType==TokenType> :
     public init(getParser:() -> P) {
         self.getParser = getParser
     }
+    @warn_unused_result
     public func parse(input: ParserContext) -> (token: TokenType, output: ParserContext)? {
         return getParser().parse(input)
     }
@@ -105,6 +110,7 @@ public struct AnyParser<T> : ParserType {
     public init<P: ParserType where P.TokenType == T>(_ parser: P) {
         _parse = parser.parse
     }
+    @warn_unused_result
     public func parse(input: ParserContext) -> (token: T, output: ParserContext)? {
         return _parse(input)
     }
@@ -115,10 +121,12 @@ public struct AnyParser<T> : ParserType {
 ///////////////////////////////
 
 public class Parsers {
+    @warn_unused_result
     public static func failure<T>() -> Parser<T> {
         return Parser { _ in nil }
     }
 
+    @warn_unused_result
     public static func success<T>(t:T) -> Parser<T> {
         return Parser { (t, $0) }
     }
@@ -142,6 +150,7 @@ public class Parsers {
     public static let lower = satisfy(isLower)
     public static let alphanum = satisfy(isAlphanum)
 
+    @warn_unused_result
     public static func string(s:String) -> Parser<String> {
         guard (!s.isEmpty) else {
             return success("")
@@ -168,7 +177,8 @@ public class Parsers {
 
     public static let symbol:String -> Parser<String> = { (Parsers.string § $0).token() }
 
-    //* Wrap a parser so that it is evaluated lazily
+    /// Wrap a parser so that it is evaluated lazily
+    @warn_unused_result
     public static func lazy<TokenType, P:ParserType where P.TokenType==TokenType>(@autoclosure(escaping) getParser:() -> P) -> LazyParser<TokenType, P> {
         return LazyParser { getParser() }
     }
@@ -193,19 +203,23 @@ let isAlphanum:Character -> Bool = { isLetter($0) || isDigit($0) }
 // MARK: ParserType extension
 
 extension ParserType {
+    @warn_unused_result
     public func repeatMany() -> Parser<List<TokenType>> {
-        return Parsers.lazy(self.repeatOneOrMany()) <|> Parsers.success(List<TokenType>.Nil)
+        return Parsers.lazy(self.repeatOneOrMany()) <|> Parsers.success(.Nil)
     }
+    @warn_unused_result
     func repeatOneOrMany() -> Parser<List<TokenType>> {
         return cons <§> self <*> self.repeatMany()
     }
     public func token() -> Parser<TokenType> {
         return Parsers.space *> self <* Parsers.space
     }
+    @warn_unused_result
     public func void() -> Parser<()> {
         return (self) *> Parsers.success(())
     }
 
+    @warn_unused_result
     public func orElse<P:ParserType where P.TokenType==TokenType>(p:P) -> Parser<TokenType> {
         return self <|> p
     }
@@ -213,6 +227,7 @@ extension ParserType {
     // How can I avoid doing the start and end location for each parsing expression. How about
     // something like this:
 
+    @warn_unused_result
     func withLocation() -> Parser<(TokenType,Location,Location)> {
         func reorderTuple(startLoc:Location)(_ token:TokenType)(_ endLoc:Location) -> (TokenType,Location,Location) {
             return (token, startLoc, endLoc)
@@ -222,16 +237,19 @@ extension ParserType {
 }
 
 extension ParserType where TokenType==List<String> {
+    @warn_unused_result
     public func join() -> Parser<String> {
         let join = flip(List<String>.joinWithSeparator)("")
         return join <§> self
     }
 }
 
+@warn_unused_result
 public postfix func *<PT:ParserType, T where PT.TokenType==T>(p:PT) -> Parser<List<T>> {
     return p.repeatMany()
 }
 
+@warn_unused_result
 public postfix func +<PT:ParserType, T where PT.TokenType==T>(p:PT) -> Parser<List<T>> {
     return p.repeatOneOrMany()
 }

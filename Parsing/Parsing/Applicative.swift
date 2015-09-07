@@ -15,6 +15,7 @@ import Foundation
 /// If the first one fails to parse anything then the second run is run.
 ///
 /// Like Haskell Alternative <|>
+@warn_unused_result
 public func <|><ParserA1:ParserType, ParserA2:ParserType, A where ParserA1.TokenType==A, ParserA2.TokenType==A>(lhs:ParserA1, rhs:ParserA2) -> Parser<A> {
     return Parser { input in
         if let result = lhs.parse(input) {
@@ -27,12 +28,14 @@ public func <|><ParserA1:ParserType, ParserA2:ParserType, A where ParserA1.Token
 
 ///
 // Like Haskell Applicative <*>
+@warn_unused_result
 public func <*><ParserAB:ParserType, ParserA:ParserType, A, B where ParserAB.TokenType==A->B,
     ParserA.TokenType==A>(lhs:ParserAB, rhs:ParserA) -> Parser<B> {
         return apply(lhs, rhs)
 }
 
 // Haskell Applicative <*
+@warn_unused_result
 public func <*<ParserA:ParserType, ParserB:ParserType, A, B where
     ParserA.TokenType==A, ParserB.TokenType==B>(lhs:ParserA, rhs:ParserB) -> Parser<A> {
         let first:(A,B) -> A = { $0.0 }
@@ -40,6 +43,7 @@ public func <*<ParserA:ParserType, ParserB:ParserType, A, B where
 }
 
 // Haskell Applictive *>
+@warn_unused_result
 public func *><ParserA:ParserType, ParserB:ParserType, A, B where
     ParserA.TokenType==A, ParserB.TokenType==B>(lhs:ParserA, rhs:ParserB) -> Parser<B> {
         let second:(A,B) -> B = { $0.1 }
@@ -53,6 +57,7 @@ public struct SequenceParser<PA:ParserType, PB:ParserType, A, B where PA.TokenTy
         self.parserA = parserA
         self.parserB = parserB
     }
+    @warn_unused_result
     public func parse(input: ParserContext) -> (token: (A,B), output: ParserContext)? {
         return bothTokens.parse(input)
     }
@@ -94,6 +99,7 @@ extension ParserType {
     
 }
 
+@warn_unused_result
 func apply<Parser1:ParserType, ParserA:ParserType, A, B where Parser1.TokenType==A->B,
     ParserA.TokenType==A>(tf:Parser1, _ ta:ParserA) -> Parser<B> {
         return tf.bind { f in f <§> ta }
@@ -102,21 +108,22 @@ func apply<Parser1:ParserType, ParserA:ParserType, A, B where Parser1.TokenType=
 
 // MARK: Optional Applicative
 
+@warn_unused_result
 public func <*><A,B>(lhs:(A->B)?, rhs:A?) -> B? {
     return lhs.flatMap { rhs.map($0) }
 }
 
 
+@warn_unused_result
 public func *><A,B>(lhs:A?, rhs:B?) -> B? {
     if lhs == nil { return nil }
     return rhs
 }
 
+@warn_unused_result
 public func <*<A,B>(lhs:A?, rhs:B?) -> A? {
     return rhs *> lhs
 }
-
-
 
 
 

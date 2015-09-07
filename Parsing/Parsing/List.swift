@@ -13,6 +13,8 @@ import Swift
 public indirect enum List<T> {
     case Nil
     case Cons(h:T, t:List<T>)
+
+    @warn_unused_result
     public func insert(h:T) -> List<T> {
         return Cons(h: h, t: self)
     }
