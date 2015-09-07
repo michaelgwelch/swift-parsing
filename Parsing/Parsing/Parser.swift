@@ -187,7 +187,7 @@ public class Parsers {
 
     public static let currentCol:Parser<Int> = Parser { ($0.col, $0) }
 
-    public static let currentLocation:Parser<Location> = { row in { col in (row,col) } } <§> currentRow <*> currentCol
+    public static let currentLocation:Parser<Location> = Parsers.sequence(currentRow, currentCol) {($0,$1)}
 
 }
 public typealias Location = (row:Int, col:Int)
@@ -219,6 +219,10 @@ extension ParserType {
         return (self) *> Parsers.success(())
     }
 
+    public var discardToken:Parser<()> {
+        return Parsers.success(()) <* self
+    }
+
     @warn_unused_result
     public func orElse<P:ParserType where P.TokenType==TokenType>(p:P) -> Parser<TokenType> {
         return self <|> p
@@ -229,10 +233,7 @@ extension ParserType {
 
     @warn_unused_result
     func withLocation() -> Parser<(TokenType,Location,Location)> {
-        func reorderTuple(startLoc:Location)(_ token:TokenType)(_ endLoc:Location) -> (TokenType,Location,Location) {
-            return (token, startLoc, endLoc)
-        }
-        return reorderTuple <§> Parsers.currentLocation <*> self <*> Parsers.currentLocation
+        return Parsers.sequence(Parsers.currentLocation, self, Parsers.currentLocation) { ($1, $0, $2) }
     }
 }
 

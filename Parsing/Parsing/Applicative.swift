@@ -38,16 +38,16 @@ public func <*><ParserAB:ParserType, ParserA:ParserType, A, B where ParserAB.Tok
 @warn_unused_result
 public func <*<ParserA:ParserType, ParserB:ParserType, A, B where
     ParserA.TokenType==A, ParserB.TokenType==B>(lhs:ParserA, rhs:ParserB) -> Parser<A> {
-        let first:(A,B) -> A = { $0.0 }
-        return Parsers.lift(first, lhs, rhs)
+
+        return Parsers.sequence(lhs, rhs) { $0.0 }
 }
 
 // Haskell Applictive *>
 @warn_unused_result
 public func *><ParserA:ParserType, ParserB:ParserType, A, B where
     ParserA.TokenType==A, ParserB.TokenType==B>(lhs:ParserA, rhs:ParserB) -> Parser<B> {
-        let second:(A,B) -> B = { $0.1 }
-        return Parsers.lift(second, lhs, rhs)
+        
+        return Parsers.sequence(lhs, rhs) { $0.1 }
 }
 
 public struct SequenceParser<PA:ParserType, PB:ParserType, A, B where PA.TokenType==A, PB.TokenType==B> : ParserType {
@@ -79,24 +79,31 @@ public struct SequenceParser<PA:ParserType, PB:ParserType, A, B where PA.TokenTy
 
 extension Parsers {
 
-    /// Takes a function of type `(A,B)->C` and "lifts" it to work with a
-    /// parser for type `A` and a parser for type `B` and return a parser for type `C`
-    public static func lift<ParserA:ParserType, ParserB:ParserType, A, B, C
-        where ParserA.TokenType==A, ParserB.TokenType==B>(f:(A,B) ->C, _ parserA:ParserA, _ parserB:ParserB) -> Parser<C> {
-            return parserA.bind { a in
-                parserB.bind { b in
-                    return Parsers.success(f(a,b))
-                }
-            }
+    /// Create a new parser that sequences two parsers and passes their
+    /// tokens through the function `f`.
+    @warn_unused_result
+    public static func sequence<PA:ParserType, PB:ParserType, A, B, C where
+        PA.TokenType==A, PB.TokenType==B>(parserA:PA, _ parserB:PB,  _ f:(A,B)->C) -> Parser<C> {
+            return { a in { b in f(a,b) } } <§> parserA <*> parserB
     }
+
+    /// Creates a new parser that sequences three parsers and passes their
+    /// results throught the function `f`.
+    @warn_unused_result
+    public static func sequence<PA:ParserType, PB:ParserType, PC:ParserType, A, B, C, D
+        where PA.TokenType==A, PB.TokenType==B, PC.TokenType==C>(pa:PA, _ pb:PB, _ pc:PC,
+        _ f:(A,B,C)->D) -> Parser<D> {
+            return { a in { b in { c in f(a,b,c) } } } <§> pa <*> pb <*> pc
+    }
+
 }
 
 extension ParserType {
 
-    public func sequence<P:ParserType, A where P.TokenType==A>(parser:P) -> SequenceParser<Self, P, TokenType, A> {
-        return SequenceParser(parserA: self, parserB: parser)
-    }
-    
+//    public func sequence<P:ParserType, A where P.TokenType==A>(parser:P) -> SequenceParser<Self, P, TokenType, A> {
+//        return SequenceParser(parserA: self, parserB: parser)
+//    }
+
 }
 
 @warn_unused_result
