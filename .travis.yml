@@ -1,0 +1,4 @@
+language: objective-c
+xcode_project: Parsing/Parsing.xcodeproj
+xcode_schema: Parsing
+osx_image: xcode7
