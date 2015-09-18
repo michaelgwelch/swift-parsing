@@ -2,3 +2,6 @@ language: objective-c
 xcode_project: Parsing/Parsing.xcodeproj
 xcode_schema: Parsing
 osx_image: xcode7
+script:
+- xcodebuild clean build test -project Parsing/Parsing.xcodeproj -scheme Parsing
+
