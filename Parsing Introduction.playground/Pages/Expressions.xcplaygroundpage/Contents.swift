@@ -66,7 +66,7 @@ let createDiv = curry(NumericExpression.DivideFactorTail)
 let createFactor = curry(NumericExpression.Factor)
 let createBasic = curry(NumericExpression.BasicTail)
 
-let num_expr:Parser<NumericExpression>
+let num_expr:ParserOf<NumericExpression>
 let expr = Parsers.lazy(num_expr)
 
 
@@ -89,15 +89,15 @@ let literal = NumericExpression.Literal <§> Parsers.natural
 let identifier = NumericExpression.Identifier <§> Parsers.identifier
 let paren_expr = NumericExpression.Paren <§> (lparen *> expr) <* rparen
 let basic = paren_expr <|> identifier <|> literal <|> unaryNegate <|> unaryPlus
-let basic_tail:Parser<NumericExpression>
+let basic_tail:ParserOf<NumericExpression>
 basic_tail = createBasic <§> (exp_op *> basic) <*> Parsers.lazy(basic_tail) <|> epsilon
 let factor = createFactor <§> basic <*> basic_tail
-let factor_tail:Parser<NumericExpression>
+let factor_tail:ParserOf<NumericExpression>
 factor_tail = createMult <§> (mult_op *> factor) <*> Parsers.lazy(factor_tail)
     <|> createDiv <§> (div_op *> factor) <*> Parsers.lazy(factor_tail)
     <|> epsilon
 let term = createTerm <§> factor <*> factor_tail
-let term_tail:Parser<NumericExpression>
+let term_tail:ParserOf<NumericExpression>
 term_tail = createAdd <§> (plus_op *> term) <*> Parsers.lazy(term_tail)
     <|> createSub <§> (sub_op *> term) <*> Parsers.lazy(term_tail)
     <|> epsilon

@@ -74,7 +74,7 @@ public extension ParserType {
     }
 }
 
-public struct Parser<T> : ParserType {
+public struct ParserOf<T> : ParserType {
     private let parser:ParserContext -> (T,ParserContext)?
     init(parser:ParserContext -> (T,ParserContext)?) {
         self.parser = parser
@@ -88,7 +88,7 @@ public struct Parser<T> : ParserType {
 }
 
 
-public struct LazyParser<TokenType, P:ParserType where P.TokenType==TokenType> : ParserType {
+public struct LazyParserOf<TokenType, P:ParserType where P.TokenType==TokenType> : ParserType {
     private let getParser:() -> P
     // Hunch: Source of memory leaks when we get into recursive parsers later.
     public init(@autoclosure(escaping) parser:() -> P) {
@@ -105,7 +105,7 @@ public struct LazyParser<TokenType, P:ParserType where P.TokenType==TokenType> :
 
 
 
-public struct AnyParser<T> : ParserType {
+public struct AnyParserOf<T> : ParserType {
     private let _parse:(ParserContext) -> (token: T, output: ParserContext)?
     public init<P: ParserType where P.TokenType == T>(_ parser: P) {
         _parse = parser.parse
@@ -122,16 +122,16 @@ public struct AnyParser<T> : ParserType {
 
 public class Parsers {
     @warn_unused_result
-    public static func failure<T>() -> Parser<T> {
-        return Parser { _ in nil }
+    public static func failure<T>() -> ParserOf<T> {
+        return ParserOf { _ in nil }
     }
 
     @warn_unused_result
-    public static func success<T>(t:T) -> Parser<T> {
-        return Parser { (t, $0) }
+    public static func success<T>(t:T) -> ParserOf<T> {
+        return ParserOf { (t, $0) }
     }
 
-    public static let item = Parser<Character> { (var input) in
+    public static let item = ParserOf<Character> { (var input) in
         let currentChar = input.advance()
         return currentChar.map { ($0, input) }
     }
@@ -151,7 +151,7 @@ public class Parsers {
     public static let alphanum = satisfy(isAlphanum)
 
     @warn_unused_result
-    public static func string(s:String) -> Parser<String> {
+    public static func string(s:String) -> ParserOf<String> {
         guard (!s.isEmpty) else {
             return success("")
         }
@@ -165,29 +165,29 @@ public class Parsers {
     public static let isSpace:Character -> Bool = { (c:Character) -> Bool in
         c == " " || c == "\n" || c == "\r" || c == "\t" }
 
-    public static let space:Parser<()> = Parsers.satisfy(isSpace)* *> Parsers.success(())
+    public static let space:ParserOf<()> = Parsers.satisfy(isSpace)* *> Parsers.success(())
 
-    public static let ident:Parser<String> = String.init <§> (cons <§> letter <*> alphanum*)
+    public static let ident:ParserOf<String> = String.init <§> (cons <§> letter <*> alphanum*)
     public static let int:String -> Int = { Int($0)!} // Construct an int out of a string of digits
 
-    public static let nat:Parser<Int> = int <§> (String.init <§> (cons <§> digit <*> digit*))
+    public static let nat:ParserOf<Int> = int <§> (String.init <§> (cons <§> digit <*> digit*))
     public static let identifier = ident.token()
 
     public static let natural = nat.token()
 
-    public static let symbol:String -> Parser<String> = { (Parsers.string § $0).token() }
+    public static let symbol:String -> ParserOf<String> = { (Parsers.string § $0).token() }
 
     /// Wrap a parser so that it is evaluated lazily
     @warn_unused_result
-    public static func lazy<TokenType, P:ParserType where P.TokenType==TokenType>(@autoclosure(escaping) getParser:() -> P) -> LazyParser<TokenType, P> {
-        return LazyParser { getParser() }
+    public static func lazy<TokenType, P:ParserType where P.TokenType==TokenType>(@autoclosure(escaping) getParser:() -> P) -> LazyParserOf<TokenType, P> {
+        return LazyParserOf { getParser() }
     }
 
-    public static let currentRow:Parser<Int> = Parser { ($0.row, $0) }
+    public static let currentRow:ParserOf<Int> = ParserOf { ($0.row, $0) }
 
-    public static let currentCol:Parser<Int> = Parser { ($0.col, $0) }
+    public static let currentCol:ParserOf<Int> = ParserOf { ($0.col, $0) }
 
-    public static let currentLocation:Parser<Location> = Parsers.sequence(currentRow, currentCol) {($0,$1)}
+    public static let currentLocation:ParserOf<Location> = Parsers.sequence(currentRow, currentCol) {($0,$1)}
 
 }
 public typealias Location = (row:Int, col:Int)
@@ -204,27 +204,27 @@ let isAlphanum:Character -> Bool = { isLetter($0) || isDigit($0) }
 
 extension ParserType {
     @warn_unused_result
-    public func repeatMany() -> Parser<List<TokenType>> {
+    public func repeatMany() -> ParserOf<List<TokenType>> {
         return Parsers.lazy(self.repeatOneOrMany()) <|> Parsers.success(.Nil)
     }
     @warn_unused_result
-    func repeatOneOrMany() -> Parser<List<TokenType>> {
+    func repeatOneOrMany() -> ParserOf<List<TokenType>> {
         return cons <§> self <*> self.repeatMany()
     }
-    public func token() -> Parser<TokenType> {
+    public func token() -> ParserOf<TokenType> {
         return Parsers.space *> self <* Parsers.space
     }
     @warn_unused_result
-    public func void() -> Parser<()> {
+    public func void() -> ParserOf<()> {
         return (self) *> Parsers.success(())
     }
 
-    public var discardToken:Parser<()> {
+    public var discardToken:ParserOf<()> {
         return Parsers.success(()) <* self
     }
 
     @warn_unused_result
-    public func orElse<P:ParserType where P.TokenType==TokenType>(p:P) -> Parser<TokenType> {
+    public func orElse<P:ParserType where P.TokenType==TokenType>(p:P) -> ParserOf<TokenType> {
         return self <|> p
     }
 
@@ -232,26 +232,26 @@ extension ParserType {
     // something like this:
 
     @warn_unused_result
-    func withLocation() -> Parser<(TokenType,Location,Location)> {
+    func withLocation() -> ParserOf<(TokenType,Location,Location)> {
         return Parsers.sequence(Parsers.currentLocation, self, Parsers.currentLocation) { ($1, $0, $2) }
     }
 }
 
 extension ParserType where TokenType==List<String> {
     @warn_unused_result
-    public func join() -> Parser<String> {
+    public func join() -> ParserOf<String> {
         let join = flip(List<String>.joinWithSeparator)("")
         return join <§> self
     }
 }
 
 @warn_unused_result
-public postfix func *<PT:ParserType, T where PT.TokenType==T>(p:PT) -> Parser<List<T>> {
+public postfix func *<PT:ParserType, T where PT.TokenType==T>(p:PT) -> ParserOf<List<T>> {
     return p.repeatMany()
 }
 
 @warn_unused_result
-public postfix func +<PT:ParserType, T where PT.TokenType==T>(p:PT) -> Parser<List<T>> {
+public postfix func +<PT:ParserType, T where PT.TokenType==T>(p:PT) -> ParserOf<List<T>> {
     return p.repeatOneOrMany()
 }
 

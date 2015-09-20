@@ -43,7 +43,7 @@ func sum(x:Int)(_ y:Int) -> Int { return x + y }
 //: ## The Primitives
 //: The `Parsers` class provides many parser primitives. A parser
 //: is any type that conforms to `ParserType`. Most of the primitives
-//: return a parser of type `Parser<T>` where `T` depends on what is
+//: return a parser of type `ParserOf<T>` where `T` depends on what is
 //: to be parsed.
 //:
 //: The extension method `parse` is defined for all instances of `ParserType`.
@@ -56,8 +56,8 @@ func sum(x:Int)(_ y:Int) -> Int { return x + y }
 //:
 
 //:
-//: `Parser.failure<T>() -> Parser<T>` This parser fails to parse anything and always returns `nil`
-let intParser:Parser<Int> = Parsers.failure()
+//: `Parser.failure<T>() -> ParserOf<T>` This parser fails to parse anything and always returns `nil`
+let intParser:ParserOf<Int> = Parsers.failure()
 intParser.parse("any input")
 
 //: Note that since `failure` is generic in it's return type you need a type
@@ -72,20 +72,20 @@ intParser.parse("any input")
 //: bottom since it's unlikely to be used much.)
 //:
 
-//: `Parsers.success<T>(t:T) -> Parser<T>` This parser always succeeds and returns
+//: `Parsers.success<T>(t:T) -> ParserOf<T>` This parser always succeeds and returns
 //: the token `t`. It never consumer any of the input string.
 //: The following example always "parses" the array `[2,3,4]` but consumes
 //: none of the string.
 Parsers.success([2,3,4]).parse("Hello")
 
 
-//: `Parsers.item:Parser<Character>` This parser fails if the input string is the empty string.
+//: `Parsers.item:ParserOf<Character>` This parser fails if the input string is the empty string.
 //: It parses the first character of any non-empty string.
 Parsers.item.parse("")
 Parsers.item.parse("abcde")!.token   // parses "a" as the token
 Parsers.item.parse("abcde")!.output  // what's left is "bcde"
 
-//: `Parsers.satisfy(Character -> Bool) -> Parser<Character>` This parser succeeds 
+//: `Parsers.satisfy(Character -> Bool) -> ParserOf<Character>` This parser succeeds 
 //: whenever the predicate returns
 //: `true`. It fails when the predicate returns `false`
 Parsers.satisfy { $0 >= "a" }.parse("Apple")        // returns nil

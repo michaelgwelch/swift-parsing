@@ -49,7 +49,7 @@ indirect enum RegEx {
 
 typealias P = Parsers
 
-let reg_expr:Parser<RegEx>
+let reg_expr:ParserOf<RegEx>
 let expr = Parsers.lazy(reg_expr)
 
 let reg_char = Parsers.satisfy { (c:Character) in
@@ -70,7 +70,7 @@ let basic_expr_tail = basic_star.orElse(basic_epsilon)
 let factor_sequence = P.sequence(basic_expr, basic_expr_tail) { ($0,$1) }
 let factor = factor_sequence.map(RegEx.Factor)
 
-let factor_tail:Parser<RegEx>
+let factor_tail:ParserOf<RegEx>
 let factor_tail_sequence = P.sequence(factor, P.lazy(factor_tail)) { ($0, $1) }
 let factor_tail_continue = factor_tail_sequence.map(RegEx.FactorTailContinue)
 let factor_tail_epsilon = Parsers.success(RegEx.FactorTailEpsilon())
@@ -78,7 +78,7 @@ factor_tail = factor_tail_continue.orElse(factor_tail_epsilon)
 
 let term_sequence = P.sequence(factor, factor_tail) { ($0,$1) }
 let term = term_sequence.map(RegEx.Term)
-let term_tail:Parser<RegEx>
+let term_tail:ParserOf<RegEx>
 let term_tail_sequence = P.sequence(P.char("|"), term, P.lazy(term_tail)) { ($1, $2) }
 let term_tail_continue = term_tail_sequence.map(RegEx.TermTailContinue)
 let term_tail_epsilon = Parsers.success(RegEx.TermTailEpsilon())
@@ -90,7 +90,7 @@ reg_expr = reg_expr_sequence.map(RegEx.Expr)
 
 extension RegEx {
 
-    func compile() -> Parser<String> {
+    func compile() -> ParserOf<String> {
 
         switch self {
         case .Expr(let r1, let r2):
@@ -125,7 +125,7 @@ extension RegEx {
         }
     }
 
-    func compileTail(withPrefix prefix:Parser<String>) -> Parser<String> {
+    func compileTail(withPrefix prefix:ParserOf<String>) -> ParserOf<String> {
 
         switch self {
         case .TermTailContinue(let r1, let r2):
@@ -150,7 +150,7 @@ extension RegEx {
 }
 
 
-func compile(s:String)->Parser<String> {
+func compile(s:String)->ParserOf<String> {
     let regex = reg_expr.parse(s)?.token
     if let regex = regex {
         return regex.compile()
@@ -159,7 +159,7 @@ func compile(s:String)->Parser<String> {
     }
 }
 
-func runParser(p:Parser<String>)(_ s:String) -> String {
+func runParser(p:ParserOf<String>)(_ s:String) -> String {
     return p.parse(s)!.token
 }
 

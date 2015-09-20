@@ -52,7 +52,7 @@ indirect enum RegEx {
     static let createFactor = curry(Factor)
 
 
-    func compile() -> Parser<String> {
+    func compile() -> ParserOf<String> {
 
         switch self {
         case .Expr(let r1, let r2):
@@ -90,7 +90,7 @@ indirect enum RegEx {
         }
     }
 
-    func compileTail(withPrefix prefix:Parser<String>) -> Parser<String> {
+    func compileTail(withPrefix prefix:ParserOf<String>) -> ParserOf<String> {
         let concat = { (s1:String) in { s1 + $0 } }
 
         switch self {
@@ -114,8 +114,8 @@ indirect enum RegEx {
 }
 
 
-let reg_expr:Parser<RegEx>
-//let term:Parser<RegEx>
+let reg_expr:ParserOf<RegEx>
+//let term:ParserOf<RegEx>
 let expr = Parsers.lazy(reg_expr)
 
 let reg_char = Parsers.satisfy { (c:Character) in
@@ -134,13 +134,13 @@ let basic_expr_tail = basic_star <|> basic_epsilon
 
 
 let factor = RegEx.createFactor <§> basic_expr <*> basic_expr_tail
-let factor_tail:Parser<RegEx>
+let factor_tail:ParserOf<RegEx>
 let factor_tail_continue = RegEx.createFactorTailContinue <§> factor <*> Parsers.lazy(factor_tail)
 let factor_tail_epsilon = Parsers.success(RegEx.FactorTailEpsilon())
 factor_tail = factor_tail_continue <|> factor_tail_epsilon
 
 let term = RegEx.createTerm <§> factor <*> factor_tail
-let term_tail:Parser<RegEx>
+let term_tail:ParserOf<RegEx>
 let term_tail_continue = RegEx.createTermTailContinue <§> (Parsers.char("|") *> term) <*>
     Parsers.lazy(term_tail)
 let term_tail_epsilon = Parsers.success(RegEx.TermTailEpsilon())
@@ -150,7 +150,7 @@ reg_expr = RegEx.createExpr <§> term <*> term_tail
 
 
 
-func compile(s:String)->Parser<String> {
+func compile(s:String)->ParserOf<String> {
     let regex = reg_expr.parse(s)?.token
     if let regex = regex {
         return regex.compile()
@@ -159,7 +159,7 @@ func compile(s:String)->Parser<String> {
     }
 }
 
-func runParser(p:Parser<String>)(_ s:String) -> String {
+func runParser(p:ParserOf<String>)(_ s:String) -> String {
     return p.parse(s)!.token
 }
 

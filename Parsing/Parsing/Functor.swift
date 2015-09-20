@@ -10,7 +10,7 @@ import Foundation
 
 extension ParserType {
     @warn_unused_result
-    public func map<B>(f:TokenType -> B) -> Parser<B> {
+    public func map<B>(f:TokenType -> B) -> ParserOf<B> {
         return self.bind { Parsers.success(f($0)) }
     }
 }
@@ -18,7 +18,7 @@ extension ParserType {
 
 // Like Haskell fmap, <$>
 @warn_unused_result
-public func <§><ParserA:ParserType, A, B where ParserA.TokenType==A>(lhs:A->B, rhs:ParserA) -> Parser<B> {
+public func <§><ParserA:ParserType, A, B where ParserA.TokenType==A>(lhs:A->B, rhs:ParserA) -> ParserOf<B> {
     return rhs.map(lhs)
 }
 

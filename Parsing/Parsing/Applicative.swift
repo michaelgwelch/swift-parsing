@@ -16,8 +16,8 @@ import Foundation
 ///
 /// Like Haskell Alternative <|>
 @warn_unused_result
-public func <|><ParserA1:ParserType, ParserA2:ParserType, A where ParserA1.TokenType==A, ParserA2.TokenType==A>(lhs:ParserA1, rhs:ParserA2) -> Parser<A> {
-    return Parser { input in
+public func <|><ParserA1:ParserType, ParserA2:ParserType, A where ParserA1.TokenType==A, ParserA2.TokenType==A>(lhs:ParserA1, rhs:ParserA2) -> ParserOf<A> {
+    return ParserOf { input in
         if let result = lhs.parse(input) {
             return result
         } else {
@@ -30,14 +30,14 @@ public func <|><ParserA1:ParserType, ParserA2:ParserType, A where ParserA1.Token
 // Like Haskell Applicative <*>
 @warn_unused_result
 public func <*><ParserAB:ParserType, ParserA:ParserType, A, B where ParserAB.TokenType==A->B,
-    ParserA.TokenType==A>(lhs:ParserAB, rhs:ParserA) -> Parser<B> {
+    ParserA.TokenType==A>(lhs:ParserAB, rhs:ParserA) -> ParserOf<B> {
         return apply(lhs, rhs)
 }
 
 // Haskell Applicative <*
 @warn_unused_result
 public func <*<ParserA:ParserType, ParserB:ParserType, A, B where
-    ParserA.TokenType==A, ParserB.TokenType==B>(lhs:ParserA, rhs:ParserB) -> Parser<A> {
+    ParserA.TokenType==A, ParserB.TokenType==B>(lhs:ParserA, rhs:ParserB) -> ParserOf<A> {
 
         return Parsers.sequence(lhs, rhs) { $0.0 }
 }
@@ -45,12 +45,12 @@ public func <*<ParserA:ParserType, ParserB:ParserType, A, B where
 // Haskell Applictive *>
 @warn_unused_result
 public func *><ParserA:ParserType, ParserB:ParserType, A, B where
-    ParserA.TokenType==A, ParserB.TokenType==B>(lhs:ParserA, rhs:ParserB) -> Parser<B> {
+    ParserA.TokenType==A, ParserB.TokenType==B>(lhs:ParserA, rhs:ParserB) -> ParserOf<B> {
         
         return Parsers.sequence(lhs, rhs) { $0.1 }
 }
 
-public struct SequenceParser<PA:ParserType, PB:ParserType, A, B where PA.TokenType==A, PB.TokenType==B> : ParserType {
+public struct SequenceParserOf<PA:ParserType, PB:ParserType, A, B where PA.TokenType==A, PB.TokenType==B> : ParserType {
     private let parserA:PA
     private let parserB:PB
     init(parserA:PA, parserB:PB) {
@@ -62,15 +62,15 @@ public struct SequenceParser<PA:ParserType, PB:ParserType, A, B where PA.TokenTy
         return bothTokens.parse(input)
     }
 
-    public var firstToken:Parser<A> {
+    public var firstToken:ParserOf<A> {
         return parserA <* parserB
     }
 
-    public var secondToken:Parser<B> {
+    public var secondToken:ParserOf<B> {
         return parserA *> parserB
     }
 
-    public var bothTokens:Parser<(A,B)> {
+    public var bothTokens:ParserOf<(A,B)> {
         return { x in { (x,$0) } } <§> parserA <*> parserB
     }
 }
@@ -83,7 +83,7 @@ extension Parsers {
     /// tokens through the function `f`.
     @warn_unused_result
     public static func sequence<PA:ParserType, PB:ParserType, A, B, C where
-        PA.TokenType==A, PB.TokenType==B>(parserA:PA, _ parserB:PB,  _ f:(A,B)->C) -> Parser<C> {
+        PA.TokenType==A, PB.TokenType==B>(parserA:PA, _ parserB:PB,  _ f:(A,B)->C) -> ParserOf<C> {
             return { a in { b in f(a,b) } } <§> parserA <*> parserB
     }
 
@@ -92,7 +92,7 @@ extension Parsers {
     @warn_unused_result
     public static func sequence<PA:ParserType, PB:ParserType, PC:ParserType, A, B, C, D
         where PA.TokenType==A, PB.TokenType==B, PC.TokenType==C>(pa:PA, _ pb:PB, _ pc:PC,
-        _ f:(A,B,C)->D) -> Parser<D> {
+        _ f:(A,B,C)->D) -> ParserOf<D> {
             return { a in { b in { c in f(a,b,c) } } } <§> pa <*> pb <*> pc
     }
 
@@ -100,7 +100,7 @@ extension Parsers {
 
 extension ParserType {
 
-//    public func sequence<P:ParserType, A where P.TokenType==A>(parser:P) -> SequenceParser<Self, P, TokenType, A> {
+//    public func sequence<P:ParserType, A where P.TokenType==A>(parser:P) -> SequenceParserOf<Self, P, TokenType, A> {
 //        return SequenceParser(parserA: self, parserB: parser)
 //    }
 
@@ -108,7 +108,7 @@ extension ParserType {
 
 @warn_unused_result
 func apply<Parser1:ParserType, ParserA:ParserType, A, B where Parser1.TokenType==A->B,
-    ParserA.TokenType==A>(tf:Parser1, _ ta:ParserA) -> Parser<B> {
+    ParserA.TokenType==A>(tf:Parser1, _ ta:ParserA) -> ParserOf<B> {
         return tf.bind { f in f <§> ta }
 }
 
