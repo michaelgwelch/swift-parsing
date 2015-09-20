@@ -120,7 +120,7 @@ public struct AnyParserOf<T> : ParserType {
 
 ///////////////////////////////
 
-public class Parsers {
+public class Parser {
     @warn_unused_result
     public static func failure<T>() -> ParserOf<T> {
         return ParserOf { _ in nil }
@@ -137,7 +137,7 @@ public class Parsers {
     }
 
     public static let satisfy = { (predicate:Character->Bool) in
-        return item.bind { predicate($0) ? Parsers.success($0) : Parsers.failure() }
+        return item.bind { predicate($0) ? Parser.success($0) : Parser.failure() }
     }
 
     public static let char = { (c:Character) in
@@ -165,7 +165,7 @@ public class Parsers {
     public static let isSpace:Character -> Bool = { (c:Character) -> Bool in
         c == " " || c == "\n" || c == "\r" || c == "\t" }
 
-    public static let space:ParserOf<()> = Parsers.satisfy(isSpace)* *> Parsers.success(())
+    public static let space:ParserOf<()> = Parser.satisfy(isSpace)* *> Parser.success(())
 
     public static let ident:ParserOf<String> = String.init <§> (cons <§> letter <*> alphanum*)
     public static let int:String -> Int = { Int($0)!} // Construct an int out of a string of digits
@@ -175,7 +175,7 @@ public class Parsers {
 
     public static let natural = nat.token()
 
-    public static let symbol:String -> ParserOf<String> = { (Parsers.string § $0).token() }
+    public static let symbol:String -> ParserOf<String> = { (Parser.string § $0).token() }
 
     /// Wrap a parser so that it is evaluated lazily
     @warn_unused_result
@@ -187,7 +187,7 @@ public class Parsers {
 
     public static let currentCol:ParserOf<Int> = ParserOf { ($0.col, $0) }
 
-    public static let currentLocation:ParserOf<Location> = Parsers.sequence(currentRow, currentCol) {($0,$1)}
+    public static let currentLocation:ParserOf<Location> = Parser.sequence(currentRow, currentCol) {($0,$1)}
 
 }
 public typealias Location = (row:Int, col:Int)
@@ -205,22 +205,22 @@ let isAlphanum:Character -> Bool = { isLetter($0) || isDigit($0) }
 extension ParserType {
     @warn_unused_result
     public func repeatMany() -> ParserOf<List<TokenType>> {
-        return Parsers.lazy(self.repeatOneOrMany()) <|> Parsers.success(.Nil)
+        return Parser.lazy(self.repeatOneOrMany()) <|> Parser.success(.Nil)
     }
     @warn_unused_result
     func repeatOneOrMany() -> ParserOf<List<TokenType>> {
         return cons <§> self <*> self.repeatMany()
     }
     public func token() -> ParserOf<TokenType> {
-        return Parsers.space *> self <* Parsers.space
+        return Parser.space *> self <* Parser.space
     }
     @warn_unused_result
     public func void() -> ParserOf<()> {
-        return (self) *> Parsers.success(())
+        return (self) *> Parser.success(())
     }
 
     public var discardToken:ParserOf<()> {
-        return Parsers.success(()) <* self
+        return Parser.success(()) <* self
     }
 
     @warn_unused_result
@@ -233,7 +233,7 @@ extension ParserType {
 
     @warn_unused_result
     func withLocation() -> ParserOf<(TokenType,Location,Location)> {
-        return Parsers.sequence(Parsers.currentLocation, self, Parsers.currentLocation) { ($1, $0, $2) }
+        return Parser.sequence(Parser.currentLocation, self, Parser.currentLocation) { ($1, $0, $2) }
     }
 }
 

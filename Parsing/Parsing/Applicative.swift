@@ -39,7 +39,7 @@ public func <*><ParserAB:ParserType, ParserA:ParserType, A, B where ParserAB.Tok
 public func <*<ParserA:ParserType, ParserB:ParserType, A, B where
     ParserA.TokenType==A, ParserB.TokenType==B>(lhs:ParserA, rhs:ParserB) -> ParserOf<A> {
 
-        return Parsers.sequence(lhs, rhs) { $0.0 }
+        return Parser.sequence(lhs, rhs) { $0.0 }
 }
 
 // Haskell Applictive *>
@@ -47,7 +47,7 @@ public func <*<ParserA:ParserType, ParserB:ParserType, A, B where
 public func *><ParserA:ParserType, ParserB:ParserType, A, B where
     ParserA.TokenType==A, ParserB.TokenType==B>(lhs:ParserA, rhs:ParserB) -> ParserOf<B> {
         
-        return Parsers.sequence(lhs, rhs) { $0.1 }
+        return Parser.sequence(lhs, rhs) { $0.1 }
 }
 
 public struct SequenceParserOf<PA:ParserType, PB:ParserType, A, B where PA.TokenType==A, PB.TokenType==B> : ParserType {
@@ -77,7 +77,7 @@ public struct SequenceParserOf<PA:ParserType, PB:ParserType, A, B where PA.Token
 
 
 
-extension Parsers {
+extension Parser {
 
     /// Create a new parser that sequences two parsers and passes their
     /// tokens through the function `f`.

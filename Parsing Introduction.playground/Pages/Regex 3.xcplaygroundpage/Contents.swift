@@ -56,7 +56,7 @@ import SwiftParsing
 
 
 //: Some helper functions we'll be using later.
-typealias P = Parsers
+typealias P = Parser
 let satisfy = P.satisfy
 let char = P.char
 

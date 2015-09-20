@@ -47,12 +47,12 @@ indirect enum RegEx {
 
 }
 
-typealias P = Parsers
+typealias P = Parser
 
 let reg_expr:ParserOf<RegEx>
-let expr = Parsers.lazy(reg_expr)
+let expr = Parser.lazy(reg_expr)
 
-let reg_char = Parsers.satisfy { (c:Character) in
+let reg_char = Parser.satisfy { (c:Character) in
     c != "(" && c != ")" && c != "*" && c != "|"
 }
 
@@ -64,7 +64,7 @@ let paren_expr = paren_expr_sequence.map(RegEx.Paren)
 
 let basic_expr = (paren_expr <|> char_expr).map(RegEx.Basic)
 let basic_star = P.sequence(P.char("*"), P.success(RegEx.BasicStar())) { $0.1 }
-let basic_epsilon = Parsers.success(RegEx.BasicEpsilon())
+let basic_epsilon = Parser.success(RegEx.BasicEpsilon())
 let basic_expr_tail = basic_star.orElse(basic_epsilon)
 
 let factor_sequence = P.sequence(basic_expr, basic_expr_tail) { ($0,$1) }
@@ -73,7 +73,7 @@ let factor = factor_sequence.map(RegEx.Factor)
 let factor_tail:ParserOf<RegEx>
 let factor_tail_sequence = P.sequence(factor, P.lazy(factor_tail)) { ($0, $1) }
 let factor_tail_continue = factor_tail_sequence.map(RegEx.FactorTailContinue)
-let factor_tail_epsilon = Parsers.success(RegEx.FactorTailEpsilon())
+let factor_tail_epsilon = Parser.success(RegEx.FactorTailEpsilon())
 factor_tail = factor_tail_continue.orElse(factor_tail_epsilon)
 
 let term_sequence = P.sequence(factor, factor_tail) { ($0,$1) }
@@ -81,7 +81,7 @@ let term = term_sequence.map(RegEx.Term)
 let term_tail:ParserOf<RegEx>
 let term_tail_sequence = P.sequence(P.char("|"), term, P.lazy(term_tail)) { ($1, $2) }
 let term_tail_continue = term_tail_sequence.map(RegEx.TermTailContinue)
-let term_tail_epsilon = Parsers.success(RegEx.TermTailEpsilon())
+let term_tail_epsilon = Parser.success(RegEx.TermTailEpsilon())
 term_tail = term_tail_continue.orElse(term_tail_epsilon)
 
 let reg_expr_sequence = P.sequence(term, term_tail) { ($0,$1) }
@@ -120,7 +120,7 @@ extension RegEx {
         case .BasicEpsilon(): fatalError("shouldn't be called")
         case .Basic(let r): return r.compile()
         case .Paren(let r): return r.compile()
-        case .Char(let c): return Parsers.string(String(c))
+        case .Char(let c): return Parser.string(String(c))
 
         }
     }
@@ -155,7 +155,7 @@ func compile(s:String)->ParserOf<String> {
     if let regex = regex {
         return regex.compile()
     } else {
-        return Parsers.failure()
+        return Parser.failure()
     }
 }
 

@@ -9,7 +9,7 @@ import Swift
 import XCTest
 @testable import SwiftParsing
 
-typealias P=Parsers
+typealias P=Parser
 func AssertNil<T>(@autoclosure expression: () -> T?, message: String = "",
     file: String = __FILE__, line: UInt = __LINE__) {
 

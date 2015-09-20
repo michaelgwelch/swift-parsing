@@ -11,7 +11,7 @@ import Foundation
 extension ParserType {
     @warn_unused_result
     public func map<B>(f:TokenType -> B) -> ParserOf<B> {
-        return self.bind { Parsers.success(f($0)) }
+        return self.bind { Parser.success(f($0)) }
     }
 }
 
