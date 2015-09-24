@@ -201,22 +201,34 @@ let isAlphanum:Character -> Bool = { isLetter($0) || isDigit($0) }
 
 
 // MARK: ParserType extension
-
+extension ParserType where TokenType==String {
+    
+    @warn_unused_result
+    public func optional() -> ParserOf<String> {
+        return self <|> Parser.success("")
+    }
+}
 extension ParserType {
     @warn_unused_result
     public func repeatMany() -> ParserOf<List<TokenType>> {
-        return Parser.lazy(self.repeatOneOrMany()) <|> Parser.success(.Nil)
+        return Parser.lazy(self.repeatOneOrMore()) <|> Parser.success(.Nil)
     }
     @warn_unused_result
-    func repeatOneOrMany() -> ParserOf<List<TokenType>> {
+    public func repeatOneOrMore() -> ParserOf<List<TokenType>> {
         return cons <§> self <*> self.repeatMany()
     }
+    @warn_unused_result
     public func token() -> ParserOf<TokenType> {
         return Parser.space *> self <* Parser.space
     }
     @warn_unused_result
     public func void() -> ParserOf<()> {
         return (self) *> Parser.success(())
+    }
+
+    @warn_unused_result
+    public func optional(defaultVal:TokenType) -> ParserOf<TokenType> {
+        return self <|> Parser.success(defaultVal)
     }
 
     public var discardToken:ParserOf<()> {
@@ -252,7 +264,7 @@ public postfix func *<PT:ParserType, T where PT.TokenType==T>(p:PT) -> ParserOf<
 
 @warn_unused_result
 public postfix func +<PT:ParserType, T where PT.TokenType==T>(p:PT) -> ParserOf<List<T>> {
-    return p.repeatOneOrMany()
+    return p.repeatOneOrMore()
 }
 
 
