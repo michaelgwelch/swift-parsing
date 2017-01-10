@@ -6,6 +6,8 @@
 //  Copyright © 2015 Michael Welch. All rights reserved.
 //
 
+/*
+
 import Foundation
 
 extension ParserType {
@@ -51,3 +53,5 @@ extension List {
         return self.reduce(List<B>.Nil, combine: {List<B>.Cons(h: f($1), t: $0)})
     }
 }
+ 
+ */

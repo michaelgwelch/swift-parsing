@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		E3085CBB1B91340F009A8804 /* ParsingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3085CB91B913404009A8804 /* ParsingTests.swift */; settings = {ASSET_TAGS = (); }; };
+		E3085CBB1B91340F009A8804 /* ParsingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3085CB91B913404009A8804 /* ParsingTests.swift */; };
 		E31408A11B8BECEA00F73964 /* Parsing.h in Headers */ = {isa = PBXBuildFile; fileRef = E31408A01B8BECEA00F73964 /* Parsing.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E31408A81B8BECEA00F73964 /* SwiftParsing.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E314089D1B8BECEA00F73964 /* SwiftParsing.framework */; };
 		E31408BF1B8BEE4A00F73964 /* Applicative.swift in Sources */ = {isa = PBXBuildFile; fileRef = E31408B81B8BEE4A00F73964 /* Applicative.swift */; };
@@ -164,7 +164,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0700;
-				LastUpgradeCheck = 0700;
+				LastUpgradeCheck = 0820;
 				ORGANIZATIONNAME = "Michael Welch";
 				TargetAttributes = {
 					E314089C1B8BECEA00F73964 = {
@@ -257,8 +257,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
@@ -303,8 +305,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
@@ -323,6 +327,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = macosx;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};

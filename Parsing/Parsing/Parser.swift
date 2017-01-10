@@ -37,6 +37,7 @@ public struct ParserContext {
     }
 }
 
+/*
 extension ParserContext:Equatable {
 
 }
@@ -269,5 +270,5 @@ public postfix func +<PT:ParserType, T where PT.TokenType==T>(p:PT) -> ParserOf<
 
 
 
-
+*/
 

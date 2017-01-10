@@ -6,6 +6,7 @@
 //  Copyright © 2015 Michael Welch. All rights reserved.
 //
 
+/*
 import Foundation
 
 @warn_unused_result
@@ -60,3 +61,5 @@ extension String {
         return f(head: self[index0], tail: self.substringFromIndex(index0.successor()))
     }
 }
+
+ */

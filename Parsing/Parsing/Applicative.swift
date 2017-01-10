@@ -8,6 +8,7 @@
 
 import Foundation
 
+/*
 
 // MARK: ParserType Applicative
 
@@ -133,4 +134,4 @@ public func <*<A,B>(lhs:A?, rhs:B?) -> A? {
 }
 
 
-
+*/
