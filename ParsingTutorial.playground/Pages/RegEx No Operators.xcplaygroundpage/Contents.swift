@@ -1,7 +1,9 @@
 //: [Previous](@previous)
 
-import Foundation
+import Cocoa
 import SwiftParsing
+
+print("hello")
 
 //: **Figure 1: The grammar for regular expressions**
 //:
@@ -30,127 +32,121 @@ import SwiftParsing
 //: We want a tree we can parse our results into. The RegEx enum
 //: has cases for each production in the grammar.
 
-
 indirect enum RegEx {
-    case Expr(RegEx, RegEx)
-    case TermTailContinue(RegEx, RegEx)
-    case TermTailEpsilon()
-    case Term(RegEx, RegEx)
-    case FactorTailContinue(RegEx, RegEx)
-    case FactorTailEpsilon()
-    case Factor(RegEx, RegEx)
-    case BasicStar()
-    case BasicEpsilon()
-    case Basic(RegEx)
-    case Paren(RegEx)
-    case Char(Character)
-
+    case expr(RegEx, RegEx)
+    case termTailContinue(RegEx, RegEx)
+    case termTailEpsilon()
+    case term(RegEx, RegEx)
+    case factorTailContinue(RegEx, RegEx)
+    case factorTailEpsilon()
+    case factor(RegEx, RegEx)
+    case basicStar()
+    case basicEpsilon()
+    case basic(RegEx)
+    case paren(RegEx)
+    case char(Character)
 }
 
 typealias P = Parser
 
-let reg_expr:ParserOf<RegEx>
+var reg_expr:ParserOf<RegEx>! = nil
 let expr = Parser.lazy(reg_expr)
 
 let reg_char = Parser.satisfy { (c:Character) in
     c != "(" && c != ")" && c != "*" && c != "|"
 }
 
-let char_expr = reg_char.map(RegEx.Char)
+let char_expr = reg_char.map(RegEx.char)
 
 let paren_expr_sequence = P.sequence(P.char("("), expr, P.char(")")) { $0.1 }
 
-let paren_expr = paren_expr_sequence.map(RegEx.Paren)
+let paren_expr = paren_expr_sequence.map(RegEx.paren)
 
-let basic_expr = (paren_expr <|> char_expr).map(RegEx.Basic)
-let basic_star = P.sequence(P.char("*"), P.success(RegEx.BasicStar())) { $0.1 }
-let basic_epsilon = Parser.success(RegEx.BasicEpsilon())
+let basic_expr = (paren_expr <|> char_expr).map(RegEx.basic)
+let basic_star = P.sequence(P.char("*"), P.success(RegEx.basicStar())) { $0.1 }
+let basic_epsilon = Parser.success(RegEx.basicEpsilon())
 let basic_expr_tail = basic_star.orElse(basic_epsilon)
 
 let factor_sequence = P.sequence(basic_expr, basic_expr_tail) { ($0,$1) }
-let factor = factor_sequence.map(RegEx.Factor)
+let factor = factor_sequence.map(RegEx.factor)
 
-let factor_tail:ParserOf<RegEx>
+var factor_tail:ParserOf<RegEx>! = nil
 let factor_tail_sequence = P.sequence(factor, P.lazy(factor_tail)) { ($0, $1) }
-let factor_tail_continue = factor_tail_sequence.map(RegEx.FactorTailContinue)
-let factor_tail_epsilon = Parser.success(RegEx.FactorTailEpsilon())
+let factor_tail_continue = factor_tail_sequence.map(RegEx.factorTailContinue)
+let factor_tail_epsilon = Parser.success(RegEx.factorTailEpsilon())
 factor_tail = factor_tail_continue.orElse(factor_tail_epsilon)
 
 let term_sequence = P.sequence(factor, factor_tail) { ($0,$1) }
-let term = term_sequence.map(RegEx.Term)
-let term_tail:ParserOf<RegEx>
+let term = term_sequence.map(RegEx.term)
+var term_tail:ParserOf<RegEx>! = nil
 let term_tail_sequence = P.sequence(P.char("|"), term, P.lazy(term_tail)) { ($1, $2) }
-let term_tail_continue = term_tail_sequence.map(RegEx.TermTailContinue)
-let term_tail_epsilon = Parser.success(RegEx.TermTailEpsilon())
+let term_tail_continue = term_tail_sequence.map(RegEx.termTailContinue)
+let term_tail_epsilon = Parser.success(RegEx.termTailEpsilon())
 term_tail = term_tail_continue.orElse(term_tail_epsilon)
 
 let reg_expr_sequence = P.sequence(term, term_tail) { ($0,$1) }
-reg_expr = reg_expr_sequence.map(RegEx.Expr)
-
+reg_expr = reg_expr_sequence.map(RegEx.expr)
 
 extension RegEx {
-
     func compile() -> ParserOf<String> {
 
         switch self {
-        case .Expr(let r1, let r2):
+        case .expr(let r1, let r2):
             return r2.compileTail(withPrefix: r1.compile())
 
-        case .TermTailContinue(let r1, let r2):
+        case .termTailContinue(let r1, let r2):
             return r2.compileTail(withPrefix: r1.compile())
 
-        case .TermTailEpsilon():
+        case .termTailEpsilon():
             fatalError("t eps shouldn't be called")
 
-        case .Term(let r1, let r2):
+        case .term(let r1, let r2):
             return r2.compileTail(withPrefix: r1.compile())
 
-        case .FactorTailContinue(let r1, let r2):
+        case .factorTailContinue(let r1, let r2):
             return r2.compileTail(withPrefix: r1.compile())
 
-        case .FactorTailEpsilon():
+        case .factorTailEpsilon():
             fatalError("f eps shouldn't be called")
 
-        case .Factor(let r1, let r2):
+        case .factor(let r1, let r2):
             return r2.compileTail(withPrefix: r1.compile())
 
-        case .BasicStar():
+        case .basicStar():
             fatalError("* is not a valid regular expression")
 
-        case .BasicEpsilon(): fatalError("shouldn't be called")
-        case .Basic(let r): return r.compile()
-        case .Paren(let r): return r.compile()
-        case .Char(let c): return Parser.string(String(c))
-
+        case .basicEpsilon(): fatalError("shouldn't be called")
+        case .basic(let r): return r.compile()
+        case .paren(let r): return r.compile()
+        case .char(let c): return Parser.string(String(c))
+            
         }
     }
 
     func compileTail(withPrefix prefix:ParserOf<String>) -> ParserOf<String> {
 
         switch self {
-        case .TermTailContinue(let r1, let r2):
+        case .termTailContinue(let r1, let r2):
             return prefix.orElse(r2.compileTail(withPrefix: r1.compile()))
 
-        case .FactorTailContinue(let r1, let r2):
+        case .factorTailContinue(let r1, let r2):
             let sequence = P.sequence(prefix, r2.compileTail(withPrefix: r1.compile())) {
                 ($0,$1)
             }
             return sequence.map(+)
-            
-        case .BasicStar():
+
+        case .basicStar():
             return prefix.repeatMany().join()
-            
-        case .BasicEpsilon(), .FactorTailEpsilon(), .TermTailEpsilon(): return prefix
-            
+
+        case .basicEpsilon(), .factorTailEpsilon(), .termTailEpsilon(): return prefix
+
         default:
             fatalError()
         }
     }
-
 }
 
-
-func compile(s:String)->ParserOf<String> {
+func compile(_ s:String)->ParserOf<String> {
     let regex = reg_expr.parse(s)?.token
     if let regex = regex {
         return regex.compile()
@@ -159,31 +155,27 @@ func compile(s:String)->ParserOf<String> {
     }
 }
 
-func runParser(p:ParserOf<String>)(_ s:String) -> String {
-    return p.parse(s)!.token
+func runParser(_ p:ParserOf<String>) -> ((String) -> String) {
+    return { s in p.parse(s)!.token }
 }
 
-
-func ==<A,B where A:Equatable, B:Equatable>(lhs:(A,B), rhs:(A,B)) -> Bool {
-    return lhs.0 == rhs.0 && lhs.1 == rhs.1
-}
-
-func assertEqual(@autoclosure result:() -> (String,String)?, _ expected:(String,String)?,
-    file: String = __FILE__, line: UInt = __LINE__) -> (String,String)? {
-        let actual = result()
-        let equal:(String,String)->(String,String)->Bool = { lhs in { lhs == $0 } }
-
-        if (actual == nil && expected == nil) {
-            return actual
-        }
-
-        let comparison = equal <§> actual <*> expected
-        if let areEqual = comparison where areEqual {
-            return actual
-        }
-
-        print("Error: \(actual) != \(expected) on line:\(line)")
+//: Asserts equality but also prints the error to the console
+func assertEqual(_ result:@autoclosure() -> (String,String)?, _ expected:(String,String)?,
+                 file: StaticString = #file, line: UInt = #line) -> (String,String)? {
+    let actual = result()
+    let equal:(String,String)->(String,String)->Bool = { lhs in { rhs in lhs == rhs } }
+    if (actual == nil && expected == nil) {
         return actual
+    }
+    let comparison = equal <§> actual <*> expected
+
+    if let areEqual = comparison, areEqual  {
+        return actual
+    }
+
+    print("Error: \(actual) != \(expected) on line:\(line)")
+    return actual
+
 }
 
 // char expr
@@ -235,3 +227,4 @@ assertEqual(p.parse("abbbg"), ("abbb","g"))
 
 
 //: [Next](@next)
+
