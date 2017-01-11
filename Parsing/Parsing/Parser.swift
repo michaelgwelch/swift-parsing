@@ -17,7 +17,7 @@ import Foundation
 public struct ParserContext {
     public fileprivate(set) var row:Int
     public fileprivate(set) var col:Int
-    private var iterator:IndexingIterator<String.CharacterView>
+    fileprivate var iterator:IndexingIterator<String.CharacterView>
 
     init(string:String) {
         row = 1
@@ -66,17 +66,17 @@ public protocol ParserType {
 }
 
 
-/*
+
 public extension ParserType {
     /// For backward compatiblity with prewritten tests.
-    @warn_unused_result
-    func parse(input: String) -> (token: Self.TokenType, output: String)? {
+    
+    func parse(_ input: String) -> (token: Self.TokenType, output: String)? {
         let context = ParserContext(string: input)
         let result = self.parse(context)
-        return result.map { ($0.token, $0.output.string) }
+        return result.map { ($0.token, String($0.output.iterator)) }
     }
 }
-*/
+
 
 
 
@@ -182,11 +182,10 @@ public class Parser {
 
     public static let space:ParserOf<()> = Parser.satisfy(isSpace)* *> Parser.success(())
 
-
-    public static let ident:ParserOf<String> = Parser.sequence(letter, alphanum*, cons).map { String($0) }
+    public static let ident:ParserOf<String> = { String($0) } <§> (cons <§> letter <*> alphanum*)
     public static let int:(String) -> Int = { Int($0)!} // Construct an int out of a string of digits
 
-    public static let nat:ParserOf<Int> = Parser.sequence(digit, digit*, cons).map {String($0)}.map(int)
+    public static let nat:ParserOf<Int> = int <§> ({ String($0) } <§> (cons <§> digit <*> digit*))
     public static let identifier = ident.token()
 
     public static let natural = nat.token()
@@ -236,7 +235,7 @@ extension ParserType {
 
     
     public func repeatOneOrMore() -> ParserOf<List<TokenType>> {
-        return Parser.sequence(self, self.repeatMany(), cons)
+        return cons <§> self <*> self.repeatMany()
     }
 
 

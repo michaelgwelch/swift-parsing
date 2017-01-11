@@ -10,24 +10,24 @@ import XCTest
 @testable import SwiftParsing
 
 typealias P=Parser
-func AssertNil<T>(_ expression: @autoclosure () -> T?, message: String = "",
-    file: String = #file, line: UInt = #line) {
-
-        XCTAssert(expression() == nil, message, file:file, line:line);
-}
+//func AssertNil<T>(_ expression: @autoclosure () -> T?, message: String = "",
+//    file: String = #file, line: UInt = #line) {
+//
+//        XCTAssert(expression() == nil, message, file:file, line:line);
+//}
 
 func ==<T:Equatable,U:Equatable>(lhs: (T,U), rhs: (T,U)) -> Bool {
     return lhs.0 == rhs.0 && lhs.1 == rhs.1
 }
 
-func AssertEqual<T:Equatable,U:Equatable>(_ expression1: (T,U), _ expression2: (T,U)) {
-    XCTAssert(expression1 == expression2)
-}
+//func AssertEqual<T:Equatable,U:Equatable>(_ expression1: (T,U), _ expression2: (T,U)) {
+//    XCTAssert(expression1 == expression2)
+//}
 
-func AssertEqual<T:Equatable,U:Equatable>(_ expression1: ([T],U), _ expression2: ([T],U)) {
-    XCTAssertEqual(expression1.0, expression2.0)
-    XCTAssertEqual(expression1.1, expression2.1)
-}
+//func AssertEqual<T:Equatable,U:Equatable>(_ expression1: ([T],U), _ expression2: ([T],U)) {
+//    XCTAssertEqual(expression1.0, expression2.0)
+//    XCTAssertEqual(expression1.1, expression2.1)
+//}
 
 
 class Success: XCTestCase {

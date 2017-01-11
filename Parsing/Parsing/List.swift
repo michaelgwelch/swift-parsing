@@ -20,8 +20,8 @@ public indirect enum List<T> {
     }
 }
 
-public func cons<T>(_ head:T, _ tail:List<T>) -> List<T> {
-    return List<T>.cons(h: head, t: tail)
+public func cons<T>(_ head:T) -> ((List<T>) -> List<T>) {
+    return { List<T>.cons(h: head, t: $0) }
 }
 
 extension List : IteratorProtocol, Sequence {

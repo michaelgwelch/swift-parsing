@@ -10,19 +10,18 @@
 import Foundation
 
 
-//public func const<A,B>(a:A, b:B) -> A {
-//    return a
-//}
+public func const<A,B>(a:A) -> ((B) -> A) {
+    return { _ in a }
+}
 
 
 public func id<A>(a:A) -> A {
     return a
 }
 
-
-//public func flip<TA, TB, TC>(f:TA -> TB -> TC)(_ b:TB)(_ a:TA) -> TC {
-//    return f(a)(b)
-//}
+public func flip<TA, TB, TC>(_ f:@escaping (TA) -> (TB) -> TC) -> ((TB) -> (TA) -> TC) {
+    return { b in { a in f(a)(b) } }
+}
 
 // Like Haskell $
 
@@ -35,15 +34,13 @@ public func •<A,B,C>(f:@escaping (B)->C, g:@escaping (A)->B) -> ((A) -> C) {
     return { f § g § $0 } // === f(g(a))
 }
 
+public func curry<A,B,C>(_ f:@escaping (A,B)->C) -> ((A) ->((B)->C)) {
+    return { a in { b in f(a,b) } }
+}
 
-//public func curry<A,B,C>(f:(A,B)->C)(_ a:A)(_ b:B) -> C {
-//    return f(a,b)
-//}
-
-
-//public func uncurry<A,B,C>(f:A->B->C)(_ a:A,_ b:B) -> C {
-//    return f(a)(b)
-//}
+public func uncurry<A,B,C>(f:@escaping (A)->(B)->C)->((A,B)->C) {
+    return { f($0)($1) }
+}
 
 extension String {
     /// A tuple compromised of the first character and the remaining characters of
