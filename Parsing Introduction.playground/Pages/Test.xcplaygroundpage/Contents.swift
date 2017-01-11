@@ -8,6 +8,8 @@ let string_literal = Parser.sequence(Parser.string("\""), string_literal_content
     (_,s,_) in s
 }
 
+
+
 //: [Next](@next)
 
 let simpleString = "\"abcdef\""
@@ -35,7 +37,7 @@ identifier.parse("]BC34_")
 
 
 let digitsOptional = Parser.digit.repeatMany().map {String($0)}
-let digits = Parser.digit.repeatOneOrMany().map {String($0)}
+let digits = Parser.digit.repeatOneOrMore().map {String($0)}
 let fractional = Parser.sequence(Parser.string("."), digits.optional("0"), {$0 + $1}).optional("")
 let exponent_char = Parser.string("e").orElse(Parser.string("E"))
 let exponent_sign = (Parser.string("+").orElse(Parser.string("-"))).optional("")
