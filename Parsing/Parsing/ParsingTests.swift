@@ -20,14 +20,15 @@ func ==<T:Equatable,U:Equatable>(lhs: (T,U), rhs: (T,U)) -> Bool {
     return lhs.0 == rhs.0 && lhs.1 == rhs.1
 }
 
-//func AssertEqual<T:Equatable,U:Equatable>(_ expression1: (T,U), _ expression2: (T,U)) {
-//    XCTAssert(expression1 == expression2)
-//}
+func AssertEqual<T:Equatable,U:Equatable>(_ expression1: (T,U), _ expression2: (T,U)) {
+    XCTAssertEqual(expression1.0, expression2.0)
+    XCTAssertEqual(expression1.1, expression2.1)
+}
 
-//func AssertEqual<T:Equatable,U:Equatable>(_ expression1: ([T],U), _ expression2: ([T],U)) {
-//    XCTAssertEqual(expression1.0, expression2.0)
-//    XCTAssertEqual(expression1.1, expression2.1)
-//}
+func AssertEqual<T:Equatable,U:Equatable>(_ expression1: ([T],U), _ expression2: ([T],U)) {
+    XCTAssertEqual(expression1.0, expression2.0)
+    XCTAssertEqual(expression1.1, expression2.1)
+}
 
 
 class Success: XCTestCase {
@@ -59,17 +60,17 @@ class Success: XCTestCase {
 class Failure: XCTestCase {
     func testAlwaysReturnsNil() {
         var result:(Int,String)? = P.failure().parse("")
-        AssertNil(result)
+        XCTAssertNil(result)
 
         result = P.failure().parse("hello")
-        AssertNil(result)
+        XCTAssertNil(result)
     }
 }
 
 class Item: XCTestCase {
     func testFailsOnEmptyString() {
         let result:(Character,String)? = P.item.parse("")
-        AssertNil(result)
+        XCTAssertNil(result)
     }
 
     func testConsumesAndReturnsOneCharacter() {
@@ -105,7 +106,7 @@ class Item: XCTestCase {
 class Sat: XCTestCase {
     func testFailsIfPredicateEvaluatesToFalse() {
         let result = P.satisfy { $0 < "a" }.parse("boat")
-        AssertNil(result)
+        XCTAssertNil(result)
     }
     func testConsumesAndReturnsOneCharacterIfPredicateEvaluatesToTrue() {
         let expected:(Character,String) = ("b", "oat")
@@ -117,11 +118,11 @@ class Sat: XCTestCase {
 class Char: XCTestCase {
     func testFailsOnEmptyStringInput() {
         let result = P.char("a").parse("")
-        AssertNil(result)
+        XCTAssertNil(result)
     }
     func testFailsIfCharDoesNotMatch() {
         let result = P.char("z").parse("chair")
-        AssertNil(result)
+        XCTAssertNil(result)
     }
     func testConsumesAndReturnsOneCharacterIfItMatches() {
         let expected:(Character, String) = ("c", "hair")
@@ -134,11 +135,11 @@ class Char: XCTestCase {
 class Letter: XCTestCase {
     func testFailsIfEmptyStringInput() {
         let result = P.letter.parse("")
-        AssertNil(result)
+        XCTAssertNil(result)
     }
     func testFailsIfFirstCharIsNotALetter() {
         let result = P.letter.parse("[]")
-        AssertNil(result)
+        XCTAssertNil(result)
     }
     func testConsumesAndReturnsOneCharacterIfALetter() {
         let expected = ExpectedResult("l", "etter")
@@ -167,7 +168,7 @@ class StringParser: XCTestCase {
         AssertEqual(expected, actual)
     }
     func testFailsIfNoMatch() {
-        AssertNil(P.string("hello").parse("goodbye"))
+        XCTAssertNil(P.string("hello").parse("goodbye"))
     }
     func testColumnIncreasesByNumberOfCharactersInString() {
         let string = "\nMichael"
@@ -206,7 +207,7 @@ class Choice: XCTestCase {
 class Many: XCTestCase {
     func testZeroMatches() {
         let expected = ("", "hello")
-        let actual = String.init <§> P.char("a").repeatMany().parse("hello")!
+        let actual = { String($0) } <§> P.char("a").repeatMany().parse("hello")!
         AssertEqual(expected, actual)
     }
 }

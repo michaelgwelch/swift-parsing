@@ -19,11 +19,6 @@ public struct ParserContext {
     public fileprivate(set) var col:Int
     fileprivate var iterator:IndexingIterator<String.CharacterView>
 
-    init(string:String) {
-        row = 1
-        col = 1
-        iterator = string.characters.makeIterator()
-    }
 
     mutating func advance() -> Character? {
         guard let currentChar = iterator.next() else {
@@ -41,18 +36,36 @@ public struct ParserContext {
     }
 }
 
-/*
+extension ParserContext {
+    init(row:Int, col:Int, string:String) {
+        self.row = row
+        self.col = col
+        self.iterator = string.characters.makeIterator()
+    }
+    
+    init(string:String) {
+        row = 1
+        col = 1
+        iterator = string.characters.makeIterator()
+    }
+}
+
+
 extension ParserContext:Equatable {
 
 }
 
-@warn_unused_result
+
 public func ==(lhs:ParserContext, rhs:ParserContext) -> Bool {
+
+    let lhsIterator = lhs.iterator
+    let rhsIterator = rhs.iterator
+
     return lhs.col == rhs.col
     && lhs.row == rhs.row
-    && lhs.string == rhs.string
+    && String(lhsIterator) == String(rhsIterator)
 }
-*/
+
 
 
 
