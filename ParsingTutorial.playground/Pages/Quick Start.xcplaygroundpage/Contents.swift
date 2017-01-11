@@ -3,6 +3,8 @@
 import Cocoa
 import SwiftParsing
 
+var x = 234
+
 //: # Quick Example
 //: Parse an expression of the form  `x + z` and evaluate it.
 
@@ -17,16 +19,18 @@ let parseExpression = Parser.natural.bind { x in
 parseExpression.parse(" 3 + 5 ")!.token
 
 //: We can simplify slightly by using the `|>>` operator to avoid the
-//: unused variable `c`. 
+//: unused variable `c`.
 (Parser.natural |>>= { x in
     Parser.char("+") |>> Parser.natural |>>= {
         return Parser.success(x + $0)
     }
-}).parse("    12  + 23  ")!.token
+    }).parse("    12  + 23  ")!.token
 
 //: Alternatively we could do this without the lambda expressions
 //: But first we need a curried version of addition
-let sumFunny:Int -> Character -> Int -> Int = { x in { _ in { x + $0 } } }
+let sumFunny:(Int) -> (Character) -> (Int) -> Int = { x in { _ in { x + $0 } } }
+
+
 
 //: `parseExpression2` is functionally equivalent to `parseExpression` and arguable
 //: simpler once you learn the funny operators: `<§>` , `<*>` and `*>`
@@ -38,8 +42,9 @@ parseExpression2.parse(" 19 + 24 ")!.token
 //: really want to pass the `+` to the `sumFunny` function. To parse the `+` and
 //: "throw it away" we can use the `*>` operator like this:
 
-func sum(x:Int)(_ y:Int) -> Int { return x + y }
+let sum:(Int) -> (Int) -> Int = { x in { y in x + y } }
 (sum <§> Parser.natural <*> (Parser.char("+") *> Parser.natural)).parse(" 19 + 24 ")!.token
+
 //: ## The Primitives
 //: The `Parser` class provides many parser primitives. A parser
 //: is any type that conforms to `ParserType`. Most of the primitives
@@ -85,7 +90,7 @@ Parser.item.parse("")
 Parser.item.parse("abcde")!.token   // parses "a" as the token
 Parser.item.parse("abcde")!.output  // what's left is "bcde"
 
-//: `Parser.satisfy(Character -> Bool) -> ParserOf<Character>` This parser succeeds 
+//: `Parser.satisfy(Character -> Bool) -> ParserOf<Character>` This parser succeeds
 //: whenever the predicate returns
 //: `true`. It fails when the predicate returns `false`
 Parser.satisfy { $0 >= "a" }.parse("Apple")        // returns nil
@@ -93,6 +98,7 @@ Parser.satisfy { $0 >= "a" }.parse("apple")!.token // parses "a"
 
 //: Parse the letter "c". The result is `Some ("c","hair")`
 Parser.char("c").parse("chair")
+
 
 //: Fail to parse because the first letter of "hello" is not a "c"
 let letter_c_failure = Parser.char("c").parse("hello") //: returns nil
@@ -103,7 +109,6 @@ var integerValue = Parser.nat.parse("234")!.token
 //: Parse an integer including the white space before and after
 //: (ignoring all the whitespace)
 integerValue = Parser.natural.parse("   234   ")!.token
-
 
 //: ## Combining parsers
 //: It's great to be able to parse primitives but often we
@@ -116,10 +121,10 @@ integerValue = Parser.natural.parse("   234   ")!.token
 //:
 //: ### Applicative parsing
 //: Let's assume we want to parse an expression of the form
-//: 
+//:
 //:     a + b
 //:
-//: where `a` and `b` are any two natural numbers and 
+//: where `a` and `b` are any two natural numbers and
 //: we evaluate the result
 //:
 //: Here's are first, rather long, example:
@@ -143,7 +148,3 @@ let evaluate = parser.parse("    225 + 432   ")!.token
 let failToParse = parser.parse("    225 - 432 ")
 
 //: ### Monadic parsing
-
-
-
-
