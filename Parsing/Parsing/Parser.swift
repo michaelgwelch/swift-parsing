@@ -263,7 +263,7 @@ extension ParserType {
     }
 
     
-    public func optional(defaultVal:TokenType) -> ParserOf<TokenType> {
+    public func optional(_ defaultVal:TokenType) -> ParserOf<TokenType> {
         return self <|> Parser.success(defaultVal)
     }
 
@@ -272,7 +272,7 @@ extension ParserType {
     }
 
     
-    public func orElse<P:ParserType>(p:P) -> ParserOf<TokenType> where P.TokenType==TokenType {
+    public func orElse<P:ParserType>(_ p:P) -> ParserOf<TokenType> where P.TokenType==TokenType {
         return self <|> p
     }
 
@@ -286,15 +286,15 @@ extension ParserType {
 
     
 }
-/*
+
 extension ParserType where TokenType==List<String> {
-    @warn_unused_result
+    
     public func join() -> ParserOf<String> {
-        let join = flip(List<String>.joinWithSeparator)("")
+        let join = flip(List<String>.joined)("")
         return join <§> self
     }
 }
-*/
+
 
 public postfix func *<PT:ParserType, T>(p:PT) -> ParserOf<List<T>> where PT.TokenType==T {
     return p.repeatMany()
