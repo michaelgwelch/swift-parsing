@@ -3,5 +3,6 @@
     <pages>
         <page name='RegEx No Operators'/>
         <page name='Quick Start'/>
+        <page name='NumericExpressions'/>
     </pages>
 </playground>

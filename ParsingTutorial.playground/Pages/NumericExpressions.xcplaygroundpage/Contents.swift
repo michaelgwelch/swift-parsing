@@ -8,7 +8,7 @@ import Darwin
 //:
 //: For this example we'll parse the following grammar
 //:
-//:     
+//:
 //:     expr             ::= term term_tail
 //:     term_tail        ::= plus_op term term_tail
 //:                        | sub_op term term_tail
@@ -138,7 +138,7 @@ extension NumericExpression {
 
 
         case .AddTermTail(_), .SubtractTermTail(_), .MultiplyFactorTail(_), .DivideFactorTail(_),
-        .BasicTail(_), .Epsilon:
+             .BasicTail(_), .Epsilon:
             return nil
 
         }
