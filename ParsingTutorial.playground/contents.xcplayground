@@ -7,5 +7,6 @@
         <page name='Test'/>
         <page name='Regex'/>
         <page name='RegEx 2'/>
+        <page name='RegEx 3'/>
     </pages>
 </playground>

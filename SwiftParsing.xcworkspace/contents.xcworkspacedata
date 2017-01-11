@@ -8,9 +8,6 @@
       location = "group:../tibasic/tibasic.xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:Parsing Introduction.playground">
-   </FileRef>
-   <FileRef
       location = "group:Parsing/Parsing.xcodeproj">
    </FileRef>
 </Workspace>
