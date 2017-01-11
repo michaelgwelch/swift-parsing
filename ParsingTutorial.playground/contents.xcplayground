@@ -6,5 +6,6 @@
         <page name='NumericExpressions'/>
         <page name='Test'/>
         <page name='Regex'/>
+        <page name='RegEx 2'/>
     </pages>
 </playground>
