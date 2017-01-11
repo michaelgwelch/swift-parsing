@@ -31,7 +31,7 @@ import Foundation
 
 // §
 precedencegroup ApplicationPrecedence {
-    higherThan: AssignmentPrecedence
+    higherThan: AssignmentPrecedence, TernaryPrecedence
     associativity: right
 }
 
