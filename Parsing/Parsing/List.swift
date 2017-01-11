@@ -6,38 +6,50 @@
 //  Copyright © 2015 Michael Welch. All rights reserved.
 //
 
-/*
+
 import Foundation
 
 import Swift
 
 public indirect enum List<T> {
-    case Nil
-    case Cons(h:T, t:List<T>)
+    case empty
+    case cons(h:T, t:List<T>)
 
-    @warn_unused_result
     public func insert(h:T) -> List<T> {
-        return Cons(h: h, t: self)
+        return .cons(h: h, t: self)
     }
 }
 
-public func cons<T>(head:T)(_ tail:List<T>) -> List<T> {
-    return List<T>.Cons(h: head, t: tail)
+public func cons<T>(_ head:T, _ tail:List<T>) -> List<T> {
+    return List<T>.cons(h: head, t: tail)
 }
 
-extension List : SequenceType {
-    public func generate() -> AnyGenerator<T> {
+extension List : IteratorProtocol, Sequence {
+    mutating public func next() -> T? {
+        switch self {
+        case .empty: return nil
+        case .cons(let h, let t):
+            defer { self = t }
+            return h
+        }
+    }
+}
+/*
+extension List : Sequence {
+    public func makeIterator() -> AnyIterator<T> {
         var list = self
-        return anyGenerator {
+        return AnyIterator {
             switch list {
-            case .Nil: return nil
-            case .Cons(let h, let t):
+            case .empty: return nil
+            case .cons(let h, let t):
                 list = t
                 return h
             }
         }
     }
 }
+*/
+
 
 //extension List {
 //    public func bind<U>(f:T -> List<U>) -> List<U> {
@@ -51,4 +63,4 @@ extension List : SequenceType {
 //    }
 //}
 
- */
+
