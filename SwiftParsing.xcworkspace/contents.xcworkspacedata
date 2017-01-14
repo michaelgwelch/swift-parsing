@@ -2,10 +2,10 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:../tibasic/tibasic.xcodeproj">
+      location = "group:ParsingTutorial.playground">
    </FileRef>
    <FileRef
-      location = "group:Parsing Introduction.playground">
+      location = "group:../tibasic/tibasic.xcodeproj">
    </FileRef>
    <FileRef
       location = "group:Parsing/Parsing.xcodeproj">

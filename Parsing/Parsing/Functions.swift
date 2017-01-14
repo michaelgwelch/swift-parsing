@@ -6,57 +6,57 @@
 //  Copyright © 2015 Michael Welch. All rights reserved.
 //
 
+
 import Foundation
 
-@warn_unused_result
-public func const<A,B>(a:A)(b:B) -> A {
-    return a
+
+public func const<A,B>(a:A) -> ((B) -> A) {
+    return { _ in a }
 }
 
-@warn_unused_result
+
 public func id<A>(a:A) -> A {
     return a
 }
 
-@warn_unused_result
-public func flip<TA, TB, TC>(f:TA -> TB -> TC)(_ b:TB)(_ a:TA) -> TC {
-    return f(a)(b)
+public func flip<TA, TB, TC>(_ f:@escaping (TA) -> (TB) -> TC) -> ((TB) -> (TA) -> TC) {
+    return { b in { a in f(a)(b) } }
 }
 
 // Like Haskell $
-@warn_unused_result
-public func §<A,B>(lhs:A->B, rhs:A) -> B {
+
+public func §<A,B>(lhs:(A)->B, rhs:A) -> B {
     return lhs(rhs)
 }
 
-@warn_unused_result
-public func •<A,B,C>(f:B->C, g:A->B)(_ a:A) -> C {
-    return f § g § a // === f(g(a))
+
+public func •<A,B,C>(f:@escaping (B)->C, g:@escaping (A)->B) -> ((A) -> C) {
+    return { f § g § $0 } // === f(g(a))
 }
 
-@warn_unused_result
-public func curry<A,B,C>(f:(A,B)->C)(_ a:A)(_ b:B) -> C {
-    return f(a,b)
+public func curry<A,B,C>(_ f:@escaping (A,B)->C) -> ((A) ->((B)->C)) {
+    return { a in { b in f(a,b) } }
 }
 
-@warn_unused_result
-public func uncurry<A,B,C>(f:A->B->C)(_ a:A,_ b:B) -> C {
-    return f(a)(b)
+public func uncurry<A,B,C>(f:@escaping (A)->(B)->C)->((A,B)->C) {
+    return { f($0)($1) }
 }
 
 extension String {
     /// A tuple compromised of the first character and the remaining characters of
     /// self if self is not empty. Else nil.
-    @warn_unused_result
+    
     public func uncons() -> (head:Character, tail:String)? {
         return uncons(id)
     }
-    @warn_unused_result
-    public func uncons<T>(f:(head:Character, tail:String) -> T) -> T? {
+
+    public func uncons<T>(_ f:(_ head:Character, _ tail:String) -> T) -> T? {
         guard (!self.isEmpty) else {
             return nil
         }
         let index0 = self.startIndex
-        return f(head: self[index0], tail: self.substringFromIndex(index0.successor()))
+        return f(self[index0], self.substring(from: self.index(after: index0)))
     }
 }
+
+

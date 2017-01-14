@@ -8,7 +8,7 @@ import Darwin
 //:
 //: For this example we'll parse the following grammar
 //:
-//:     
+//:
 //:     expr             ::= term term_tail
 //:     term_tail        ::= plus_op term term_tail
 //:                        | sub_op term term_tail
@@ -66,7 +66,7 @@ let createDiv = curry(NumericExpression.DivideFactorTail)
 let createFactor = curry(NumericExpression.Factor)
 let createBasic = curry(NumericExpression.BasicTail)
 
-let num_expr:ParserOf<NumericExpression>
+var num_expr:ParserOf<NumericExpression>! = nil
 let expr = Parser.lazy(num_expr)
 
 
@@ -89,15 +89,15 @@ let literal = NumericExpression.Literal <§> Parser.natural
 let identifier = NumericExpression.Identifier <§> Parser.identifier
 let paren_expr = NumericExpression.Paren <§> (lparen *> expr) <* rparen
 let basic = paren_expr <|> identifier <|> literal <|> unaryNegate <|> unaryPlus
-let basic_tail:ParserOf<NumericExpression>
+var basic_tail:ParserOf<NumericExpression>! = nil
 basic_tail = createBasic <§> (exp_op *> basic) <*> Parser.lazy(basic_tail) <|> epsilon
 let factor = createFactor <§> basic <*> basic_tail
-let factor_tail:ParserOf<NumericExpression>
+var factor_tail:ParserOf<NumericExpression>! = nil
 factor_tail = createMult <§> (mult_op *> factor) <*> Parser.lazy(factor_tail)
     <|> createDiv <§> (div_op *> factor) <*> Parser.lazy(factor_tail)
     <|> epsilon
 let term = createTerm <§> factor <*> factor_tail
-let term_tail:ParserOf<NumericExpression>
+var term_tail:ParserOf<NumericExpression>! = nil
 term_tail = createAdd <§> (plus_op *> term) <*> Parser.lazy(term_tail)
     <|> createSub <§> (sub_op *> term) <*> Parser.lazy(term_tail)
     <|> epsilon
@@ -107,7 +107,7 @@ num_expr = createExpression <§> term <*> term_tail
 
 
 extension NumericExpression {
-    static func eval(expr1:NumericExpression, inExpression expr2:NumericExpression, withStore store:[String:Int]) -> Int? {
+    static func eval(_ expr1:NumericExpression, inExpression expr2:NumericExpression, withStore store:[String:Int]) -> Int? {
         let e1 = expr1.eval(withMemory:store)
         return expr2.eval(withLeftHandSide:e1, andMemory:store)
     }
@@ -138,7 +138,7 @@ extension NumericExpression {
 
 
         case .AddTermTail(_), .SubtractTermTail(_), .MultiplyFactorTail(_), .DivideFactorTail(_),
-        .BasicTail(_), .Epsilon:
+             .BasicTail(_), .Epsilon:
             return nil
 
         }
@@ -152,23 +152,23 @@ extension NumericExpression {
             return nil
 
         case .AddTermTail(let expr1, let expr2):
-            let sum:Int -> Int -> Int = { x in { y in x + y } }
+            let sum:(Int) -> (Int) -> Int = { x in { y in x + y } }
             return sum <§> accumulator <*> NumericExpression.eval(expr1, inExpression: expr2, withStore: store)
 
         case .SubtractTermTail(let expr1, let expr2):
-            let diff:Int -> Int -> Int = { x in { y in x - y } }
+            let diff:(Int) -> (Int) -> Int = { x in { y in x - y } }
             return diff <§> accumulator <*> NumericExpression.eval(expr1, inExpression: expr2, withStore: store)
 
         case .MultiplyFactorTail(let expr1, let expr2):
-            let product:Int -> Int -> Int = { x in { y in x * y } }
+            let product:(Int) -> (Int) -> Int = { x in { y in x * y } }
             return product <§> accumulator <*> NumericExpression.eval(expr1, inExpression: expr2, withStore: store)
 
         case .DivideFactorTail(let expr1, let expr2):
-            let quotient:Int -> Int -> Int = { x in { y in x / y } }
+            let quotient:(Int) -> (Int) -> Int = { x in { y in x / y } }
             return quotient <§> accumulator <*> NumericExpression.eval(expr1, inExpression: expr2, withStore: store)
 
         case .BasicTail(let expr1, let expr2):
-            let exp:Int -> Int -> Int = { x in { y in Int(pow(Double(x), Double(y))) } }
+            let exp:(Int) -> (Int) -> Int = { x in { y in Int(pow(Double(x), Double(y))) } }
             return exp <§> accumulator <*> NumericExpression.eval(expr1, inExpression: expr2, withStore: store)
 
         case .Epsilon:
